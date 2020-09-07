@@ -1,5 +1,7 @@
 # Faasm Toolchain
 
+This is the toolchain for building functions for [Faasm](https://github.com/lsds/faasm).
+
 Faasm aims to support a range of legacy applications, so requires a toolchain
 capable of compiling large projects that may require threading, C++ exceptions 
 and dynamic linking. To do this we have to use a custom 
