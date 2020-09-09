@@ -128,6 +128,7 @@ gettext
 dup
 chmod
 umask
+mkdtemp
 
 # Non-WASI timing
 utime
