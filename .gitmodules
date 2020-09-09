@@ -1,6 +1,6 @@
 [submodule "third-party/wasi-libc"]
 	path = third-party/wasi-libc
-	url = git@github.com:Shillaker/wasi-libc
+	url = https://github.com/Shillaker/wasi-libc.git
 [submodule "third-party/llvm-project"]
 	path = third-party/llvm-project
 	url = https://github.com/llvm/llvm-project.git
