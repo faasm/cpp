@@ -92,6 +92,9 @@ pthread_cond_signal
 pthread_cond_timedwait
 pthread_cond_init
 pthread_equal
+pthread_mutexattr_init
+pthread_mutexattr_settype
+pthread_mutexattr_destroy
 __tls_base
 
 # Signals
@@ -129,6 +132,7 @@ dup
 chmod
 umask
 mkdtemp
+tmpfile
 
 # Non-WASI timing
 utime
