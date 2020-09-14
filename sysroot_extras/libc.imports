@@ -12,6 +12,7 @@ raise
 ttyname
 pipe
 getpwnam
+setgroups
 
 # Musl syscall interface
 __syscall
@@ -133,6 +134,8 @@ chmod
 umask
 mkdtemp
 tmpfile
+memfd_create
+msync
 
 # Non-WASI timing
 utime
