@@ -9,7 +9,7 @@ export WASM_AR=${WASM_TOOLCHAIN_BIN}/llvm-ar
 export WASM_NM=${WASM_TOOLCHAIN_BIN}/llvm-nm
 export WASM_RANLIB=${WASM_TOOLCHAIN_BIN}/llvm-ranlib
 export WASM_LD=${WASM_TOOLCHAIN_BIN}/wasm-ld
-export WASM_LDSHARED="${WASM_TOOLCHAIN_BIN}/wasm-ld --no-entry"
+export WASM_LDSHARED="${WASM_LD} --no-entry"
 
 export WASM_LDFLAGS="-Xlinker --stack-first -Xlinker --no-check-features"
 export WASM_FUNC_LDFLAGS="-Xlinker --export=_faasm_zygote -Xlinker --export=__wasm_call_ctors -Xlinker --max-memory=4294901760 -Wl,-z,stack-size=4194304 -Wl,"
