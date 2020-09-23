@@ -43,13 +43,19 @@ add_definitions(-DEIGEN_DONT_PARALLELIZE=1)
 # Add definition for flagging Faasm
 add_definitions(-D__faasm)
 
-# Note: see Clang wasm-specific flags at https://clang.llvm.org/docs/ClangCommandLineReference.html#webassembly
-# Note the optimisation level. We want to keep vectorization so stick with O3
-# Also note that the optimisation is crucial to getting any kind of decent performance
-# We must explicitly exclude atomics here just in case we've accidentally introduced them
-# upstream. Use of atomics means we can't link things together:
+# Note: see Clang wasm-specific flags at
+# https://clang.llvm.org/docs/ClangCommandLineReference.html#webassembly Note
+# the optimisation level. We want to keep vectorization so stick with O3 Also
+# note that the optimisation is crucial to getting any kind of decent
+# performance.
+#
+# We must explicitly exclude atomics here just in case we've accidentally
+# introduced them upstream. Use of atomics means we can't link things together:
 # https://reviews.llvm.org/D59281
-set(FAASM_COMPILER_FLAGS "-O3 -msimd128 -mno-atomics --sysroot=${FAASM_SYSROOT}")
+
+# 23/09/2020 - Remove SIMD
+# set(FAASM_COMPILER_FLAGS "-O3 -msimd128 -mno-atomics --sysroot=${FAASM_SYSROOT}")
+set(FAASM_COMPILER_FLAGS "-O3 -mno-atomics --sysroot=${FAASM_SYSROOT}")
 
 set(CMAKE_SYSROOT ${FAASM_SYSROOT} CACHE STRING "faasm build")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${FAASM_COMPILER_FLAGS}" CACHE STRING "faasm build")
