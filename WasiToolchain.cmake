@@ -90,3 +90,7 @@ SET(FAASM_EXE_LINKER_FLAGS "${FAASM_COMMON_LINKER_FLAGS}")
 # Note, these get passed to llvm-ar for static libs, so 
 # don't set for CMAKE_STATIC_LINKER_FLAGS
 SET(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} ${FAASM_COMMON_LINKER_FLAGS} CACHE STRING "faasm build")
+
+# Note - order very important here
+SET(FAASM_BLAS_LIBS lapack blas f2c)
+

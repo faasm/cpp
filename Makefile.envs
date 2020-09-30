@@ -30,3 +30,5 @@ export WASM_CXXFLAGS_NO_QUOTES=$(WASM_CFLAGS_NO_QUOTES)
 export WASM_CFLAGS="$(WASM_CFLAGS_NO_QUOTES)"
 export WASM_CXXFLAGS="$(WASM_CXXFLAGS_NO_QUOTES)"
 
+# Note - order very important here 
+export WASM_BLAS_LIBS="lapack blas f2c"

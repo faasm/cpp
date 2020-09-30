@@ -23,3 +23,6 @@ export WASM_HOST_UNKNOWN=wasm32-unknown-unknown
 export WASM_CFLAGS="-O3 --sysroot=${WASM_SYSROOT} -mno-atomics -D__faasm"
 export WASM_CXXFLAGS=${WASM_CFLAGS}
 
+# Note - order very important here
+export WASM_BLAS_LIBS="lapack blas f2c"
+
