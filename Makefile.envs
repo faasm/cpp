@@ -30,5 +30,8 @@ export WASM_CXXFLAGS_NO_QUOTES=$(WASM_CFLAGS_NO_QUOTES)
 export WASM_CFLAGS="$(WASM_CFLAGS_NO_QUOTES)"
 export WASM_CXXFLAGS="$(WASM_CXXFLAGS_NO_QUOTES)"
 
+export WASM_SHARED_FLAGS_NO_QUOTES=-D__wasi__ -nostdlib -nostlib++ -fPIC --target=wasm32-unknown-emscripten -Xlinker --no-entry -Xlinker --shared -Xlinker --export-all -Xlinker --no-gc-sections
+export WASM_SHARED_FLAGS="$(WASM_SHARED_FLAGS_NO_QUOTES)"
+
 # Note - order very important here 
 export WASM_BLAS_LIBS="lapack blas f2c"

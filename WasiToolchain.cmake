@@ -91,6 +91,22 @@ SET(FAASM_EXE_LINKER_FLAGS "${FAASM_COMMON_LINKER_FLAGS}")
 # don't set for CMAKE_STATIC_LINKER_FLAGS
 SET(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} ${FAASM_COMMON_LINKER_FLAGS} CACHE STRING "faasm build")
 
+# Shared library flags
+SET(WASM_SHARED_FLAGS"\
+    -D__wasi__ \
+    -nostdlib -nostlib++ \
+    -fPIC \
+    --target=wasm32-unknown-emscripten \
+    -Xlinker --no-entry \
+    -Xlinker --shared \
+    -Xlinker --export-all \
+    -Xlinker --no-gc-sections \
+")
+
 # Note - order very important here
-SET(FAASM_BLAS_LIBS lapack blas f2c)
+SET(FAASM_BLAS_LIBS 
+    ${FAASM_SYSROOT}/lib/wasm32-wasi/liblapack.so 
+    ${FAASM_SYSROOT}/lib/wasm32-wasi/libblas.so 
+    ${FAASM_SYSROOT}/lib/wasm32-wasi/libf2c.so 
+)
 

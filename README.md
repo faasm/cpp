@@ -11,17 +11,29 @@ LLVM toolchain via [this Makefile](Makefile).
 
 # Usage
 
+## Shared libraries
+
+Building shared libraries to wasm is currently a little difficult. The only
+supported target is Emscripten, and we build our standard libraries as
+statically linked libs so cannot link against them. Therefore we have to make 
+sure our compiler flags:
+
+- Target Emscripten
+- Exclude standard libraries
+- Ensure all symbols are exported
+- Prodce relocatable code
+- Add the `__wasi__` definition to keep WASI headers happy
+
+There is some more detail on the Emscripten-only support for `-fPIC` 
+[here](https://bugs.llvm.org/show_bug.cgi?id=42714).
+
+The environments in this repo have these flags collected in certain variables so
+they don't need to be repeated in every project.
+
 ## Dynamic Linking
 
 Faasm implements dynamic linking according to the [WebAssembly tool
 conventions](https://github.com/WebAssembly/tool-conventions/blob/master/DynamicLinking.md). 
-
-Shared libraries must be built with `-fPIC`, but this is only supported with
-`--target wasm32-unknown-emscripten` as per this [LLVM
-bug](https://bugs.llvm.org/show_bug.cgi?id=42714).
-
-You will need to set this target explicitly in any relevant CMakeLists/
-Makefiles (as the default is `wasm32`).
 
 ## SIMD
 
