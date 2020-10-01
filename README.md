@@ -1,7 +1,7 @@
 # Faasm Toolchain
 
 This is the toolchain for building functions for
-[Faasm](https://github.com/lsds/faasm).
+[Faasm](https://github.com/faasm/faasm).
 
 Faasm aims to support a range of legacy applications, so requires a toolchain
 capable of compiling large projects that may require threading, C++ exceptions
@@ -55,8 +55,8 @@ support. This seems to work but is definitely experimental.
 # Downloading
  
 The toolchain is packaged as part of the [Faasm
-releases](https://github.com/lsds/faasm/releases), and can be downloaded using
-[the Faasm CLI](https://github.com/lsds/faasm/blob/master/docs/setup.md):
+releases](https://github.com/faasm/faasm/releases), and can be downloaded using
+[the Faasm CLI](https://github.com/faasm/faasm/blob/master/docs/setup.md):
 
 ```bash
 # Toolchain - clang, clang++, wasm-ld etc.
