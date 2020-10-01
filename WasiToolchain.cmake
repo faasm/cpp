@@ -104,9 +104,5 @@ SET(WASM_SHARED_FLAGS"\
 ")
 
 # Note - order very important here
-SET(FAASM_BLAS_LIBS 
-    ${FAASM_SYSROOT}/lib/wasm32-wasi/liblapack.so 
-    ${FAASM_SYSROOT}/lib/wasm32-wasi/libblas.so 
-    ${FAASM_SYSROOT}/lib/wasm32-wasi/libf2c.so 
-)
+SET(FAASM_BLAS_LIBS lapack blas f2c)
 
