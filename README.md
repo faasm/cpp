@@ -9,14 +9,21 @@ and dynamic linking. To do this we have to use a custom [fork of
 wasi-libc](https://github.com/faasm/wasi-libc), and our own build of the
 LLVM toolchain via [this Makefile](Makefile).  
 
+We have also made a couple of very small changes to the C++ standard libraries
+captured in [this fork](https://github.com/faasm/llvm-project). You can look at
+the diff
+[here](https://github.com/llvm/llvm-project/compare/llvmorg-10.0.1...faasm:faasm).
+
 # Usage
 
 ## Shared libraries
 
 Building shared libraries to wasm is currently a little difficult. The only
-supported target is Emscripten, and we build our standard libraries as
-statically linked libs so cannot link against them. Therefore we have to make 
-sure our compiler flags:
+supported target is Emscripten. This means that shared libraries may clash with
+other parts of the toolchain (e.g. libc).
+
+To build shared libraries, we make sure the following happens in the relevant
+compiler and linker flags:
 
 - Target Emscripten
 - Exclude standard libraries
@@ -27,8 +34,8 @@ sure our compiler flags:
 There is some more detail on the Emscripten-only support for `-fPIC` 
 [here](https://bugs.llvm.org/show_bug.cgi?id=42714).
 
-The environments in this repo have these flags collected in certain variables so
-they don't need to be repeated in every project.
+The changes needed to do this should all be captured in the environments in 
+this repo.
 
 ## Dynamic Linking
 

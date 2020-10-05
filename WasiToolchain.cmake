@@ -32,7 +32,6 @@ if(FAASM_BUILD_SHARED)
     # Note, even when targeting the Emscripten target, we still want to use
     # our WASI stdlibs, so we fiddle the definitions here.
     add_definitions("-D__wasi__=1")
-    remove_definitions("-D__EMSCRIPTEN__")
     
 else()
     message(STATUS "Faasm building STATIC libraries")
