@@ -26,11 +26,14 @@ set(CMAKE_SYSTEM_PROCESSOR wasm32)
 if(FAASM_BUILD_SHARED)
     message(STATUS "Faasm building SHARED libraries")
 
-    # Note, even when targeting non-WASI targets we need to defined __wasi__ to 
-    # avoid libc complaining
-    add_definitions("-D__wasi__=1")
-    
+    # See note in README about shared libraries targeting Emscripten
     set(WASM_TRIPLE wasm32-unknown-emscripten)
+
+    # Note, even when targeting the Emscripten target, we still want to use
+    # our WASI stdlibs, so we fiddle the definitions here.
+    add_definitions("-D__wasi__=1")
+    remove_definitions("-D__EMSCRIPTEN__")
+    
 else()
     message(STATUS "Faasm building STATIC libraries")
 
