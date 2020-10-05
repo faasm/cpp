@@ -17,18 +17,29 @@ set(EXE_SUFFIX "")
 
 set(UNIX 1)
 
-# Note, even when targeting non-WASI targets we need to defined __wasi__ to 
-# avoid libc complaining
-add_definitions(-D__wasi__)
-
 # Note that system name and processor here are crucial
 # Setting system name automatically switches on cross-compiling
-set(WASM_TRIPLE wasm32-wasi)
 set(CMAKE_SYSTEM_NAME Wasm)
 set(CMAKE_SYSTEM_VERSION 1)
 set(CMAKE_SYSTEM_PROCESSOR wasm32)
+
+if(FAASM_BUILD_SHARED)
+    message(STATUS "Faasm building SHARED libraries")
+
+    # Note, even when targeting non-WASI targets we need to defined __wasi__ to 
+    # avoid libc complaining
+    add_definitions("-D__wasi__=1")
+    
+    set(WASM_TRIPLE wasm32-unknown-emscripten)
+else()
+    message(STATUS "Faasm building STATIC libraries")
+
+    set(WASM_TRIPLE wasm32-wasi)
+endif()
+
 set(CMAKE_C_COMPILER_TARGET ${WASM_TRIPLE} CACHE STRING "faasm build")
 set(CMAKE_CXX_COMPILER_TARGET ${WASM_TRIPLE} CACHE STRING "faasm build")
+message(STATUS "Faasm building target ${CMAKE_CXX_COMPILER_TARGET}")
 
 # Specify LLVM toolchain
 set(CMAKE_C_COMPILER ${INSTALL_DIR}/clang)
@@ -64,6 +75,14 @@ set(FAASM_COMPILER_FLAGS " \
     -Xlinker --stack-first \
     ")
 
+if(FAASM_BUILD_SHARED)
+    set(FAASM_COMPILER_FLAGS "${FAASM_COMPILER_FLAGS} \
+        -fPIC \
+        -nostdlib \
+        -nostdlib++ \
+    ")
+endif()
+
 set(CMAKE_SYSROOT ${FAASM_SYSROOT} CACHE STRING "faasm build")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${FAASM_COMPILER_FLAGS}" CACHE STRING "faasm build")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FAASM_COMPILER_FLAGS}" CACHE STRING "faasm build")
@@ -71,10 +90,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FAASM_COMPILER_FLAGS}" CACHE STRING "f
 # Shared library flags
 # See notes in README about WebAssembly and shared libraries
 SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} \
-    -D__wasi__ \
-    -nostdlib -nostdlib++ \
-    -fPIC \
-    --target=wasm32-unknown-emscripten \
     -Xlinker --no-entry \
     -Xlinker --shared \
     -Xlinker --export-all \
