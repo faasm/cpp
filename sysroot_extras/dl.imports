@@ -1,0 +1,5 @@
+# Dynamic linking
+dlopen
+dlsym
+dlclose
+dlerror
