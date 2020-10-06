@@ -18,6 +18,15 @@ diff](https://github.com/llvm/llvm-project/compare/llvmorg-10.0.1...faasm:faasm)
 
 ## Shared libraries
 
+For CMake projects, you should be able to add the following to your build:
+
+```
+  -DFAASM_BUILD_SHARED=ON
+  -DCMAKE_TOOLCHAIN_FILE=<path to toolchain in this dir>
+```
+
+### Shared libraries internals
+
 Building shared libraries to wasm is currently a little difficult. The only
 supported target is Emscripten. This means that shared libraries may clash with
 other parts of the toolchain (e.g. libc).
@@ -39,7 +48,7 @@ There is some more detail on the Emscripten-only support for `-fPIC`
 The relevant sets of flags should all be captured in the toolchain files in this
 repo.
 
-## Dynamic Linking
+### Dynamic Linking
 
 Faasm implements dynamic linking according to the [WebAssembly tool
 conventions](https://github.com/WebAssembly/tool-conventions/blob/master/DynamicLinking.md). 
