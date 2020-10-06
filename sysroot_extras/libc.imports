@@ -36,6 +36,9 @@ dlsym
 dlclose
 dlerror
 
+# Process I/O
+popen
+
 # Environment
 uname
 getpid
