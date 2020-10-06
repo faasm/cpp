@@ -45,7 +45,7 @@ set(CMAKE_AR ${INSTALL_DIR}/llvm-ar CACHE STRING "faasm build")
 set(CMAKE_NM ${INSTALL_DIR}/llvm-nm CACHE STRING "faasm build")
 set(CMAKE_RANLIB ${INSTALL_DIR}/llvm-ranlib CACHE STRING "faasm build")
 
-set(CMAKE_DL_LIBS "")
+set(CMAKE_DL_LIBS "" CACHE STRING "faasm build")
 
 # Add definition for flagging Faasm
 add_definitions(-D__faasm)
