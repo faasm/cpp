@@ -28,11 +28,6 @@ if(FAASM_BUILD_SHARED)
 
     # See note in README about shared libraries targeting Emscripten
     set(WASM_TRIPLE wasm32-unknown-emscripten)
-
-    # Note, even when targeting the Emscripten target, we still want to use
-    # our WASI stdlibs, so we fiddle the definitions here.
-    add_definitions("-D__wasi__=1")
-    
 else()
     message(STATUS "Faasm building STATIC libraries")
 
@@ -74,6 +69,8 @@ add_definitions(-D__faasm)
 set(FAASM_COMPILER_FLAGS " \
     -O3 -mno-atomics \
     --sysroot=${FAASM_SYSROOT} \
+    -m32 \
+    -DANSI \
     -Xlinker --stack-first \
     ")
 
