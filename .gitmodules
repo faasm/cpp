@@ -3,5 +3,6 @@
     url = https://github.com/faasm/wasi-libc
     branch = faasm
 [submodule "third-party/llvm-project"]
-	path = third-party/llvm-project
-	url = https://github.com/llvm/llvm-project.git
+    path = third-party/llvm-project
+    url = https://github.com/faasm/llvm-project.git
+    branch = faasm
