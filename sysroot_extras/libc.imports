@@ -38,6 +38,7 @@ dlerror
 
 # Process I/O
 popen
+pclose
 
 # Environment
 uname
