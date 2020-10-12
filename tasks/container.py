@@ -14,8 +14,6 @@ from tasks.env import (
 
 
 def _do_container_build(tag_name, dockerfile, nocache=False, push=False):
-    llvm_version = get_llvm_version()
-
     if nocache:
         no_cache_str = "--no-cache"
     else:
@@ -26,7 +24,6 @@ def _do_container_build(tag_name, dockerfile, nocache=False, push=False):
         no_cache_str,
         "-t {}".format(tag_name),
         "-f {}".format(dockerfile),
-        "--build-arg LLVM_VERSION={}".format(llvm_version),
         ".",
     ]
     build_cmd = " ".join(build_cmd)

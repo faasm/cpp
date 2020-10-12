@@ -20,7 +20,7 @@ Dockerhub.
 
 To do this:
 
-- Update the version in `VERSION` 
+- Update the version in `versions.yml`
 - Run `inv git.tag` to create the tag (from the head of the current branch)
 - Let the CI build run through and build the container
 

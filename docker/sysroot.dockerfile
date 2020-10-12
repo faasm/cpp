@@ -1,5 +1,4 @@
-ARG LLVM_VERSION
-FROM faasm/toolchain:${LLVM_VERSION}
+FROM faasm/toolchain:10.0.1
 
 # Install Python tooling
 RUN apt update

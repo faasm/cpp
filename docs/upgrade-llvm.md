@@ -3,7 +3,9 @@
 To upgrade the underlying LLVM version you need to:
 
 - Update the _submodule_ in this project (see below)
-- Update the `LLVM_VERSION` file
+- Update the version in `docker/sysroot.dockerfile`
+- Update the `versions.yml` file
+- Update `Makefile`
 - Run the `inv container.toolchain` task
 - Test it out
 - Run the `inv container.push-toolchain` task

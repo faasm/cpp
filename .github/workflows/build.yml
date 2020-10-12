@@ -12,12 +12,6 @@ jobs:
     steps:
       - name: "Get the latest code"
         uses: actions/checkout@v2
-      - name: "Get LLVM version"
-        id: llvm_ver
-        run: echo "::set-output name=version::$(cat LLVM_VERSION)"
-        shell: bash
-      - name: "Print LLVM version"
-        run: echo "LLVM VERSION = ${{ steps.llvm_ver.outputs.version }}"
       - name: "Set up QEMU"
         uses: docker/setup-qemu-action@v1
       - name: "Set up Docker Buildx"
@@ -28,5 +22,4 @@ jobs:
         with:
           push: false
           file: docker/sysroot.dockerfile
-          build-args: LLVM_VERSION=${{ steps.llvm_ver.outputs.version }}
 

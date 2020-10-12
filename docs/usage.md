@@ -1,31 +1,5 @@
 # Usage
 
-## Using the raw sysroot image
-
-The toolchain images are designed to be a base for other images, but can still
-be used as they are if you really want to. To start the `sysroot`  container on
-some existing code, you can run [`here.sh`](bin/here.sh).
-
-This will mount your current working directory at `/code` in an instance of the
-`sysroot` container, thus giving you access to the toolchain, e.g.
-
-```
-# Create some code outside the container
-echo "int main() { return 0; };" > hello.c
-
-# Start the container
-<path to this repo>/bin/here.sh
-
-# Check clang version
-/usr/local/faasm/toolchain/bin/clang --version
-
-# Show supported arch
-/usr/local/faasm/toolchain/bin/llc --version
-
-# Compile code
-/usr/local/faasm/toolchain/bin/clang hello.c
-```
-
 ## Shared libraries
 
 For CMake projects, you should be able to add the following to your build:

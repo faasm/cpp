@@ -11,10 +11,6 @@ jobs:
     steps:
       - name: "Get the code"
         uses: actions/checkout@v2
-      - name: "Get LLVM version"
-        id: llvm_ver
-        run: echo "::set-output name=version::$(cat LLVM_VERSION)"
-        shell: bash
       - name: "Get tag version"
         run: echo ::set-env name=TAG_VERSION::${GITHUB_REF#refs/*/}
       - name: "Print tag version"
@@ -35,4 +31,3 @@ jobs:
           push: true
           file: docker/sysroot.dockerfile
           tags: faasm/sysroot:${{ env.TAG_VERSION }}
-          build-args: LLVM_VERSION=${{ steps.llvm_ver.outputs.version }}
