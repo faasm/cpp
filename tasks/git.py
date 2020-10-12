@@ -29,4 +29,3 @@ def tag(ctx):
     # Create tag
     tag_name = "v{}".format(version)
     _do_tag(tag_name)
-

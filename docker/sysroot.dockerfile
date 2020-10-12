@@ -1,10 +1,9 @@
 ARG LLVM_VERSION
 FROM faasm/toolchain:${LLVM_VERSION}
-ARG LLVM_VERSION
 
 # Install Python tooling
 RUN apt update
-RUN apt install \
+RUN apt install -y \
     python3-dev \
     python3-pip 
 
