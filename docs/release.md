@@ -13,6 +13,17 @@ You only need to rebuild the `toolchain` image when upgrading LLVM (see
 
 The `sysroot` image is rebuilt as part of the CI and tagging process. 
 
+## Release build
+
+The release build will run the `sysroot` build and push the Docker image to
+Dockerhub.
+
+To do this:
+
+- Update the version in `VERSION` 
+- Run `inv git.tag` to create the tag (from the head of the current branch)
+- Let the CI build run through and build the container
+
 ## Rebuilding `toolchain`
 
 You should only need to manually rebuild the `toolchain` image, the `sysroot`
@@ -33,19 +44,4 @@ If you do want to build `sysroot` locally (e.g. for debugging issues):
 ```bash
 inv container.sysroot
 ```
-
-## CI build
-
-The CI build will run through the `sysroot` build but not push any new images.
-
-## Release build
-
-The release build will run the `sysroot` build and push the Docker image to
-Dockerhub.
-
-To do this:
-
-- Update the version in `VERSION` 
-- Run `inv git.tag` to create the tag (from the head of the current branch)
-- Let the CI build run through and build the container
 
