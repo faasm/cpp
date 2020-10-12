@@ -2,7 +2,7 @@ ARG TOOLCHAIN_VERSION
 FROM faasm/toolchain:${TOOLCHAIN_VERSION}
 ARG TOOLCHAIN_VERSION
 
-# Check out latest tag
+# Update existing code checkout to latest tag
 WORKDIR /code/faasm-toolchain
 RUN git fetch --all
 RUN git checkout v${TOOLCHAIN_VERSION}

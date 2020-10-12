@@ -67,7 +67,17 @@ def toolchain(ctx, nocache=False, push=False):
     """
     Build current version of the toolchain container
     """
-    _do_container_build(TOOLCHAIN_IMAGE_NAME, TOOLCHAIN_DOCKERFILE)
+    _do_container_build(
+        TOOLCHAIN_IMAGE_NAME, TOOLCHAIN_DOCKERFILE, nocache=nocache, push=push
+    )
+
+
+@task
+def push_toolchain(ctx):
+    """
+    Push the current version of the toolchain container
+    """
+    _do_container_push(TOOLCHAIN_IMAGE_NAME)
 
 
 @task
@@ -75,4 +85,14 @@ def sysroot(ctx, nocache=False, push=False):
     """
     Build current version of the sysroot container
     """
-    _do_container_build(SYSROOT_IMAGE_NAME, SYSROOT_DOCKERFILE)
+    _do_container_build(
+        SYSROOT_IMAGE_NAME, SYSROOT_DOCKERFILE, nocache=nocache, push=push
+    )
+
+
+@task
+def push_sysroot(ctx):
+    """
+    Push the current version of the sysroot container
+    """
+    _do_container_push(SYSROOT_IMAGE_NAME)

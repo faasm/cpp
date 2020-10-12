@@ -91,6 +91,7 @@ We have two tasks for building the Docker images:
 
 To create a new release:
 
+- Update the versions in `VERSION` and the Github Actions build
 - Run `inv git.tag` from the branch you want to tag
 - Push and let the CI do the rest
 
