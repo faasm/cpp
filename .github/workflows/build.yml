@@ -1,0 +1,25 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: "Get the latest code"
+        uses: actions/checkout@v2
+      - name: "Set up QEMU"
+        uses: docker/setup-qemu-action@v1
+      - name: "Set up Docker Buildx"
+        uses: docker/setup-buildx-action@v1
+      - name: "Build the sysroot container"
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          file: docker/sysroot.dockerfile
+
