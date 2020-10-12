@@ -15,10 +15,10 @@ jobs:
         id: llvm_ver
         run: echo "::set-output name=version::$(cat LLVM_VERSION)"
         shell: bash
-      - name: "Get toolchain version"
-        id: toolchain_ver
-        run: echo "::set-output name=version::$(cat VERSION)"
-        shell: bash        
+      - name: "Get tag version"
+        run: echo ::set-env name=TAG_VERSION::${GITHUB_REF#refs/*/}
+      - name: "Print tag version"
+        run: echo ${{ env.TAG_VERSION }}
       - name: "Set up QEMU"
         uses: docker/setup-qemu-action@v1
       - name: "Set up Docker Buildx"
@@ -34,5 +34,5 @@ jobs:
         with:
           push: true
           file: docker/sysroot.dockerfile
-          tags: faasm/sysroot:${{ steps.toolchain_ver.outputs.version }}
+          tags: faasm/sysroot:${{ env.TAG_VERSION }}
           build-args: LLVM_VERSION=${{ steps.llvm_ver.outputs.version }}
