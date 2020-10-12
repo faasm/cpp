@@ -1,4 +1,4 @@
-# Faasm Toolchain
+# Faasm Toolchain ![Toolchain tests](https://github.com/faasm/faasm-toolchain/workflows/Build/badge.svg) ![License](https://img.shields.io/github/license/faasm/faasm-toolchain.svg)
 
 This is the toolchain for building functions for
 [Faasm](https://github.com/faasm/faasm).
@@ -69,22 +69,30 @@ We have a hacked fork of Eigen to support WebAssembly SIMD
 [here](https://github.com/faasm/eigen-git-mirror), although this is
 experimental.
 
-# Downloading
- 
-The toolchain is packaged as part of the [Faasm
-releases](https://github.com/faasm/faasm/releases), and can be downloaded using
-[the Faasm CLI](https://github.com/faasm/faasm/blob/master/docs/setup.md):
+# Docker
 
-```bash
-# Toolchain - clang, clang++, wasm-ld etc.
-inv toolchain.download-toolchain
+The toolchain is packaged using two Docker images:
 
-# Sysroot - wasm-compiled libc, libcxx etc.
-inv toolchain.download-sysroot
-```
+- `faasm/toolchain` - contains the custom LLVM build, not rebuilt regularly
+- `faasm/sysroot` - adds the sysroot and core libraries and is rebuilt for each
+  version
 
-This repo also contains a corresponding [CMake toolchain](WasiToolchain.cmake),
-that's used under the hood to build functions and libraries.
+See the [Actions page](https://github.com/faasm/faasm-toolchain/actions) and
+[Dockerfiles](docker) for more info.
+
+## Building Docker images 
+
+We have two tasks for building the Docker images:
+
+- `inv container.toolchain` - rebuilds the base toolchain image
+- `inv container.sysroot` - rebuilds the sysroot image
+
+## Releasing
+
+To create a new release:
+
+- Run `inv git.tag` from the branch you want to tag
+- Push and let the CI do the rest
 
 # Building
 
