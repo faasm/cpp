@@ -1,3 +1,0 @@
-# Ignore builds
-third-party/llvm-project/build
-third-party/wasi-libc/build
