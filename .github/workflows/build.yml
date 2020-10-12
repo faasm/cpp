@@ -28,6 +28,5 @@ jobs:
         with:
           push: false
           file: docker/sysroot.dockerfile
-          build-args:
-            - LLVM_VERSION=${{ steps.llvm_ver.outputs.version }}
+          build-args: LLVM_VERSION=${{ steps.llvm_ver.outputs.version }}
 
