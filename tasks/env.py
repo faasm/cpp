@@ -21,9 +21,16 @@ WASM_AR = join(TOOLCHAIN_BIN, "llvm-ar")
 WASM_NM = join(TOOLCHAIN_BIN, "llvm-nm")
 
 
+def _get_version_yaml_value(key):
+    with open(VERSIONS_FILE) as fh:
+        versions = yaml.load(fh)
+
+    return versions[key]
+
+
 def get_version():
-    yaml.load(VERSIONS_FILE)["toolchain"]
+    return _get_version_yaml_value("toolchain")
 
 
 def get_llvm_version():
-    yaml.load(VERSIONS_FILE)["llvm"]
+    return _get_version_yaml_value("llvm")
