@@ -16,6 +16,8 @@ jobs:
         id: llvm_ver
         run: echo "::set-output name=version::$(cat LLVM_VERSION)"
         shell: bash
+      - name: "Print LLVM version"
+        run: echo "LLVM VERSION = ${{ steps.llvm_ver.outputs.version }}"
       - name: "Set up QEMU"
         uses: docker/setup-qemu-action@v1
       - name: "Set up Docker Buildx"
