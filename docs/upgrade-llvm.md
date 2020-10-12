@@ -1,7 +1,16 @@
 # Upgrading LLVM
 
-To upgrade the underlying LLVM version you need to update the _submodule_ in
-this project. Find the commit related to tag name for the desired release in
+To upgrade the underlying LLVM version you need to:
+
+- Update the _submodule_ in this project (see below)
+- Update the `LLVM_VERSION` file
+- Run the `inv container.toolchain` task
+- Test it out
+- Run the `inv container.push-toolchain` task
+
+## Updating the LLVM submodule
+
+Find the commit related to tag name for the desired release in
 [the LLVM repo](https://github.com/llvm/llvm-project/releases) (e.g.
 `llvmorg-10.0.1`), then:
 
@@ -12,38 +21,16 @@ git fetch origin
 git checkout <tag-name>
 ```
 
-Once done, check the [Makefile](Makefile) for any references to LLVM 
-versions and update accordingly.
+# Rebuilding LLVM
 
-You can then follow the steps below as normal.
-
-## Building From Scratch
-
-To build from scratch:
-
-```bash
-make clean-all
-make
-```
-
-This a while as it builds a lot of the LLVM toolchain from scratch.
-
-When it finishes, check things are up to date with: 
-
-```bash
-/usr/local/faasm/toolchain/bin/clang --version
-```
-
-### Rebuilding
-
-To rebuild, there different options. The first is just rebuilding libc:
+To rebuild LLVM, there a couple of options. To rebuild just libc:
 
 ```bash
 make clean-libc
 make
 ```
 
-Another is rebuilding all the libs, i.e. libc, libcxx, libcxxabi and
+To rebuilding all the libs, i.e. libc, libcxx, libcxxabi and
 compiler-rt:
 
 ```bash

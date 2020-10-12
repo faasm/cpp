@@ -4,6 +4,7 @@ from multiprocessing import cpu_count
 PROJ_ROOT = dirname(dirname(abspath(__file__)))
 
 VERSION_FILE = join(PROJ_ROOT, "VERSION")
+LLVM_VERSION_FILE = join(PROJ_ROOT, "LLVM_VERSION")
 
 TOOLCHAIN_IMAGE_NAME = "faasm/toolchain"
 TOOLCHAIN_DOCKERFILE = join(PROJ_ROOT, "docker", "toolchain.dockerfile")
@@ -20,9 +21,17 @@ WASM_AR = join(TOOLCHAIN_BIN, "llvm-ar")
 WASM_NM = join(TOOLCHAIN_BIN, "llvm-nm")
 
 
-def get_version():
-    with open(VERSION_FILE) as fh:
+def _read_version_file(file_path):
+    with open(file_path) as fh:
         ver_str = fh.read()
 
     ver_str = ver_str.strip()
     return ver_str
+
+
+def get_version():
+    return _read_version_file(VERSION_FILE)
+
+
+def get_llvm_version():
+    return _read_version_file(LLVM_VERSION_FILE)

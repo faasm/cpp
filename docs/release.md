@@ -1,32 +1,51 @@
 # Building and Releasing
 
-This repo has two types of releases:
+The toolchain repo is based on two Docker images:
 
-- LLVM releases e.g. `vllvm-10.0.1`, which include the bundled LLVM tooling
-- Normal releases e.g. `v0.0.1`, which include a bundled sysroot
-
-## Docker
-
-The toolchain uses two Docker images:
-
-- `faasm/toolchain` - used to build the custom LLVM tools, not rebuilt regularly
-- `faasm/sysroot` - used to build and package the sysroot
+- `faasm/toolchain` - the base image holding just the custom LLVM tools
+- `faasm/sysroot` - the image holding both the tools and sysroot
 
 See the [Actions page](https://github.com/faasm/faasm-toolchain/actions) and
 [Dockerfiles](docker) for more info.
 
-## Building Docker images 
+You only need to rebuild the `toolchain` image when upgrading LLVM (see 
+[the docs](docs/upgrade-llvm.md).
 
-We have two tasks for building the Docker images:
+The `sysroot` image is rebuilt as part of the CI and tagging process. 
 
-- `inv container.toolchain` - rebuilds the base toolchain image
-- `inv container.sysroot` - rebuilds the sysroot image
+## Rebuilding `toolchain`
 
-## Releasing
+You should only need to manually rebuild the `toolchain` image, the `sysroot`
+image is built through GH Actions.
 
-To create a new release:
+```bash
+# Build the toolchain image
+inv container.toolchain` - rebuilds the base toolchain image
 
-- Update the versions in `VERSION` and the Github Actions build
-- Run `inv git.tag` from the branch you want to tag
-- Push and let the CI do the rest
+# Push the latest toolchain image build
+inv container.push-toolchain
+```
+
+## Rebuilding `sysroot`
+
+If you do want to build `sysroot` locally (e.g. for debugging issues):
+
+```bash
+inv container.sysroot
+```
+
+## CI build
+
+The CI build will run through the `sysroot` build but not push any new images.
+
+## Release build
+
+The release build will run the `sysroot` build and push the Docker image to
+Dockerhub.
+
+To do this:
+
+- Update the version in `VERSION` 
+- Run `inv git.tag` to create the tag (from the head of the current branch)
+- Let the CI build run through and build the container
 

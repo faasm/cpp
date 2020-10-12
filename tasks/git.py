@@ -8,6 +8,17 @@ from tasks.env import (
 )
 
 
+def _do_tag(tag_name):
+    run("git tag {}".format(tag_name), shell=True, check=True, cwd=PROJ_ROOT)
+
+    run(
+        "git push origin {}".format(tag_name),
+        shell=True,
+        check=True,
+        cwd=PROJ_ROOT,
+    )
+
+
 @task
 def tag(ctx):
     """
@@ -17,12 +28,5 @@ def tag(ctx):
 
     # Create tag
     tag_name = "v{}".format(version)
-    run("git tag {}".format(tag_name), shell=True, check=True, cwd=PROJ_ROOT)
+    _do_tag(tag_name)
 
-    # Push tag
-    run(
-        "git push origin {}".format(tag_name),
-        shell=True,
-        check=True,
-        cwd=PROJ_ROOT,
-    )

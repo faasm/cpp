@@ -1,14 +1,20 @@
-ARG TOOLCHAIN_VERSION
-FROM faasm/toolchain:${TOOLCHAIN_VERSION}
-ARG TOOLCHAIN_VERSION
+ARG LLVM_VERSION
+FROM faasm/toolchain:${LLVM_VERSION}
+ARG LLVM_VERSION
 
-# Update existing code checkout to latest tag
-WORKDIR /code/faasm-toolchain
-RUN git fetch --all
-RUN git checkout v${TOOLCHAIN_VERSION}
-RUN git submodule update --init --recursive
+# Install Python tooling
+RUN apt update
+RUN apt install \
+    python3-dev \
+    python3-pip 
+
+WORKDIR /code
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
+
+# Copy the code in
+COPY . . 
 
 # Rebuild libc
-RUN make clean-libc
-RUN make
+RUN inv libc --clean
 
