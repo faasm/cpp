@@ -18,7 +18,9 @@ jobs:
       - name: "Get toolchain version"
         id: toolchain_ver
         run: echo "::set-output name=version::$(cat VERSION)"
-        shell: bash
+        shell: bash        
+      - name: "Print versions"
+        run: echo "LLVM: ${{ steps.llvm_ver.outputs.version }}, toolchain: ${{ steps.toolchain_ver.outputs.version }}"
       - name: "Set up QEMU"
         uses: docker/setup-qemu-action@v1
       - name: "Set up Docker Buildx"
@@ -35,5 +37,4 @@ jobs:
           push: true
           file: docker/sysroot.dockerfile
           tags: faasm/sysroot:${{ steps.toolchain_ver.outputs.version }}
-          build-args:
-            - LLVM_VERSION=${{ steps.llvm_ver.outputs.version }}
+          build-args: LLVM_VERSION=${{ steps.llvm_ver.outputs.version }}
