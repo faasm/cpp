@@ -19,3 +19,6 @@ RUN inv libc --clean
 # Build eigen
 RUN inv eigen
 
+# Build libffi
+RUN inv libffi
+
