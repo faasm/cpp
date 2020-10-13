@@ -16,3 +16,6 @@ COPY . .
 # Rebuild libc
 RUN inv libc --clean
 
+# Build eigen
+RUN inv eigen
+
