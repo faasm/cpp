@@ -13,12 +13,11 @@ RUN pip3 install -r requirements.txt
 # Copy the code in
 COPY . . 
 
-# Rebuild libc
+# Build libraries
 RUN inv libc --clean
 
-# Build eigen
 RUN inv eigen
 
-# Build libffi
 RUN inv libffi
 
+RUN inv clapack

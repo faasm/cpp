@@ -20,6 +20,43 @@ INSTALLED_LIBS = [
     "liblapack",
 ]
 
+CLAPACK_THIRD_PARTY_DIR = join(THIRD_PARTY_DIR, "faasm-clapack", "third-party")
+LAPACKE_DIR = join(CLAPACK_THIRD_PARTY_DIR, "lapack", "LAPACKE")
+CLAPACK_DIR = join(CLAPACK_THIRD_PARTY_DIR, "clapack")
+
+
+@task(default=True)
+def build(ctx, clean=False, shared=False):
+    """
+    Builds CBLAS, CLAPACK, F2C etc.
+    """
+    # Build clapack
+    if clean:
+        run("make clean", cwd=CLAPACK_DIR, shell=True, check=True)
+
+    # Set up environment to specify whether we're building static or shared
+    env = copy(os.environ)
+    env.update({"LIBEXT": ".so" if shared else ".a"})
+
+    # Make libf2c first (needed by others)
+    run(
+        "make f2clib -j {}".format(USABLE_CPUS),
+        shell=True,
+        cwd=CLAPACK_DIR,
+        check=True,
+        env=env,
+    )
+
+    # Make the rest of CLAPACK
+    run(
+        "make -j {}".format(USABLE_CPUS),
+        shell=True,
+        cwd=CLAPACK_DIR,
+        check=True,
+        env=env,
+    )
+    run("make install", shell=True, cwd=CLAPACK_DIR, check=True)
+
 
 @task
 def uninstall(ctx):
@@ -49,50 +86,15 @@ def lapacke(ctx, clean=False):
     """
     Builds the LAPACKE interface from LAPACK
     """
-    lapacke_dir = join(THIRD_PARTY_DIR, "lapack", "LAPACKE")
-
     if clean:
-        run("make clean", cwd=lapacke_dir, shell=True, check=True)
+        run("make clean", cwd=LAPACKE_DIR, shell=True, check=True)
 
     run(
         "make -j {}".format(USABLE_CPUS),
         shell=True,
-        cwd=lapacke_dir,
+        cwd=LAPACKE_DIR,
         check=True,
     )
-    run("make install", shell=True, cwd=lapacke_dir, check=True)
+    run("make install", shell=True, cwd=LAPACKE_DIR, check=True)
 
 
-@task(default=True)
-def build(ctx, clean=False, shared=False):
-    """
-    Builds CBLAS, CLAPACK, F2C etc.
-    """
-    clapack_dir = join(THIRD_PARTY_DIR, "clapack")
-
-    # Build clapack
-    if clean:
-        run("make clean", cwd=clapack_dir, shell=True, check=True)
-
-    # Set up environment to specify whether we're building static or shared
-    env = copy(os.environ)
-    env.update({"LIBEXT": ".so" if shared else ".a"})
-
-    # Make libf2c first (needed by others)
-    run(
-        "make f2clib -j {}".format(USABLE_CPUS),
-        shell=True,
-        cwd=clapack_dir,
-        check=True,
-        env=env,
-    )
-
-    # Make the rest of CLAPACK
-    run(
-        "make -j {}".format(USABLE_CPUS),
-        shell=True,
-        cwd=clapack_dir,
-        check=True,
-        env=env,
-    )
-    run("make install", shell=True, cwd=clapack_dir, check=True)
