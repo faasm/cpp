@@ -96,5 +96,3 @@ def lapacke(ctx, clean=False):
         check=True,
     )
     run("make install", shell=True, cwd=LAPACKE_DIR, check=True)
-
-
