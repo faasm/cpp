@@ -17,7 +17,7 @@ RUN pip3 install -r requirements.txt
 COPY . . 
 
 # Build libraries
-RUN inv libc --clean
+RUN inv libc
 
 RUN inv eigen
 
