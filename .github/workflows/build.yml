@@ -16,7 +16,7 @@ jobs:
       - name: "Install requirements"
         run: "pip3 install -r requirements.txt"
       - name: "Run Black"
-        run: '/usr/local/bin/black --check $(git ls-files "*.py")'
+        run: "python3 -m black --check $(git ls-files '*.py')"
       - name: "Set up QEMU"
         uses: docker/setup-qemu-action@v1
       - name: "Set up Docker Buildx"
