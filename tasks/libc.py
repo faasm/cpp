@@ -7,11 +7,13 @@ from invoke import task
 from faasmtools.env import (
     USABLE_CPUS,
     THIRD_PARTY_DIR,
+    PROJ_ROOT,
 )
 
 from faasmtools.build import (
     WASM_CC,
     WASM_AR,
+    WASM_LIB_INSTALL,
     WASM_NM,
     WASM_SYSROOT,
 )
@@ -39,5 +41,10 @@ def build(ctx, clean=False):
     make_cmd = " ".join(make_cmd)
     print(make_cmd)
 
-    # Push tag
+    # Run the build
     run(make_cmd, check=True, shell=True, cwd=libc_dir)
+
+    # Copy the import files into place
+    copy_cmd = "cp -r sysroot_extras/* {}".format(WASM_LIB_INSTALL)
+    print("\nCopying undefined symbols into place: \n{}".format(copy_cmd))
+    run(copy_cmd, check=True, shell=True, cwd=PROJ_ROOT)

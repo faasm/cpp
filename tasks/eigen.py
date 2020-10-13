@@ -43,7 +43,7 @@ def eigen(ctx, verbose=False):
     run(cmd_string, shell=True, cwd=build_dir, check=True)
 
     run(
-        "{} make install".format(verbose_string),
+        "{} ninja install".format(verbose_string),
         shell=True,
         cwd=build_dir,
         check=True,
