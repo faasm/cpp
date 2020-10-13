@@ -3,6 +3,7 @@ from multiprocessing import cpu_count
 import yaml
 
 PROJ_ROOT = dirname(dirname(abspath(__file__)))
+THIRD_PARTY_DIR = join(PROJ_ROOT, "third-party")
 
 VERSIONS_FILE = join(PROJ_ROOT, "versions.yml")
 

@@ -5,8 +5,8 @@ from os.path import join
 from invoke import task
 
 from faasmtools.env import (
-    PROJ_ROOT,
     USABLE_CPUS,
+    THIRD_PARTY_DIR,
 )
 
 from faasmtools.build import (
@@ -22,7 +22,7 @@ def build(ctx, clean=False):
     """
     Builds the wasi libc fork in this directory
     """
-    libc_dir = join(PROJ_ROOT, "third-party", "wasi-libc")
+    libc_dir = join(THIRD_PARTY_DIR, "wasi-libc")
 
     if clean:
         run("make clean", shell=True, check=True, cwd=libc_dir)

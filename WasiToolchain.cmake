@@ -3,11 +3,10 @@ cmake_minimum_required(VERSION 3.4.0)
 # -----------------------------------------
 # A useful reference for this file is the wasi-sdk equivalent:
 # https://github.com/WebAssembly/wasi-sdk/blob/master/wasi-sdk.cmake
-# If anything breaks it's useful to compare the two.
 #
 # BUT there are lots of crucial modifications in here and it's
 # used all over the place in this project, so be **very** careful
-# if changing it.
+# when changing it.
 # -----------------------------------------
 
 set(INSTALL_DIR /usr/local/faasm/toolchain/bin)
