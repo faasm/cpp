@@ -16,6 +16,7 @@ diff](https://github.com/llvm/llvm-project/compare/llvmorg-10.0.1...faasm:faasm)
 
 More detailed docs can be found in:
 
+- [Python tooling](docs/python.md)
 - [Usage](docs/usage.md)
 - [Building and Releasing](docs/release.md)
 - [Upgrading LLVM](docs/upgrading-llvm.md)

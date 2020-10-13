@@ -4,13 +4,16 @@ from os.path import join
 
 from invoke import task
 
-from tasks.env import (
+from faasmtools.env import (
     PROJ_ROOT,
+    USABLE_CPUS,
+)
+
+from faasmtools.build import (
     WASM_CC,
     WASM_AR,
     WASM_NM,
-    SYSROOT,
-    USABLE_CPUS,
+    WASM_SYSROOT,
 )
 
 
@@ -31,7 +34,7 @@ def build(ctx, clean=False):
         "WASM_CC={}".format(WASM_CC),
         "WASM_AR={}".format(WASM_AR),
         "WASM_NM={}".format(WASM_NM),
-        "SYSROOT={}".format(SYSROOT),
+        "SYSROOT={}".format(WASM_SYSROOT),
     ]
     make_cmd = " ".join(make_cmd)
     print(make_cmd)
