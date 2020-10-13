@@ -30,4 +30,5 @@ jobs:
         with:
           push: true
           file: docker/sysroot.dockerfile
+          context: .
           tags: faasm/sysroot:${{ env.TAG_VERSION }}

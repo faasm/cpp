@@ -4,7 +4,10 @@ FROM faasm/toolchain:10.0.1
 RUN apt update
 RUN apt install -y \
     python3-dev \
-    python3-pip 
+    python3-pip \
+    libtool \
+    autotools-dev \
+    autoconf
 
 WORKDIR /code
 COPY requirements.txt .
