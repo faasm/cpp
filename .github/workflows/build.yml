@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: "Get the latest code"
         uses: actions/checkout@v2
+      - name: "Submodules"
+        run: "git submodule update --init --recursive"
       - name: "Install requirements"
         run: "pip3 install -r requirements.txt"
       - name: "Run Black"
