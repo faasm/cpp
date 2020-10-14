@@ -4,7 +4,10 @@ FROM faasm/toolchain:10.0.1
 RUN apt update
 RUN apt install -y \
     python3-dev \
-    python3-pip 
+    python3-pip \
+    libtool \
+    autotools-dev \
+    autoconf
 
 WORKDIR /code
 COPY requirements.txt .
@@ -13,6 +16,11 @@ RUN pip3 install -r requirements.txt
 # Copy the code in
 COPY . . 
 
-# Rebuild libc
-RUN inv libc --clean
+# Build libraries
+RUN inv libc
 
+RUN inv eigen
+
+RUN inv libffi
+
+RUN inv clapack

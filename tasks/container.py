@@ -2,7 +2,7 @@ from subprocess import run
 
 from invoke import task
 
-from tasks.env import (
+from faasmtools.env import (
     get_version,
     get_llvm_version,
     TOOLCHAIN_IMAGE_NAME,

@@ -1,5 +1,25 @@
 # Usage
 
+## Running the `sysroot` container
+
+The containers built from this repo aren't meant to be used directly, but to
+debug and test builds, you _can_ run inside the `sysroot` container with
+the `here.py` script. 
+
+This will mount your cwd into the sysroot container at `/work`, e.g.
+
+```
+# Go to some dir
+cd <my work>
+
+# Run the here script
+python3 <this repo>/bin/here.py
+
+# Now you should be in the container, so can run
+/usr/local/faasm/toolchain/bin/clang --version
+/usr/local/faasm/toolchain/bin/llc --version
+```
+
 ## Shared libraries
 
 For CMake projects, you should be able to add the following to your build:

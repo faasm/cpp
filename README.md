@@ -19,4 +19,5 @@ More detailed docs can be found in:
 - [Usage](docs/usage.md)
 - [Building and Releasing](docs/release.md)
 - [Upgrading LLVM](docs/upgrading-llvm.md)
+- [Python tooling](docs/python.md)
 

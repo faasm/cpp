@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: "Get the code"
         uses: actions/checkout@v2
+      - name: "Submodules"
+        run: "git submodule update --init --recursive"
       - name: "Get tag version"
         run: echo ::set-env name=TAG_VERSION::${GITHUB_REF#refs/*/}
       - name: "Print tag version"
@@ -30,4 +32,5 @@ jobs:
         with:
           push: true
           file: docker/sysroot.dockerfile
+          context: .
           tags: faasm/sysroot:${{ env.TAG_VERSION }}
