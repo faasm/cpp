@@ -3,9 +3,10 @@ from os.path import join
 from subprocess import run
 
 # Directories
-WASM_SYSROOT = "/usr/local/faasm/llvm-sysroot"
+FAASM_LOCAL_DIR = "/usr/local/faasm"
+WASM_SYSROOT = join(FAASM_LOCAL_DIR, "llvm-sysroot")
 WASM_LIB_INSTALL = "{}/lib/wasm32-wasi".format(WASM_SYSROOT)
-WASM_TOOLCHAIN_ROOT = "/usr/local/faasm/toolchain/"
+WASM_TOOLCHAIN_ROOT = "/usr/local/faasm/toolchain"
 WASM_TOOLCHAIN_TOOLS = join(WASM_TOOLCHAIN_ROOT, "tools")
 WASM_TOOLCHAIN_BIN = join(WASM_TOOLCHAIN_ROOT, "bin")
 
