@@ -1,4 +1,4 @@
-# Faasm Toolchain ![Toolchain tests](https://github.com/faasm/faasm-toolchain/workflows/Build/badge.svg) ![License](https://img.shields.io/github/license/faasm/faasm-toolchain.svg)
+# Faasm Toolchain [![Toolchain tests](https://github.com/faasm/faasm-toolchain/workflows/Build/badge.svg?branch=master)](https://github.com/faasm/faasm-toolchain/actions) [![License](https://img.shields.io/github/license/faasm/faasm-toolchain.svg)](https://github.com/faasm/faasm-toolchain/blob/master/LICENSE.md) 
 
 This is the toolchain for building functions for
 [Faasm](https://github.com/faasm/faasm).
