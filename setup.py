@@ -9,7 +9,7 @@ with open(join(PROJ_ROOT, "VERSION")) as fh:
 
 
 setup(
-    name="faasm-toolchain",
+    name="faasmtools",
     version=version,
     packages=find_packages(),
     author="Simon S",

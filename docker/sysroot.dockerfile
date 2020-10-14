@@ -19,6 +19,9 @@ COPY . .
 # Install the faasmtools lib
 RUN pip3 install .
 
+# Install files
+RUN inv install
+
 # Build libraries
 RUN inv libc
 
@@ -27,6 +30,7 @@ RUN inv eigen
 RUN inv libffi
 
 RUN inv clapack
+RUN inv clapack --clean --shared
 
 # Remove the code
 RUN rm -r /code
