@@ -16,6 +16,9 @@ RUN pip3 install -r requirements.txt
 # Copy the code in
 COPY . . 
 
+# Install the faasmtools lib
+RUN pip3 install .
+
 # Build libraries
 RUN inv libc
 
@@ -24,3 +27,6 @@ RUN inv eigen
 RUN inv libffi
 
 RUN inv clapack
+
+# Remove the code
+RUN rm -r /code

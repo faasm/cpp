@@ -1,7 +1,12 @@
 from subprocess import run
 
 
-def build_container(tag_name, dockerfile, cwd, nocache=False, push=False):
+def build_container(
+    tag_name, dockerfile, cwd, nocache=False, push=False, build_args=None
+):
+
+    build_args = build_args if build_args else dict()
+
     if nocache:
         no_cache_str = "--no-cache"
     else:
@@ -12,8 +17,13 @@ def build_container(tag_name, dockerfile, cwd, nocache=False, push=False):
         no_cache_str,
         "-t {}".format(tag_name),
         "-f {}".format(dockerfile),
-        ".",
     ]
+
+    for key, value in build_args.items():
+        build_cmd.append("--build-arg {}={}".format(key, value))
+
+    build_cmd.append(".")
+
     build_cmd = " ".join(build_cmd)
 
     print(build_cmd)

@@ -1,4 +1,3 @@
-
 from invoke import task
 
 from faasmtools.docker import (
@@ -8,7 +7,7 @@ from faasmtools.docker import (
 
 from faasmtools.env import (
     get_version,
-    get_llvm_version,
+    LLVM_VERSION,
     PROJ_ROOT,
     TOOLCHAIN_IMAGE_NAME,
     SYSROOT_IMAGE_NAME,
@@ -22,8 +21,7 @@ def toolchain(ctx, nocache=False, push=False):
     """
     Build current version of the toolchain container
     """
-    llvm_version = get_llvm_version()
-    tag_name = "{}:{}".format(TOOLCHAIN_IMAGE_NAME, llvm_version)
+    tag_name = "{}:{}".format(TOOLCHAIN_IMAGE_NAME, LLVM_VERSION)
     build_container(
         tag_name, TOOLCHAIN_DOCKERFILE, PROJ_ROOT, nocache=nocache, push=push
     )
@@ -34,8 +32,7 @@ def push_toolchain(ctx):
     """
     Push the current version of the toolchain container
     """
-    llvm_version = get_llvm_version()
-    tag_name = "{}:{}".format(TOOLCHAIN_IMAGE_NAME, llvm_version)
+    tag_name = "{}:{}".format(TOOLCHAIN_IMAGE_NAME, LLVM_VERSION)
     push_container(tag_name)
 
 
