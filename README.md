@@ -1,6 +1,6 @@
 # Faasm Toolchain ![Toolchain tests](https://github.com/faasm/faasm-toolchain/workflows/Build/badge.svg) ![License](https://img.shields.io/github/license/faasm/faasm-toolchain.svg)
 
-This is the toolchain for building functions for
+This is the toolchain and sysroot used for building WebAssembly to run in
 [Faasm](https://github.com/faasm/faasm).
 
 Faasm aims to support a range of legacy applications, so requires a toolchain
