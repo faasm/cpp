@@ -27,7 +27,7 @@ def get_version():
 
 def get_sysroot_tag():
     version = get_version()
-    return "{}:v{}".format(SYSROOT_IMAGE_NAME, version)
+    return "{}:{}".format(SYSROOT_IMAGE_NAME, version)
 
 
 def get_toolchain_tag():
