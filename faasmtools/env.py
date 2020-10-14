@@ -23,3 +23,12 @@ def get_version():
         ver = fh.read()
 
     return ver.strip()
+
+
+def get_sysroot_tag():
+    version = get_version()
+    return "{}:v{}".format(SYSROOT_IMAGE_NAME, version)
+
+
+def get_toolchain_tag():
+    return "{}:{}".format(TOOLCHAIN_IMAGE_NAME, LLVM_VERSION)

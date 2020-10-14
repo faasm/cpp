@@ -7,9 +7,8 @@ PROJ_ROOT = dirname(dirname(abspath(__file__)))
 
 def main():
     version_file = join(PROJ_ROOT, "VERSION")
-    ver = 
     with open(version_file) as fh:
-        toolchain_ver = yaml.load(fh, Loader=yaml.BaseLoader)["toolchain"]
+        toolchain_ver = fh.read().strip()
 
     cwd = getcwd()
     print("Running toolchain at {}".format(cwd))

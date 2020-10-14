@@ -6,11 +6,9 @@ from faasmtools.docker import (
 )
 
 from faasmtools.env import (
-    get_version,
-    LLVM_VERSION,
+    get_toolchain_tag,
+    get_sysroot_tag,
     PROJ_ROOT,
-    TOOLCHAIN_IMAGE_NAME,
-    SYSROOT_IMAGE_NAME,
     TOOLCHAIN_DOCKERFILE,
     SYSROOT_DOCKERFILE,
 )
@@ -21,9 +19,12 @@ def toolchain(ctx, nocache=False, push=False):
     """
     Build current version of the toolchain container
     """
-    tag_name = "{}:{}".format(TOOLCHAIN_IMAGE_NAME, LLVM_VERSION)
     build_container(
-        tag_name, TOOLCHAIN_DOCKERFILE, PROJ_ROOT, nocache=nocache, push=push
+        get_toolchain_tag(),
+        TOOLCHAIN_DOCKERFILE,
+        PROJ_ROOT,
+        nocache=nocache,
+        push=push,
     )
 
 
@@ -32,8 +33,7 @@ def push_toolchain(ctx):
     """
     Push the current version of the toolchain container
     """
-    tag_name = "{}:{}".format(TOOLCHAIN_IMAGE_NAME, LLVM_VERSION)
-    push_container(tag_name)
+    push_container(get_toolchain_tag())
 
 
 @task
@@ -41,10 +41,12 @@ def sysroot(ctx, nocache=False, push=False):
     """
     Build current version of the sysroot container
     """
-    toolchain_version = get_version()
-    tag_name = "{}:{}".format(SYSROOT_IMAGE_NAME, toolchain_version)
     build_container(
-        tag_name, SYSROOT_DOCKERFILE, PROJ_ROOT, nocache=nocache, push=push
+        get_sysroot_tag(),
+        SYSROOT_DOCKERFILE,
+        PROJ_ROOT,
+        nocache=nocache,
+        push=push,
     )
 
 
@@ -53,6 +55,4 @@ def push_sysroot(ctx):
     """
     Push the current version of the sysroot container
     """
-    toolchain_version = get_version()
-    tag_name = "{}:{}".format(SYSROOT_IMAGE_NAME, toolchain_version)
-    push_container(tag_name)
+    push_container(get_sysroot_tag())
