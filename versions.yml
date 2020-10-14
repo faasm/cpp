@@ -1,5 +1,5 @@
 ---
  
-toolchain: 0.0.5
+toolchain: 0.0.6
 llvm: 10.0.1
 

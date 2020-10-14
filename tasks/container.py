@@ -1,59 +1,20 @@
-from subprocess import run
 
 from invoke import task
+
+from faasmtools.docker import (
+    build_container,
+    push_container,
+)
 
 from faasmtools.env import (
     get_version,
     get_llvm_version,
-    TOOLCHAIN_IMAGE_NAME,
     PROJ_ROOT,
+    TOOLCHAIN_IMAGE_NAME,
     SYSROOT_IMAGE_NAME,
     TOOLCHAIN_DOCKERFILE,
     SYSROOT_DOCKERFILE,
 )
-
-
-def _do_container_build(tag_name, dockerfile, nocache=False, push=False):
-    if nocache:
-        no_cache_str = "--no-cache"
-    else:
-        no_cache_str = ""
-
-    build_cmd = [
-        "docker build",
-        no_cache_str,
-        "-t {}".format(tag_name),
-        "-f {}".format(dockerfile),
-        ".",
-    ]
-    build_cmd = " ".join(build_cmd)
-
-    print(build_cmd)
-    run(
-        build_cmd,
-        shell=True,
-        check=True,
-        env={"DOCKER_BUILDKIT": "1"},
-        cwd=PROJ_ROOT,
-    )
-
-    if push:
-        _do_container_push(tag_name)
-
-
-def _do_container_push(tag_name):
-    """
-    Push current version of container image
-    """
-    cmd = "docker push {}".format(tag_name)
-
-    print(cmd)
-    run(
-        cmd,
-        shell=True,
-        check=True,
-        cwd=PROJ_ROOT,
-    )
 
 
 @task
@@ -63,8 +24,8 @@ def toolchain(ctx, nocache=False, push=False):
     """
     llvm_version = get_llvm_version()
     tag_name = "{}:{}".format(TOOLCHAIN_IMAGE_NAME, llvm_version)
-    _do_container_build(
-        tag_name, TOOLCHAIN_DOCKERFILE, nocache=nocache, push=push
+    build_container(
+        tag_name, TOOLCHAIN_DOCKERFILE, PROJ_ROOT, nocache=nocache, push=push
     )
 
 
@@ -75,7 +36,7 @@ def push_toolchain(ctx):
     """
     llvm_version = get_llvm_version()
     tag_name = "{}:{}".format(TOOLCHAIN_IMAGE_NAME, llvm_version)
-    _do_container_push(tag_name)
+    push_container(tag_name)
 
 
 @task
@@ -85,8 +46,8 @@ def sysroot(ctx, nocache=False, push=False):
     """
     toolchain_version = get_version()
     tag_name = "{}:{}".format(SYSROOT_IMAGE_NAME, toolchain_version)
-    _do_container_build(
-        tag_name, SYSROOT_DOCKERFILE, nocache=nocache, push=push
+    build_container(
+        tag_name, SYSROOT_DOCKERFILE, PROJ_ROOT, nocache=nocache, push=push
     )
 
 
@@ -97,4 +58,4 @@ def push_sysroot(ctx):
     """
     toolchain_version = get_version()
     tag_name = "{}:{}".format(SYSROOT_IMAGE_NAME, toolchain_version)
-    _do_container_push(tag_name)
+    push_container(tag_name)
