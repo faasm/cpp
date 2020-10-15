@@ -1,15 +1,14 @@
 from os.path import dirname, abspath, join
 from os import getcwd
 from subprocess import run
-import yaml
 
 PROJ_ROOT = dirname(dirname(abspath(__file__)))
 
 
 def main():
-    version_file = join(PROJ_ROOT, "versions.yml")
+    version_file = join(PROJ_ROOT, "VERSION")
     with open(version_file) as fh:
-        toolchain_ver = yaml.load(fh, Loader=yaml.BaseLoader)["toolchain"]
+        toolchain_ver = fh.read().strip()
 
     cwd = getcwd()
     print("Running toolchain at {}".format(cwd))

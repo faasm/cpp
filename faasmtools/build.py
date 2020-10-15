@@ -2,15 +2,16 @@ from copy import copy
 from os.path import join
 from subprocess import run
 
-from .env import PROJ_ROOT
+# Directories
+FAASM_LOCAL_DIR = "/usr/local/faasm"
+WASM_SYSROOT = join(FAASM_LOCAL_DIR, "llvm-sysroot")
+WASM_LIB_INSTALL = "{}/lib/wasm32-wasi".format(WASM_SYSROOT)
+WASM_TOOLCHAIN_ROOT = "/usr/local/faasm/toolchain"
+WASM_TOOLCHAIN_TOOLS = join(WASM_TOOLCHAIN_ROOT, "tools")
+WASM_TOOLCHAIN_BIN = join(WASM_TOOLCHAIN_ROOT, "bin")
 
 # Toolchain files
-CMAKE_TOOLCHAIN_FILE = join(PROJ_ROOT, "WasiToolchain.cmake")
-
-# Directories
-WASM_SYSROOT = "/usr/local/faasm/llvm-sysroot"
-WASM_LIB_INSTALL = "{}/lib/wasm32-wasi".format(WASM_SYSROOT)
-WASM_TOOLCHAIN_BIN = "/usr/local/faasm/toolchain/bin"
+CMAKE_TOOLCHAIN_FILE = join(WASM_TOOLCHAIN_TOOLS, "WasiToolchain.cmake")
 
 # Executables
 WASM_CC = join(WASM_TOOLCHAIN_BIN, "clang")

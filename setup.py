@@ -1,17 +1,17 @@
-import setuptools
-import pyyaml
+from setuptools import setup, find_packages
 from os.path import join, abspath, dirname
 
 
 PROJ_ROOT = dirname(abspath(__file__))
 
-with open(join(PROJ_ROOT, "versions.yml")) as fh:
-    version = pyyaml.load(fh)["toolchain"]
+with open(join(PROJ_ROOT, "VERSION")) as fh:
+    version = fh.read().strip()
 
 
-setuptools.setup(
-    name="faasm-toolchain",
+setup(
+    name="faasmtools",
     version=version,
+    packages=find_packages(),
     author="Simon S",
     author_email="blah@foo.com",
     description="Utilities related to the Faasm toolchain",
