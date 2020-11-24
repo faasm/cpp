@@ -6,6 +6,7 @@ from . import eigen
 from . import git
 from . import install
 from . import libc
+from . import libfaasm
 from . import libffi
 
 ns = Collection(
@@ -15,5 +16,6 @@ ns = Collection(
     git,
     install,
     libc,
+    libfaasm,
     libffi,
 )

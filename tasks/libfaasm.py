@@ -1,18 +1,12 @@
 from os.path import join, exists
+from os import makedirs
 from subprocess import run
 from shutil import rmtree
 
-from faasmtools.build import (
-    build_config_cmd,
-    run_autotools,
-    WASM_SYSROOT,
-    WASM_LIB_INSTALL,
-    CMAKE_TOOLCHAIN_FILE,
-)
-
+from faasmtools.build import CMAKE_TOOLCHAIN_FILE
 from invoke import task
 
-from faasmtools.env import THIRD_PARTY_DIR, USABLE_CPUS, PROJ_ROOT
+from faasmtools.env import PROJ_ROOT
 
 
 @task(default=True)
@@ -25,6 +19,7 @@ def build(ctx, clean=False):
 
     if exists(build_dir):
         rmtree(build_dir)
+    makedirs(build_dir)
 
     build_cmd = [
         "cmake",
