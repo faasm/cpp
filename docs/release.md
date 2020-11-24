@@ -35,9 +35,9 @@ Dockerhub.
 
 To do this:
 
-- Create a new branch for the version upgrade
+- Create a branch with your changes
 - Update the version in [`VERSION`](../VERSION)
-- Commit the change to your branch
+- Push this to your branch
 - Run `inv git.tag` to create the tag (from the head of the current branch)
 - Let the CI build run through and build the container
 - Once done, create a PR, which will again run through the container build to
