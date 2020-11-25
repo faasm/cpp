@@ -7,6 +7,21 @@ on:
     branches: [master]
 
 jobs:
+  formatting:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-20.04
+    steps:
+      - name: "Get the latest code"
+        uses: actions/checkout@v2
+      - name: "Install requirements"
+        run: "pip3 install -r requirements.txt"
+      - name: "Run Black"
+        run: "python3 -m black --check $(git ls-files '*.py')"
+      - name: "Run C/C++ formatting"
+        run: ./bin/run_clang_format.sh
+      - name: "Check no formatting changes"
+        run: git diff --exit-code
+
   build:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
@@ -17,8 +32,6 @@ jobs:
         run: "git submodule update --init --recursive"
       - name: "Install requirements"
         run: "pip3 install -r requirements.txt"
-      - name: "Run Black"
-        run: "python3 -m black --check $(git ls-files '*.py')"
       - name: "Set up QEMU"
         uses: docker/setup-qemu-action@v1
       - name: "Set up Docker Buildx"
