@@ -8,10 +8,12 @@ PROJ_ROOT = dirname(dirname(abspath(__file__)))
 def main():
     version_file = join(PROJ_ROOT, "VERSION")
     with open(version_file) as fh:
-        toolchain_ver = fh.read().strip()
+        sysroot_ver = fh.read().strip()
+
+    image_tag = "faasm/cpp-sysroot:{}".format(sysroot_ver)
 
     cwd = getcwd()
-    print("Running toolchain at {}".format(cwd))
+    print("Running {} at {}".format(image_tag, cwd))
 
     docker_cmd = [
         'docker run --entrypoint="/bin/bash"',
@@ -20,7 +22,7 @@ def main():
         "-v {}:/work".format(cwd),
         "-w /work",
         "-it",
-        "faasm/sysroot:{}".format(toolchain_ver),
+        image_tag,
     ]
 
     docker_cmd = " ".join(docker_cmd)

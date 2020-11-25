@@ -1,3 +1,7 @@
-# Ignore local builds
-third-party/llvm-project/build
-third-party/wasi-libc/build
+.git
+
+build/
+
+# Ignore big third party deps
+third-party/llvm-project/
+third-party/wasi-libc/build/

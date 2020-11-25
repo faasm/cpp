@@ -5,8 +5,6 @@ project(libfaasm)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(${CMAKE_CURRENT_LIST_DIR})
-
 set(PUBLIC_HEADERS
         faasm/core.h
         faasm/host_interface.h
@@ -62,9 +60,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
 else ()
     message(STATUS "Libfaasm native build")
 
-    # Note - this should be a shared library to support linking with external
-    # projects
-    add_library(faasm SHARED "${LIB_FILES}")
+    add_library(faasm STATIC "${LIB_FILES}")
 
     set_target_properties(faasm PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 
@@ -74,3 +70,5 @@ else ()
             PUBLIC_HEADER DESTINATION include/faasm
             )
 endif ()
+
+target_include_directories(faasm PUBLIC ${CMAKE_CURRENT_LIST_DIR})

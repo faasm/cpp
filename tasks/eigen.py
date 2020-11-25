@@ -17,12 +17,16 @@ from faasmtools.build import (
 
 
 @task(default=True)
-def eigen(ctx, verbose=False):
+def eigen(ctx, verbose=False, native=False):
     """
     Compile and install Eigen
     """
     work_dir = join(THIRD_PARTY_DIR, "eigen")
-    build_dir = join(work_dir, "build")
+
+    if native:
+        build_dir = join(work_dir, "build", "native")
+    else:
+        build_dir = join(work_dir, "build", "wasm")
 
     if exists(build_dir):
         rmtree(build_dir)
@@ -30,17 +34,24 @@ def eigen(ctx, verbose=False):
 
     verbose_string = "VERBOSE=1" if verbose else ""
 
-    cmd = [
+    cmake_cmd = [
         verbose_string,
         "cmake",
         "-GNinja",
-        "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
-        "-DCMAKE_INSTALL_PREFIX={}".format(WASM_SYSROOT),
-        work_dir,
     ]
-    cmd_string = " ".join(cmd)
 
-    run(cmd_string, shell=True, cwd=build_dir, check=True)
+    if not native:
+        cmake_cmd.extend(
+            [
+                "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
+                "-DCMAKE_INSTALL_PREFIX={}".format(WASM_SYSROOT),
+            ]
+        )
+
+    cmake_cmd.append(work_dir)
+
+    cmake_cmd = " ".join(cmake_cmd)
+    run(cmake_cmd, shell=True, cwd=build_dir, check=True)
 
     run(
         "{} ninja install".format(verbose_string),

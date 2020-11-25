@@ -1,0 +1,52 @@
+name: Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  formatting:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-20.04
+    steps:
+      - name: "Get the latest code"
+        uses: actions/checkout@v2
+      - name: "Install requirements"
+        run: "pip3 install -r requirements.txt"
+      - name: "Run Black"
+        run: "python3 -m black --check $(git ls-files '*.py')"
+      - name: "Run C/C++ formatting"
+        run: ./bin/run_clang_format.sh
+      - name: "Check no formatting changes"
+        run: git diff --exit-code
+
+  tests:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-20.04
+    env:
+      HOST_TYPE: ci
+      REDIS_QUEUE_HOST: redis
+      REDIS_STATE_HOST: redis
+    container:
+      image: faasm/cpp-sysroot:0.0.11
+    defaults:
+      run:
+        working-directory: /code/faasm-toolchain
+    services:
+      redis:
+        image: redis
+    steps:
+      - name: "Fetch ref"
+        run: git fetch origin ${GITHUB_REF}:ci-branch
+      - name: "Check out branch"
+        run: git checkout --force ci-branch
+      - name: "Update Faabric submodule"
+        run: "git submodule update --init -f third-party/faabric"
+      - name: "Update CMake build"
+        run: "inv dev.cmake"
+      - name: "Build the tests"
+        run: "inv dev.cc tests"
+      - name: "Run the tests"
+        run: "/build/faasm-toolchain/bin/tests"
