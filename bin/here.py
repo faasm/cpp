@@ -20,7 +20,7 @@ def main():
         "-v {}:/work".format(cwd),
         "-w /work",
         "-it",
-        "faasm/sysroot:v{}".format(toolchain_ver),
+        "faasm/sysroot:{}".format(toolchain_ver),
     ]
 
     docker_cmd = " ".join(docker_cmd)

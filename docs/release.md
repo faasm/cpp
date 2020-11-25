@@ -13,6 +13,21 @@ You only need to rebuild the `toolchain` image when upgrading LLVM (see
 
 The `sysroot` image is rebuilt as part of the CI and tagging process. 
 
+## Development
+
+Tasks related to this repo are run using [Invoke](https://www.pyinvoke.org/).
+You just need to set up a virtual environemnt:
+
+```bash
+# Virtualenv
+python3 -m venv venv
+source venv/bin/activate
+pip install requirements.txt
+
+# List tasks
+inv -l
+```
+
 ## Release build
 
 The release build will run the `sysroot` build and push the Docker image to
@@ -20,9 +35,13 @@ Dockerhub.
 
 To do this:
 
-- Update the version in `versions.yml`
+- Create a branch with your changes
+- Update the version in [`VERSION`](../VERSION)
+- Push this to your branch
 - Run `inv git.tag` to create the tag (from the head of the current branch)
 - Let the CI build run through and build the container
+- Once done, create a PR, which will again run through the container build to
+  check it's ok
 
 ## Rebuilding `toolchain`
 

@@ -32,5 +32,7 @@ RUN inv libffi
 RUN inv clapack
 RUN inv clapack --clean --shared
 
+RUN inv libfaasm
+
 # Remove the code
 RUN rm -r /code
