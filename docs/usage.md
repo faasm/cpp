@@ -1,14 +1,13 @@
 # Usage
 
-## Running the `sysroot` container
+Everything in this repo is containerised, so to use the tooling you must do so
+from within one of the containers. You can also create your own images that
+extend those defined in this repo.
 
-The containers built from this repo aren't meant to be used directly, but to
-debug and test builds, you _can_ run inside the `sysroot` container with
-the `here.py` script. 
+The [here.py](../bin/here.py) script is a convenience wrapper that will mount 
+your cwd into the `cpp-sysroot` container at `/work`, e.g.
 
-This will mount your cwd into the sysroot container at `/work`, e.g.
-
-```
+```bash
 # Go to some dir
 cd <my work>
 
@@ -18,6 +17,27 @@ python3 <this repo>/bin/here.py
 # Now you should be in the container, so can run
 /usr/local/faasm/toolchain/bin/clang --version
 /usr/local/faasm/toolchain/bin/llc --version
+```
+
+## Development
+
+To develop the project you need to run the built container with your code
+mounted in it:
+
+```bash
+cd <this repo>
+./bin/cli.sh
+
+# List available tasks
+inv -l
+```
+
+You can then compile wasm or build and run the tests, e.g.:
+
+```bash
+inv dev.cmake
+inv dev.cc tests
+/build/bin/tests
 ```
 
 ## Shared libraries
