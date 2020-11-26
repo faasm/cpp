@@ -2,5 +2,5 @@
 
 set -e
 
-black --check $(git ls-files "*.py")
+python3 -m black --check $(git ls-files "*.py")
 
