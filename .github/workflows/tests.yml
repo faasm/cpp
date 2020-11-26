@@ -16,7 +16,7 @@ jobs:
       - name: "Install requirements"
         run: "pip3 install -r requirements.txt"
       - name: "Run Black"
-        run: "python3 -m black --check $(git ls-files '*.py')"
+        run: ./bin/check_black.sh
       - name: "Run C/C++ formatting"
         run: ./bin/run_clang_format.sh
       - name: "Check no formatting changes"

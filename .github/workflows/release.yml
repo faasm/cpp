@@ -34,3 +34,4 @@ jobs:
           file: docker/cpp-sysroot.dockerfile
           context: .
           tags: faasm/cpp-sysroot:${{ env.TAG_VERSION }}
+          build-args: SYSROOT_VERSION=${{ env.TAG_VERSION }}
