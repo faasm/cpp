@@ -61,3 +61,6 @@ RUN inv clapack --clean --shared
 
 # Install Faasm CPP wasm lib
 RUN inv libfaasm
+
+# Install Faabric MPI lib
+RUN inv libfaasmpi --clean
