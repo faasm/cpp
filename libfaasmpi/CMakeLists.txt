@@ -19,7 +19,7 @@ set(LIB_FILES
 # Only do the install if we're doing a WASM build
 # WARNING - this overwrites the existing mpi.h on the system if not used in a
 # wasm build
-if (FAASM_BUILD_TYPE STREQUAL "wasm")
+if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     message(STATUS "Libfaasmpi WebAssembly build")
 
     add_library(faasmpi STATIC ${LIB_FILES})

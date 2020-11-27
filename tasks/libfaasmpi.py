@@ -27,7 +27,6 @@ def build(ctx, clean=False):
     build_cmd = [
         "cmake",
         "-GNinja",
-        "-DFAASM_BUILD_TYPE=wasm",
         "-DCMAKE_BUILD_TYPE=Release",
         "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
         work_dir,
