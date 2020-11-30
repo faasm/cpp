@@ -8,6 +8,8 @@ from . import git
 from . import install
 from . import libc
 from . import libfaasm
+from . import libfaasmp
+from . import libfaasmpi
 from . import libffi
 
 ns = Collection(
@@ -19,5 +21,7 @@ ns = Collection(
     install,
     libc,
     libfaasm,
+    libfaasmp,
+    libfaasmpi,
     libffi,
 )

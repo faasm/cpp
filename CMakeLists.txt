@@ -20,5 +20,6 @@ add_subdirectory(third-party/faabric)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/third-party/faabric/src)
 
 add_subdirectory(libfaasm)
+add_subdirectory(libfaasmpi)
 add_subdirectory(emulator)
 add_subdirectory(tests)
