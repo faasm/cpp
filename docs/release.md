@@ -21,7 +21,7 @@ Dockerhub.
 To do this:
 
 - Create a branch with your changes
-- Update the version in [`VERSION`](../VERSION), and `.github/workflows`.
+- Update the version in `VERSION`, `.env` and `.github/workflows`.
 - Push this to your branch
 - Run `inv git.tag` to create the tag (from the head of the current branch)
 - Let the CI build run through and build the container
