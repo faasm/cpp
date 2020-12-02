@@ -26,14 +26,12 @@ def build_faasm_lib(subdir, clean=False, native=False):
             "-DCMAKE_CXX_COMPILER=/usr/bin/clang++-10",
         ]
     else:
-        extras = ["-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE)]
+        extras = [
+            "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
+            "-DCMAKE_INSTALL_PREFIX={}".format(WASM_SYSROOT),
+        ]
 
-    build_cmd = [
-        "cmake",
-        "-GNinja",
-        "-DCMAKE_BUILD_TYPE=Release",
-        "-DCMAKE_INSTALL_PREFIX={}".format(WASM_SYSROOT),
-    ]
+    build_cmd = ["cmake", "-GNinja", "-DCMAKE_BUILD_TYPE=Release"]
 
     build_cmd.extend(extras)
     build_cmd.append(work_dir)
