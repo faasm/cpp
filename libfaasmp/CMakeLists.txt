@@ -15,7 +15,7 @@ set(LIB_FILES
         )
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
-    message(STATUS "Libfaasmp  WebAssembly build")
+    message(STATUS "Libfaasmp WebAssembly build")
 
     set(LIBOMP_ASMFILES "z_Linux_asm.S")
     set_source_files_properties(${LIBOMP_ASMFILES} PROPERTIES LANGUAGE C)
@@ -36,11 +36,12 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
             DESTINATION ${CMAKE_SYSROOT}/lib/wasm32-wasi
             RENAME libfaasmp.imports)
 
-    # Add omp header (already present in native builds)
+    # Add omp header
     install(FILES omp.h
             DESTINATION ${CMAKE_SYSROOT}/include)
+
 else ()
-    message(STATUS "Libfaasmp  native build")
+    message(STATUS "Libfaasmp native build")
  
     add_library(faasmp SHARED ${LIB_FILES})
     set_target_properties(faasmp PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")

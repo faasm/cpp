@@ -51,7 +51,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     # Symlink header
     install(CODE "execute_process( \
         COMMAND ${CMAKE_COMMAND} -E create_symlink \
-        ${FAABRIC_INCLUDE_DIR}/faabric/mpi/mpi.h
+        ${FAABRIC_INCLUDE_DIR}/faabric/mpi/mpi.h \
         ${CMAKE_SYSROOT}/include/mpi.h   \
         )"
     )
