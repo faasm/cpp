@@ -40,7 +40,7 @@ RUN inv dev.cmake
 RUN inv dev.cc emulator
 
 # -----------------------------
-# WASM LIBRARIES
+# LIBRARIES (WASM AND NATIVE)
 # -----------------------------
 
 # Install files
@@ -59,11 +59,14 @@ RUN inv libffi
 RUN inv clapack
 RUN inv clapack --clean --shared
 
-# Install Faasm CPP wasm lib
+# Install Faasm CPP lib
 RUN inv libfaasm
+RUN inv libfaasm --native
 
-# Install Faabric OpenMP wasm lib
-RUN inv libfaasmp --clean
+# Install Faasm OpenMP lib
+RUN inv libfaasmp
+RUN inv libfaasmp --native
 
 # Install Faabric MPI lib
-RUN inv libfaasmpi --clean
+RUN inv libfaasmpi
+RUN inv libfaasmpi --native
