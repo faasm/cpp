@@ -27,7 +27,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
 
     # Add Faabric dependency
     set(FAABRIC_SOURCE_DIR ${CMAKE_BINARY_DIR}/../../third-party/faabric/src/mpi)
-    set(FAABRIC_INCLUDE_DIR ${CMAKE_BINARY_DIR}/../../third-party/faabric/include)
     set(FAABRIC_BINARY_DIR ${FAABRIC_SOURCE_DIR}/build)
     add_subdirectory(${FAABRIC_SOURCE_DIR} ${FAABRIC_BINARY_DIR})
     add_dependencies(faasmpi faabricmpi)
@@ -51,7 +50,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     # Symlink header
     install(CODE "execute_process( \
         COMMAND ${CMAKE_COMMAND} -E create_symlink \
-        ${FAABRIC_INCLUDE_DIR}/faabric/mpi/mpi.h \
+        ${CMAKE_SYSROOT}/include/faabric/mpi/mpi.h \
         ${CMAKE_SYSROOT}/include/mpi.h   \
         )"
     )
