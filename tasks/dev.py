@@ -54,3 +54,16 @@ def cc(ctx, target, clean=False):
         shell=True,
         check=True,
     )
+
+
+@task
+def install(ctx, target):
+    """
+    Installs the given target
+    """
+    run(
+        "ninja install {}".format(target),
+        cwd=BUILD_DIR,
+        shell=True,
+        check=True,
+    )

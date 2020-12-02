@@ -38,6 +38,7 @@ RUN inv eigen --native
 
 RUN inv dev.cmake
 RUN inv dev.cc emulator
+RUN inv dev.install emulator
 
 # -----------------------------
 # LIBRARIES (WASM AND NATIVE)
