@@ -3,7 +3,7 @@ from os import makedirs
 from subprocess import run
 from shutil import rmtree
 
-from faasmtools.build import CMAKE_TOOLCHAIN_FILE
+from faasmtools.build import CMAKE_TOOLCHAIN_FILE, WASM_SYSROOT
 
 from faasmtools.env import PROJ_ROOT
 
@@ -32,6 +32,7 @@ def build_faasm_lib(subdir, clean=False, native=False):
         "cmake",
         "-GNinja",
         "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_INSTALL_PREFIX={}".format(WASM_SYSROOT),
     ]
 
     build_cmd.extend(extras)
