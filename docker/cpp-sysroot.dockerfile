@@ -11,6 +11,7 @@ RUN apt install -y \
     autotools-dev \
     libtool \
     python3-dev \
+    python3-venv \
     python3-pip
 
 # Get the code
@@ -38,9 +39,10 @@ RUN inv eigen --native
 
 RUN inv dev.cmake
 RUN inv dev.cc emulator
+RUN inv dev.install emulator
 
 # -----------------------------
-# WASM LIBRARIES
+# LIBRARIES (WASM AND NATIVE)
 # -----------------------------
 
 # Install files
@@ -59,11 +61,14 @@ RUN inv libffi
 RUN inv clapack
 RUN inv clapack --clean --shared
 
-# Install Faasm CPP wasm lib
+# Install Faasm CPP lib
 RUN inv libfaasm
+RUN inv libfaasm --native
 
-# Install Faabric OpenMP wasm lib
-RUN inv libfaasmp --clean
+# Install Faasm OpenMP lib
+RUN inv libfaasmp
+RUN inv libfaasmp --native
 
 # Install Faabric MPI lib
-RUN inv libfaasmpi --clean
+RUN inv libfaasmpi
+RUN inv libfaasmpi --native

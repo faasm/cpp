@@ -43,7 +43,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
 else ()
     message(STATUS "Libfaasmp native build")
  
-    add_library(faasmp SHARED ${LIB_FILES})
+    add_library(faasmp STATIC ${LIB_FILES})
     set_target_properties(faasmp PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 
     install(TARGETS faasmp
