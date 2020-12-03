@@ -25,12 +25,13 @@ set(FAABRIC_BINARY_DIR ${FAABRIC_SOURCE_DIR}/build)
 
 add_subdirectory(${FAABRIC_SOURCE_DIR} ${FAABRIC_BINARY_DIR})
 add_dependencies(faasmpi faabricmpi)
-install(FILES ${FAABRIC_BINARY_DIR}/libfaabricmpi.a
-        DESTINATION ${CMAKE_SYSROOT}/lib/wasm32-wasi
-)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     message(STATUS "Libfaasmpi WebAssembly build")
+
+    install(FILES ${FAABRIC_BINARY_DIR}/libfaabricmpi.a
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/wasm32-wasi
+    )
 
     install(TARGETS faasmpi
             ARCHIVE DESTINATION ${CMAKE_SYSROOT}/lib/wasm32-wasi
@@ -48,7 +49,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     install(CODE "execute_process( \
         COMMAND ${CMAKE_COMMAND} -E create_symlink \
         ${CMAKE_SYSROOT}/lib/wasm32-wasi/libfaabricmpi.a \
-        ${CMAKE_SYSROOT}/lib/wasm32-wasi/libmpi.a   \
+        ${CMAKE_SYSROOT}/lib/wasm32-wasi/libmpi.a \
         )"
     )
 else()
@@ -62,7 +63,8 @@ else()
 endif()
 
 # Symlink header (common to wasm and native builds)
-# WARNING - this may overwrite the existing mpi.h on the system 
+# WARNING - if you use the default CMAKE_INSTALL_PREFIX, this may overwrite the 
+# existing mpi.h on the system 
 install(CODE "execute_process( \
     COMMAND ${CMAKE_COMMAND} -E create_symlink \
     ${CMAKE_INSTALL_PREFIX}/include/faabric/mpi/mpi.h \

@@ -6,6 +6,7 @@ from shutil import rmtree
 from invoke import task
 
 from faasmtools.env import PROJ_ROOT
+from faasmtools.build import FAASM_NATIVE_DIR
 
 BUILD_DIR = "/build/faasm-toolchain"
 
@@ -27,6 +28,7 @@ def cmake(ctx, clean=False, build="Debug"):
         "-DCMAKE_BUILD_TYPE={}".format(build),
         "-DCMAKE_CXX_COMPILER=/usr/bin/clang++-10",
         "-DCMAKE_C_COMPILER=/usr/bin/clang-10",
+        "-DCMAKE_INSTALL_PREFIX={}".format(FAASM_NATIVE_DIR),
         PROJ_ROOT,
     ]
 

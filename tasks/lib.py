@@ -3,7 +3,11 @@ from os import makedirs
 from subprocess import run
 from shutil import rmtree
 
-from faasmtools.build import CMAKE_TOOLCHAIN_FILE, WASM_SYSROOT
+from faasmtools.build import (
+    CMAKE_TOOLCHAIN_FILE,
+    WASM_SYSROOT,
+    FAASM_NATIVE_DIR,
+)
 
 from faasmtools.env import PROJ_ROOT
 
@@ -14,6 +18,7 @@ def build_faasm_lib(subdir, clean=False, native=False):
     """
     work_dir = join(PROJ_ROOT, subdir)
     build_dir = join(work_dir, "build-native" if native else "build-wasm")
+    install_dir = FAASM_NATIVE_DIR if native else WASM_SYSROOT
 
     if exists(build_dir) and clean:
         rmtree(build_dir)
@@ -28,10 +33,14 @@ def build_faasm_lib(subdir, clean=False, native=False):
     else:
         extras = [
             "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
-            "-DCMAKE_INSTALL_PREFIX={}".format(WASM_SYSROOT),
         ]
 
-    build_cmd = ["cmake", "-GNinja", "-DCMAKE_BUILD_TYPE=Release"]
+    build_cmd = [
+        "cmake",
+        "-GNinja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_INSTALL_PREFIX={}".format(install_dir),
+    ]
 
     build_cmd.extend(extras)
     build_cmd.append(work_dir)

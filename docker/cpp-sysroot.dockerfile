@@ -11,6 +11,7 @@ RUN apt install -y \
     autotools-dev \
     libtool \
     python3-dev \
+    python3-venv \
     python3-pip
 
 # Get the code
