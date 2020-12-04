@@ -12,7 +12,7 @@ BUILD_DIR = "/build/faasm-toolchain"
 
 
 @task
-def cmake(ctx, clean=False, build="Debug"):
+def cmake(ctx, clean=False, build="Debug", shared=False):
     """
     Configures the CMake build
     """
@@ -29,6 +29,7 @@ def cmake(ctx, clean=False, build="Debug"):
         "-DCMAKE_CXX_COMPILER=/usr/bin/clang++-10",
         "-DCMAKE_C_COMPILER=/usr/bin/clang-10",
         "-DCMAKE_INSTALL_PREFIX={}".format(FAASM_NATIVE_DIR),
+        "-DBUILD_SHARED_LIBS={}".format("ON" if shared else "OFF"),
         PROJ_ROOT,
     ]
 

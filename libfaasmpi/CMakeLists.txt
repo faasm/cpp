@@ -16,7 +16,12 @@ set(LIB_FILES
     faasmpi.cpp
 )
 
-add_library(faasmpi STATIC ${LIB_FILES})
+if(BUILD_SHARED_LIBS)
+    add_library(faasmpi SHARED ${LIB_FILES})
+else()
+    add_library(faasmpi STATIC ${LIB_FILES})
+endif()
+
 set_target_properties(faasmpi PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 
 # Install Faabric MPI library

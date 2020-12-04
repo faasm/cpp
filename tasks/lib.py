@@ -12,7 +12,7 @@ from faasmtools.build import (
 from faasmtools.env import PROJ_ROOT
 
 
-def build_faasm_lib(subdir, clean=False, native=False):
+def build_faasm_lib(subdir, clean=False, native=False, shared=False):
     """
     Builds one of the libraries included in this repo
     """
@@ -39,6 +39,7 @@ def build_faasm_lib(subdir, clean=False, native=False):
         "cmake",
         "-GNinja",
         "-DCMAKE_BUILD_TYPE=Release",
+        "-DBUILD_SHARED_LIBS={}".format("ON" if shared else "OFF"),
         "-DCMAKE_INSTALL_PREFIX={}".format(install_dir),
     ]
 

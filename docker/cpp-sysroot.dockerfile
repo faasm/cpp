@@ -1,6 +1,6 @@
 FROM faasm/llvm:10.0.1 as llvm
 
-FROM faasm/grpc-root:0.0.12
+FROM faasm/grpc-root:0.0.14
 ARG SYSROOT_VERSION
 
 # Copy the toolchain in from the LLVM container
@@ -52,7 +52,7 @@ RUN inv install
 RUN inv libc
 
 # Install eigen to wasm
-RUN inv eigen
+RUN inv eigen --native
 
 # Install libffi
 RUN inv libffi
@@ -64,11 +64,14 @@ RUN inv clapack --clean --shared
 # Install Faasm CPP lib
 RUN inv libfaasm
 RUN inv libfaasm --native
+RUN inv libfaasm --native --shared
 
 # Install Faasm OpenMP lib
 RUN inv libfaasmp
 RUN inv libfaasmp --native
+RUN inv libfaasmp --native --shared
 
 # Install Faabric MPI lib
 RUN inv libfaasmpi
 RUN inv libfaasmpi --native
+RUN inv libfaasmpi --native --shared
