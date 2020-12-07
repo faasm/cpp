@@ -11,7 +11,7 @@ set(LIB_FILES emulator.cpp)
 if(BUILD_SHARED_LIBS)
     add_library(emulator SHARED "${LIB_FILES}")
 else()
-    add_library(emualtor STATIC "${LIB_FILES}")
+    add_library(emulator STATIC "${LIB_FILES}")
 endif()
 
 target_include_directories(emulator PUBLIC ${CMAKE_CURRENT_LIST_DIR})
