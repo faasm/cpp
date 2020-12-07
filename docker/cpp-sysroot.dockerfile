@@ -26,52 +26,54 @@ RUN git submodule update --init -f third-party/faasm-clapack
 RUN git submodule update --init -f third-party/libffi
 RUN git submodule update --init -f third-party/wasi-libc
 
+# Install the faasmtools Python lib
 RUN pip3 install -r requirements.txt
-
-# Install the faasmtools lib
 RUN pip3 install .
 
-# -----------------------------
-# CPP EMULATOR
-# -----------------------------
+# ---------------------------------
+# NATIVE
+# ---------------------------------
 
+# Install eigen
 RUN inv eigen --native
 
+# CPP emulator static build
 RUN inv dev.cmake
 RUN inv dev.cc emulator
 RUN inv dev.install emulator
-
-# -----------------------------
-# LIBRARIES (WASM AND NATIVE)
-# -----------------------------
-
-# Install files
-RUN inv install
-
-# Build libraries
-RUN inv libc
-
-# Install eigen to wasm
-RUN inv eigen --native
-
-# Install libffi
-RUN inv libffi
-
-# Both static and shared clapack
-RUN inv clapack
-RUN inv clapack --clean --shared
-
-# Wasm library builds
-RUN inv libfaasm
-RUN inv libfaasmp
-RUN inv libfaasmpi
 
 # Native static libraries
 RUN inv libfaasm --native
 RUN inv libfaasmp --native
 RUN inv libfaasmpi --native
 
+# CPP emulator shared build
+RUN inv dev.cmake --clean --shared
+RUN inv dev.cc emulator
+RUN inv dev.install emulator
+
 # Native shared libraries
 RUN inv libfaasm --native --shared
 RUN inv libfaasmp --native --shared
 RUN inv libfaasmpi --native --shared
+
+# ---------------------------------
+# WASM
+# ---------------------------------
+
+# Install toolchain files
+RUN inv install
+
+# Libraries
+RUN inv libc
+RUN inv libffi
+RUN inv eigen
+
+# Both static and shared clapack
+RUN inv clapack
+RUN inv clapack --clean --shared
+
+# Faasm libraries to wasm
+RUN inv libfaasm
+RUN inv libfaasmp
+RUN inv libfaasmpi
