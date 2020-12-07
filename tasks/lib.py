@@ -17,8 +17,16 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
     Builds one of the libraries included in this repo
     """
     work_dir = join(PROJ_ROOT, subdir)
-    build_dir = join(work_dir, "build-native" if native else "build-wasm")
     install_dir = FAASM_NATIVE_DIR if native else WASM_SYSROOT
+
+    if native and shared:
+        build_dir = "build-native-shared"
+    elif native:
+        build_dir = "build-native"
+    else:
+        build_dir = "build-wasm"
+
+    build_dir = join(work_dir, build_dir)
 
     if exists(build_dir) and clean:
         rmtree(build_dir)

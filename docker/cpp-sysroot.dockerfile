@@ -61,17 +61,17 @@ RUN inv libffi
 RUN inv clapack
 RUN inv clapack --clean --shared
 
-# Install Faasm CPP lib
+# Wasm library builds
 RUN inv libfaasm
-RUN inv libfaasm --native
-RUN inv libfaasm --native --shared
-
-# Install Faasm OpenMP lib
 RUN inv libfaasmp
-RUN inv libfaasmp --native
-RUN inv libfaasmp --native --shared
-
-# Install Faabric MPI lib
 RUN inv libfaasmpi
+
+# Native static libraries
+RUN inv libfaasm --native
+RUN inv libfaasmp --native
 RUN inv libfaasmpi --native
+
+# Native shared libraries
+RUN inv libfaasm --native --shared
+RUN inv libfaasmp --native --shared
 RUN inv libfaasmpi --native --shared
