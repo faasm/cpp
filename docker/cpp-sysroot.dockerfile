@@ -38,6 +38,7 @@ RUN pip3 install .
 RUN inv eigen --native
 
 # CPP emulator static build
+ENV LD_LIBRARY_PATH=/usr/local/lib
 RUN inv dev.cmake
 RUN inv dev.cc emulator
 RUN inv dev.install emulator
