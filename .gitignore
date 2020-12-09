@@ -1,5 +1,7 @@
 build-wasm/
 build-native/
+compile_commands.json
+.clangd/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -49,9 +49,9 @@ RUN inv libfaasmp --native
 RUN inv libfaasmpi --native
 
 # CPP emulator shared build
-RUN inv dev.cmake --clean --shared
-RUN inv dev.cc emulator
-RUN inv dev.install emulator
+RUN inv dev.cmake --shared
+RUN inv dev.cc emulator --shared
+RUN inv dev.install emulator --shared
 
 # Native shared libraries
 RUN inv libfaasm --native --shared

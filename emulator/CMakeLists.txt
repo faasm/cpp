@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(faasm-emulator)
+project(emulator)
 
 set(PUBLIC_HEADERS
         faasm/emulator.h
