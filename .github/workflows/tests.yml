@@ -31,7 +31,7 @@ jobs:
       REDIS_QUEUE_HOST: redis
       REDIS_STATE_HOST: redis
     container:
-      image: faasm/cpp-sysroot:0.0.13
+      image: faasm/cpp-sysroot:0.0.15
     defaults:
       run:
         working-directory: /code/faasm-toolchain
