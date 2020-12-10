@@ -51,3 +51,40 @@ jobs:
         run: inv dev.cc tests
       - name: "Run the tests"
         run: /build/faasm-toolchain/bin/tests
+  
+  examples:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-20.04
+    env:
+      HOST_TYPE: ci
+      REDIS_QUEUE_HOST: redis
+      REDIS_STATE_HOST: redis
+    container:
+      image: faasm/cpp-sysroot:0.0.14
+    defaults:
+      run:
+        working-directory: /code/faasm-toolchain
+    services:
+      redis:
+        image: redis
+    steps:
+      - name: "Fetch ref"
+        run: git fetch origin ${GITHUB_REF}:ci-branch
+      - name: "Check out branch"
+        run: git checkout --force ci-branch
+      - name: "Build the faasm shared lib"
+        run: inv libfaasm --native --shared
+      - name: "Build the faasmp shared lib"
+        run: inv libfaasmp --native --shared
+      - name: "Build the faasmpi shared lib"
+        run: inv libfaasmpi --native --shared
+      - name: "Set up shared CMake build"
+        run: inv dev.cmake --shared
+      - name: "Build the emulator shared lib"
+        run: inv dev.cc emulator --shared
+      - name: "Install the emulator shared lib"
+        run: inv dev.install emulator --shared
+      - name: "Build the examples"
+        run: inv examples
+      - name: "Run the example check"
+        run: inv examples.execute check
