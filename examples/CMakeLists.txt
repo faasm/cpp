@@ -1,9 +1,10 @@
-# Include the native builds
-include_directories(
-    ${CMAKE_CURRENT_LIST_DIR}
-    /usr/local/faasm/native/include
-    )
-link_directories(/usr/local/faasm/native/lib)
+cmake_minimum_required(VERSION 3.13.0)
+project(faasm-cpp-examples)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 
 # Here we create a dummy library to check linking with static/ shared objects.
 # We must link directly to the installed libraries so that we replicate the
@@ -26,5 +27,12 @@ else()
         )
 endif()
 
+# Include the native install of the libraries
+target_include_directories(native_lib PUBLIC /usr/local/faasm/native/include)
+target_link_directories(native_lib PUBLIC /usr/local/faasm/native/lib)
+
 add_executable(native_exe native_exe.cpp)
-target_link_libraries(native_exe native_lib)
+target_link_libraries(native_exe 
+    native_lib
+    faabric
+    )
