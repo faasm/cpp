@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-
 # Here we create a dummy library to check linking with static/ shared objects.
 # We must link directly to the installed libraries so that we replicate the
 # behaviour of external projects.

@@ -20,10 +20,7 @@ endif()
 # Add Faabric dependency
 add_subdirectory(third-party/faabric)
 
-# Generated protobuf headers
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/third-party/faabric/src)
-
+# Build emulator and tests
 add_subdirectory(libfaasm)
 add_subdirectory(emulator)
-add_subdirectory(examples)
 add_subdirectory(tests)
