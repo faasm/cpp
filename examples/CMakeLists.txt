@@ -32,7 +32,4 @@ target_include_directories(native_lib PUBLIC /usr/local/faasm/native/include)
 target_link_directories(native_lib PUBLIC /usr/local/faasm/native/lib)
 
 add_executable(native_exe native_exe.cpp)
-target_link_libraries(native_exe 
-    native_lib
-    faabric
-    )
+target_link_libraries(native_exe native_lib)
