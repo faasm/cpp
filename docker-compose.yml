@@ -7,10 +7,10 @@ services:
   cli:
     image: ${SYSROOT_CLI_IMAGE}
     volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-        - /usr/bin/docker:/usr/bin/docker
-        - .:/code/faasm-toolchain
-        - ./build:/build/faasm-toolchain
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - .:/code/faasm-toolchain
+      - ./build:/build/faasm-toolchain
     working_dir: /code/faasm-toolchain
     stdin_open: true
     tty: true
