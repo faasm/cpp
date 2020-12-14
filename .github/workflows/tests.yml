@@ -16,6 +16,8 @@ jobs:
         uses: actions/checkout@v2
       - name: "Install requirements"
         run: pip3 install -r requirements.txt
+      - name: "Update CMake files"
+        run: inv dev.cmake
       - name: "Run Black"
         run: ./bin/check_black.sh
       - name: "Run C/C++ formatting"
@@ -85,6 +87,6 @@ jobs:
       - name: "Install the emulator shared lib"
         run: inv dev.install emulator --shared
       - name: "Build the examples"
-        run: inv examples
+        run: inv examples --shared
       - name: "Run the example check"
-        run: inv examples.execute check
+        run: inv examples.execute --shared
