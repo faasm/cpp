@@ -16,10 +16,12 @@ jobs:
         uses: actions/checkout@v2
       - name: "Install requirements"
         run: pip3 install -r requirements.txt
-      - name: "Run Black"
-        run: ./bin/check_black.sh
+      - name: "Check Python"
+        run: ./bin/check_python.sh
       - name: "Run C/C++ formatting"
         run: ./bin/run_clang_format.sh
+      - name: "Run C/C++ linter"
+        run: ./bin/run_clang_tidy.sh
       - name: "Check no formatting changes"
         run: git diff --exit-code
 
