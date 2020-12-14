@@ -11,11 +11,15 @@ jobs:
   formatting:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
+    container:
+      image: faasm/cpp-sysroot:0.0.16
     steps:
-      - name: "Get the latest code"
-        uses: actions/checkout@v2
-      - name: "Install requirements"
-        run: pip3 install -r requirements.txt
+      # --- Update code ---
+      - name: "Fetch ref"
+        run: git fetch origin ${GITHUB_REF}:ci-branch
+      - name: "Check out branch"
+        run: git checkout --force ci-branch
+      # --- Run checks ---
       - name: "Update CMake files"
         run: inv dev.cmake
       - name: "Run Black"
