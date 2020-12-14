@@ -23,6 +23,8 @@ jobs:
       - name: "Check out branch"
         run: git checkout --force ci-branch
       # --- Run checks ---
+      - name: "Install requirements"
+        run: pip3 install -r requirements.txt
       - name: "Update CMake files"
         run: inv dev.cmake
       - name: "Check python"
