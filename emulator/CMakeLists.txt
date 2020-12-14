@@ -16,7 +16,10 @@ endif()
 
 target_include_directories(emulator PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 
-target_link_libraries(emulator faasm state scheduler endpoint)
+target_link_libraries(emulator 
+    faasm 
+    faabric
+    )
 
 set_target_properties(emulator PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 

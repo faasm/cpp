@@ -8,20 +8,24 @@ from faasmtools.env import PROJ_ROOT
 from invoke import task
 
 EXAMPLES_DIR = join(PROJ_ROOT, "examples")
-BUILD_DIR = join(EXAMPLES_DIR, "build")
+BASE_BUILD_DIR = "/build/cpp-examples"
+STATIC_BUILD_DIR = join(BASE_BUILD_DIR, "build-shared")
+SHARED_BUILD_DIR = join(BASE_BUILD_DIR, "build-static")
 EXAMPLE_TARGET = "native_exe"
 
 
 @task(default=True)
-def build(ctx, clean=False):
+def build(ctx, clean=False, shared=False):
     """
     Builds the examples
     """
-    if clean and exists(BUILD_DIR):
-        rmtree(BUILD_DIR)
+    build_dir = SHARED_BUILD_DIR if shared else STATIC_BUILD_DIR
 
-    if not exists(BUILD_DIR):
-        makedirs(BUILD_DIR)
+    if clean and exists(build_dir):
+        rmtree(build_dir)
+
+    if not exists(build_dir):
+        makedirs(build_dir)
 
     # Cmake
     run(
@@ -36,23 +40,24 @@ def build(ctx, clean=False):
             ]
         ),
         shell=True,
-        cwd=BUILD_DIR,
+        cwd=build_dir,
     )
 
     # Build
     run(
         "cmake --build . --target {}".format(EXAMPLE_TARGET),
-        cwd=BUILD_DIR,
+        cwd=build_dir,
         shell=True,
     )
 
 
 @task
-def execute(ctx):
+def execute(ctx, shared=False):
     """
     Runs the given example
     """
-    exe_path = join(BUILD_DIR, EXAMPLE_TARGET)
+    build_dir = SHARED_BUILD_DIR if shared else STATIC_BUILD_DIR
+    exe_path = join(build_dir, EXAMPLE_TARGET)
 
     if not exists(exe_path):
         raise RuntimeError("Did not find {} as expected".format(exe_path))
