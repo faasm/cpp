@@ -56,7 +56,7 @@ jobs:
       - name: "Build the tests"
         run: inv dev.cc tests
       - name: "Run the tests"
-        run: /build/faasm-toolchain/bin/tests
+        run: /build/faasm-toolchain/static/bin/tests
   
   examples:
     if: github.event.pull_request.draft == false
