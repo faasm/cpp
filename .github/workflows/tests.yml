@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-20.04
     container:
       image: faasm/cpp-sysroot:0.0.16
+    defaults:
+      run:
+        working-directory: /code/faasm-toolchain
     steps:
       # --- Update code ---
       - name: "Fetch ref"
