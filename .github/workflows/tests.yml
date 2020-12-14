@@ -25,10 +25,12 @@ jobs:
       # --- Run checks ---
       - name: "Update CMake files"
         run: inv dev.cmake
-      - name: "Run Black"
-        run: ./bin/check_black.sh
+      - name: "Check python"
+        run: ./bin/check_python.sh
       - name: "Run C/C++ formatting"
         run: ./bin/run_clang_format.sh
+      - name: "Run C/C++ linter"
+        run: ./bin/run_clang_tidy.sh
       - name: "Check no formatting changes"
         run: git diff --exit-code
 
