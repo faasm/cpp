@@ -1,6 +1,6 @@
 FROM faasm/llvm:10.0.1 as llvm
 
-FROM faasm/grpc-root:0.0.12
+FROM faasm/grpc-root:0.0.16
 ARG SYSROOT_VERSION
 
 # Copy the toolchain in from the LLVM container
@@ -9,6 +9,7 @@ COPY --from=llvm /usr/local/faasm /usr/local/faasm
 RUN apt install -y \
     autoconf \
     autotools-dev \
+    clang-tidy-10 \
     libtool \
     python3-dev \
     python3-venv \
@@ -26,49 +27,55 @@ RUN git submodule update --init -f third-party/faasm-clapack
 RUN git submodule update --init -f third-party/libffi
 RUN git submodule update --init -f third-party/wasi-libc
 
+# Install the faasmtools Python lib
 RUN pip3 install -r requirements.txt
-
-# Install the faasmtools lib
 RUN pip3 install .
 
-# -----------------------------
-# CPP EMULATOR
-# -----------------------------
+# ---------------------------------
+# NATIVE
+# ---------------------------------
 
+# Install eigen
 RUN inv eigen --native
 
+# CPP emulator static build
+ENV LD_LIBRARY_PATH=/usr/local/lib
 RUN inv dev.cmake
 RUN inv dev.cc emulator
 RUN inv dev.install emulator
 
-# -----------------------------
-# LIBRARIES (WASM AND NATIVE)
-# -----------------------------
+# Native static libraries
+RUN inv libfaasm --native
+RUN inv libfaasmp --native
+RUN inv libfaasmpi --native
 
-# Install files
+# CPP emulator shared build
+RUN inv dev.cmake --shared
+RUN inv dev.cc emulator --shared
+RUN inv dev.install emulator --shared
+
+# Native shared libraries
+RUN inv libfaasm --native --shared
+RUN inv libfaasmp --native --shared
+RUN inv libfaasmpi --native --shared
+
+# ---------------------------------
+# WASM
+# ---------------------------------
+
+# Install toolchain files
 RUN inv install
 
-# Build libraries
+# Libraries
 RUN inv libc
-
-# Install eigen to wasm
-RUN inv eigen
-
-# Install libffi
 RUN inv libffi
+RUN inv eigen
 
 # Both static and shared clapack
 RUN inv clapack
 RUN inv clapack --clean --shared
 
-# Install Faasm CPP lib
+# Faasm libraries to wasm
 RUN inv libfaasm
-RUN inv libfaasm --native
-
-# Install Faasm OpenMP lib
 RUN inv libfaasmp
-RUN inv libfaasmp --native
-
-# Install Faabric MPI lib
 RUN inv libfaasmpi
-RUN inv libfaasmpi --native

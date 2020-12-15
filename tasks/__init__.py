@@ -4,6 +4,7 @@ from . import clapack
 from . import container
 from . import dev
 from . import eigen
+from . import examples
 from . import git
 from . import install
 from . import libc
@@ -17,6 +18,7 @@ ns = Collection(
     container,
     dev,
     eigen,
+    examples,
     git,
     install,
     libc,
