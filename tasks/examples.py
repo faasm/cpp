@@ -48,6 +48,7 @@ def build(ctx, clean=False, shared=False):
         "cmake --build . --target {}".format(EXAMPLE_TARGET),
         cwd=build_dir,
         shell=True,
+        check=True,
     )
 
 
@@ -62,4 +63,4 @@ def execute(ctx, shared=False):
     if not exists(exe_path):
         raise RuntimeError("Did not find {} as expected".format(exe_path))
 
-    run(exe_path, shell=True)
+    run(exe_path, shell=True, check=True)
