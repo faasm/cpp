@@ -9,6 +9,7 @@ COPY --from=llvm /usr/local/faasm /usr/local/faasm
 RUN apt install -y \
     autoconf \
     autotools-dev \
+    clang-tidy-10 \
     libtool \
     python3-dev \
     python3-venv \
