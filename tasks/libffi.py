@@ -31,7 +31,7 @@ def build(ctx, clean=False):
     configure_cmd = build_config_cmd(
         [
             "./configure",
-            "--prefix={}".format(WASM_SYSROOT),
+            "--prefix={}".format(WASM_LIB_INSTALL),
             "--disable-multi-os-directory",
             "--disable-docs",
         ],
