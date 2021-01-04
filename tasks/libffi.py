@@ -13,7 +13,7 @@ from invoke import task
 from faasmtools.env import THIRD_PARTY_DIR, USABLE_CPUS, PROJ_ROOT
 
 LIBFFI_DIR = join(THIRD_PARTY_DIR, "libffi")
-LIBFFI_INSTALL_DIR = join(LIBFFI_DIR, "wasm32-unknown-wasi")
+LIBFFI_LIBS_DIR = join(LIBFFI_DIR, "wasm32-unknown-wasi")
 
 
 @task(default=True)
@@ -31,7 +31,7 @@ def build(ctx, clean=False):
     configure_cmd = build_config_cmd(
         [
             "./configure",
-            "--prefix={}".format(WASM_LIB_INSTALL),
+            "--prefix={}".format(WASM_SYSROOT),
             "--disable-multi-os-directory",
             "--disable-docs",
         ],
@@ -43,20 +43,15 @@ def build(ctx, clean=False):
     make_cmd = ["make", "-j {}".format(USABLE_CPUS)]
     run(" ".join(make_cmd), shell=True, check=True, cwd=LIBFFI_DIR)
 
-    # Run install (although apparently doesn't do anything)
+    # Run install
     run("make install", shell=True, check=True, cwd=LIBFFI_DIR)
 
-    # Ensure the lib is copied into place
-    src_lib = join(LIBFFI_INSTALL_DIR, ".libs", "libffi.a")
-    dest_lib = join(WASM_LIB_INSTALL, "libffi.a")
-    print("Copying {} to {}".format(src_lib, dest_lib))
-    run("cp {} {}".format(src_lib, dest_lib), shell=True, check=True)
-
-    # Copy header files
-    header_src = join(LIBFFI_INSTALL_DIR, "include", "*")
-    header_dest = join(WASM_SYSROOT, "include")
-    print("Copying {} to {}".format(header_src, header_dest))
-    run("cp {} {}".format(header_src, header_dest), shell=True, check=True)
+    # Move lib into correct install dir
+    for lib_name in ["libffi.a", "libffi.la"]:
+        src_lib = join(WASM_SYSROOT, "lib", lib_name)
+        dest_lib = join(WASM_LIB_INSTALL, lib_name)
+        print("Moving {} to {}".format(src_lib, dest_lib))
+        run("mv {} {}".format(src_lib, dest_lib), shell=True, check=True)
 
     # Copy imports into place
     src_imports = join(PROJ_ROOT, "sysroot_extras", "libffi.imports")
