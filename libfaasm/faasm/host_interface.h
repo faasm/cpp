@@ -121,5 +121,5 @@ HOST_IFACE_FUNC
 unsigned int __faasm_conf_flag(const char *key);
 
 HOST_IFACE_FUNC
-unsigned int __faasm_backtrace(const int depth);
+void __faasm_backtrace(const int depth);
 #endif
