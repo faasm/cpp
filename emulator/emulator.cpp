@@ -326,7 +326,7 @@ int __faasm_await_call_output(unsigned int messageId, unsigned char *buffer,
   throw std::runtime_error("Chaining not supported in emulator");
 }
 
-void __faasm_backtrace(const int depth) { 
+void __faasm_backtrace(const int depth) {
   throw std::runtime_error("Backtrace not supported in emulator");
 }
 
@@ -359,4 +359,3 @@ void __faasm_get_py_entry(unsigned char *buffer, long bufferLen) {
 }
 
 unsigned int __faasm_conf_flag(const char *key) { return 0; }
-
