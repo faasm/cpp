@@ -355,3 +355,5 @@ void __faasm_get_py_entry(unsigned char *buffer, long bufferLen) {
 }
 
 unsigned int __faasm_conf_flag(const char *key) { return 0; }
+
+void backtrace(const int depth) { __faasm_backtrace(depth); }
