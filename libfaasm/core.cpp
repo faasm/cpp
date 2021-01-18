@@ -140,5 +140,3 @@ char *faasmGetPythonEntry() {
 }
 
 unsigned int getConfFlag(const char *key) { return __faasm_conf_flag(key); }
-
-void faasmBacktrace(const int depth) { __faasm_backtrace(depth); }
