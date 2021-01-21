@@ -77,5 +77,6 @@ RUN inv clapack --clean --shared
 
 # Faasm libraries to wasm
 RUN inv libfaasm
+RUN inv libemscripten
 RUN inv libfaasmp
 RUN inv libfaasmpi

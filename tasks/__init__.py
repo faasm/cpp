@@ -8,6 +8,7 @@ from . import examples
 from . import git
 from . import install
 from . import libc
+from . import libemscripten
 from . import libfaasm
 from . import libfaasmp
 from . import libfaasmpi
@@ -22,6 +23,7 @@ ns = Collection(
     git,
     install,
     libc,
+    libemscripten,
     libfaasm,
     libfaasmp,
     libfaasmpi,
