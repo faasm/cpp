@@ -326,6 +326,10 @@ int __faasm_await_call_output(unsigned int messageId, unsigned char *buffer,
   throw std::runtime_error("Chaining not supported in emulator");
 }
 
+void __faasm_backtrace(const int depth) {
+  throw std::runtime_error("Backtrace not supported in emulator");
+}
+
 void __faasm_lock_state_global(const char *key) {}
 
 void __faasm_unlock_state_global(const char *key) {}

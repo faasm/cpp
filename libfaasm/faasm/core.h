@@ -194,6 +194,11 @@ char *faasmGetPythonEntry();
  */
 unsigned int getConfFlag(const char *key);
 
+/**
+ * Requests that the runtime print a backtrace for the given depth
+ */
+void faasmBacktrace(const int depth);
+
 // Macro for defining zygotes (a default fallback noop is provided)
 int __attribute__((weak)) _faasm_zygote();
 #define FAASM_ZYGOTE() int _faasm_zygote()

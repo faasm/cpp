@@ -120,4 +120,6 @@ unsigned int __faasm_chain_py(const char *name, const unsigned char *inputData,
 HOST_IFACE_FUNC
 unsigned int __faasm_conf_flag(const char *key);
 
+HOST_IFACE_FUNC
+void __faasm_backtrace(const int depth);
 #endif
