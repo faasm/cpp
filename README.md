@@ -21,6 +21,7 @@ along with an emulator to compile and test native applications.
 More detailed docs can be found in:
 
 - [Usage and Development](docs/usage.md)
+- [Threading](docs/threads.md)
 - [Releasing](docs/release.md)
 - [Upgrading LLVM](docs/upgrading-llvm.md)
 - [Python library](docs/python.md)
