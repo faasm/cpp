@@ -6,6 +6,7 @@ ARG SYSROOT_VERSION
 # Copy the toolchain in from the LLVM container
 COPY --from=llvm /usr/local/faasm /usr/local/faasm
 
+RUN apt update
 RUN apt install -y \
     autoconf \
     autotools-dev \
