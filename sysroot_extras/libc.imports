@@ -72,6 +72,15 @@ getrusage
 getrlimit
 setrlimit
 
+# libc threading
+flockfile
+funlockfile
+ftrylockfile
+__lockfile
+__unlockfile
+__lock
+__unlock
+
 # Threading
 pthread_create
 pthread_exit

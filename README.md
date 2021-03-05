@@ -24,3 +24,4 @@ More detailed docs can be found in:
 - [Releasing](docs/release.md)
 - [Upgrading LLVM](docs/upgrading-llvm.md)
 - [Python library](docs/python.md)
+- [Threading](docs/threading.md)
