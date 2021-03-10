@@ -4,8 +4,6 @@
 #include <faabric/util/logging.h>
 
 int main(int argc, char *argv[]) {
-  faabric::util::initLogging();
-
   int result = Catch::Session().run(argc, argv);
 
   fflush(stdout);
