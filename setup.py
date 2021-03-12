@@ -14,7 +14,7 @@ setup(
     packages=find_packages(),
     author="Simon S",
     author_email="blah@foo.com",
-    description="Utilities related to the Faasm toolchain",
-    url="https://github.com/faasm/faasm-toolchain",
+    description="Utilities related to Faasm C++ functions",
+    url="https://github.com/faasm/cpp",
     python_requires=">=3.6",
 )

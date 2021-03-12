@@ -10,8 +10,8 @@ from faasmtools.build import FAASM_NATIVE_DIR
 
 # Slightly inefficient to have two builds, but we need to make sure all
 # dependencies are also build as shared/ static accordingly
-SHARED_BUILD_DIR = "/build/faasm-toolchain/shared"
-STATIC_BUILD_DIR = "/build/faasm-toolchain/static"
+SHARED_BUILD_DIR = "/build/cpp/shared"
+STATIC_BUILD_DIR = "/build/cpp/static"
 
 
 @task

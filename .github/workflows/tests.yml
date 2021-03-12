@@ -12,10 +12,10 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     container:
-      image: faasm/cpp-sysroot:0.0.20
+      image: faasm/cpp-sysroot:0.0.21
     defaults:
       run:
-        working-directory: /code/faasm-toolchain
+        working-directory: /code/cpp
     steps:
       # --- Update code ---
       - name: "Fetch ref"
@@ -44,10 +44,10 @@ jobs:
       REDIS_QUEUE_HOST: redis
       REDIS_STATE_HOST: redis
     container:
-      image: faasm/cpp-sysroot:0.0.20
+      image: faasm/cpp-sysroot:0.0.21
     defaults:
       run:
-        working-directory: /code/faasm-toolchain
+        working-directory: /code/cpp
     services:
       redis:
         image: redis
@@ -63,7 +63,7 @@ jobs:
       - name: "Build the tests"
         run: inv dev.cc tests
       - name: "Run the tests"
-        run: /build/faasm-toolchain/static/bin/tests
+        run: /build/cpp/static/bin/tests
   
   examples:
     if: github.event.pull_request.draft == false
@@ -73,10 +73,10 @@ jobs:
       REDIS_QUEUE_HOST: redis
       REDIS_STATE_HOST: redis
     container:
-      image: faasm/cpp-sysroot:0.0.20
+      image: faasm/cpp-sysroot:0.0.21
     defaults:
       run:
-        working-directory: /code/faasm-toolchain
+        working-directory: /code/cpp
     services:
       redis:
         image: redis

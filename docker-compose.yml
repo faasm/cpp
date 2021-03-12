@@ -9,9 +9,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
-      - .:/code/faasm-toolchain
-      - ./build:/build/faasm-toolchain
-    working_dir: /code/faasm-toolchain
+      - .:/code/cpp
+      - ./build:/build/cpp
+    working_dir: /code/cpp
     stdin_open: true
     tty: true
     privileged: true
