@@ -3,6 +3,8 @@ from multiprocessing import cpu_count
 
 PROJ_ROOT = dirname(dirname(abspath(__file__)))
 THIRD_PARTY_DIR = join(PROJ_ROOT, "third-party")
+WASM_DIR = "/usr/local/faasm/wasm"
+FAASM_RUNTIME_ROOT = "/usr/local/faasm/runtime_root"
 
 # Environment
 USABLE_CPUS = int(cpu_count()) - 1
