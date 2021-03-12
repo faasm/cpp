@@ -5,7 +5,7 @@ The toolchain repo is based on two Docker images:
 - `faasm/llvm` - the base image holding just the custom LLVM tools
 - `faasm/cpp-sysroot` - the image holding both the tools and sysroot
 
-See the [Actions page](https://github.com/faasm/faasm-toolchain/actions) and
+See the [Actions page](https://github.com/faasm/cpp/actions) and
 [Dockerfiles](docker) for more info.
 
 You only need to rebuild the `llvm` image when upgrading LLVM (see 

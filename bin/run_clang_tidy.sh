@@ -2,7 +2,7 @@
 
 set -e
 
-BUILD_PATH=/build/faasm-toolchain/static/
+BUILD_PATH=/build/cpp/static/
 CONFIG=${FAASM_ROOT}/.clang-tidy
 DUMP_OUTPUT=true
 

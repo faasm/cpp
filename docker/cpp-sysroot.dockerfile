@@ -18,8 +18,8 @@ RUN apt install -y \
 
 # Get the code
 WORKDIR /code
-RUN git clone -b v${SYSROOT_VERSION} https://github.com/faasm/faasm-toolchain
-WORKDIR /code/faasm-toolchain
+RUN git clone -b v${SYSROOT_VERSION} https://github.com/faasm/cpp
+WORKDIR /code/cpp
 
 # Update submodules (not LLVM)
 RUN git submodule update --init -f third-party/eigen
