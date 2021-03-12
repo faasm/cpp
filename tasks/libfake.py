@@ -37,7 +37,7 @@ def _build_faasm_lib(dir_name, clean, verbose, target=None):
     run("ninja install", shell=True, cwd=build_dir, check=True)
 
 
-@task
+@task(default=True)
 def fake(ctx, clean=False):
     """
     Compile and install the fake library used for testing
@@ -47,6 +47,8 @@ def fake(ctx, clean=False):
 
     if exists(build_dir) and clean:
         rmtree(build_dir)
+
+    makedirs(build_dir, exist_ok=True)
 
     build_cmd = [
         "cmake",
