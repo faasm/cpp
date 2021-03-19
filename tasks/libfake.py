@@ -10,33 +10,6 @@ from faasmtools.build import CMAKE_TOOLCHAIN_FILE, WASM_SYSROOT
 from faasmtools.env import PROJ_ROOT, FAASM_RUNTIME_ROOT
 
 
-def _build_faasm_lib(dir_name, clean, verbose, target=None):
-    work_dir = join(PROJ_ROOT, dir_name)
-    build_dir = join(PROJ_ROOT, "build", dir_name)
-
-    if exists(build_dir) and clean:
-        rmtree(build_dir)
-
-    build_cmd = [
-        "cmake",
-        "-GNinja",
-        "-DFAASM_BUILD_TYPE=wasm",
-        "-DCMAKE_BUILD_TYPE=Release",
-        "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
-        work_dir,
-    ]
-
-    build_cmd_str = " ".join(build_cmd)
-    print(build_cmd_str)
-
-    run(build_cmd_str, shell=True, cwd=build_dir, check=True)
-
-    build_cmd = ["ninja", target if target else ""]
-
-    run(" ".join(build_cmd), shell=True, cwd=build_dir, check=True)
-    run("ninja install", shell=True, cwd=build_dir, check=True)
-
-
 @task(default=True)
 def fake(ctx, clean=False):
     """

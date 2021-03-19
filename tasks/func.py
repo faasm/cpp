@@ -21,8 +21,9 @@ def compile(ctx, user, func, clean=False, debug=False):
     Compile a function
     """
     # Build the function (gets written to the build dir)
-    # Will fail if compilation fails
     wasm_cmake(FUNC_DIR, FUNC_BUILD_DIR, func, clean, debug)
+
+    # Copy into place
     _copy_built_function(user, func)
 
 
