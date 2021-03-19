@@ -22,9 +22,7 @@ def compile(ctx, user, func, clean=False, debug=False):
     """
     # Build the function (gets written to the build dir)
     # Will fail if compilation fails
-    target = func
-    wasm_cmake(FUNC_DIR, FUNC_BUILD_DIR, target, clean, debug)
-
+    wasm_cmake(FUNC_DIR, FUNC_BUILD_DIR, func, clean, debug)
     _copy_built_function(user, func)
 
 
@@ -56,4 +54,3 @@ def local(ctx, clean=False, debug=False):
     user(ctx, "errors", clean, debug)
     user(ctx, "mpi", clean, debug)
     user(ctx, "omp", clean, debug)
-    user(ctx, "python", clean, debug)

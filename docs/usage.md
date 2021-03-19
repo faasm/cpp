@@ -21,20 +21,16 @@ python3 <this repo>/bin/here.py
 
 ## Development
 
-To develop the project you need to run the built container with your code
-mounted in it:
+To develop the project you need to go through Faasm as per [the
+docs](https://github.com/faasm/faasm/blob/master/docs/development.md).
+
+From inside the `cpp` CLI container spawned from there:
 
 ```bash
-cd <this repo>
-./bin/cli.sh
-
 # List available tasks
 inv -l
-```
 
-You can then compile wasm or build and run the tests, e.g.:
-
-```bash
+# Build tests
 inv dev.cmake
 inv dev.cc tests
 /build/bin/tests
