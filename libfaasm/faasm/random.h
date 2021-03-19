@@ -8,9 +8,9 @@ int randomInteger(int iStart, int iEnd);
 
 float randomFloat();
 
-void shuffleArray(int *arrayIn, size_t arrayLen);
+void shuffleArray(int* arrayIn, size_t arrayLen);
 
-int *randomIntRange(int rangeLen);
+int* randomIntRange(int rangeLen);
 
 std::string randomString(int len);
 } // namespace faasm
