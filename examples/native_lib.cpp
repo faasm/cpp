@@ -5,16 +5,17 @@
 
 namespace native {
 
-bool callHostInterface() {
-  std::string key("exe_check_state");
-  std::vector<uint8_t> dummyState = {0, 1, 2, 3, 4};
+bool callHostInterface()
+{
+    std::string key("exe_check_state");
+    std::vector<uint8_t> dummyState = { 0, 1, 2, 3, 4 };
 
-  faasmWriteState(key.c_str(), dummyState.data(), dummyState.size());
+    faasmWriteState(key.c_str(), dummyState.data(), dummyState.size());
 
-  std::vector<uint8_t> actualState = {0, 0, 0, 0, 0};
-  faasmReadState(key.c_str(), actualState.data(), actualState.size());
+    std::vector<uint8_t> actualState = { 0, 0, 0, 0, 0 };
+    faasmReadState(key.c_str(), actualState.data(), actualState.size());
 
-  return actualState == dummyState;
+    return actualState == dummyState;
 }
 
 } // namespace native

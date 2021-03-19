@@ -6,15 +6,15 @@
 
 #include <faabric/state/State.h>
 
-unsigned int setEmulatedMessage(const faabric::Message &msg);
+unsigned int setEmulatedMessage(const faabric::Message& msg);
 
 void resetEmulator();
 
-void setEmulatorUser(const char *user);
+void setEmulatorUser(const char* user);
 
-faabric::state::State *getEmulatorState();
+faabric::state::State* getEmulatorState();
 
-void setEmulatorState(faabric::state::State *state);
+void setEmulatorState(faabric::state::State* state);
 
 std::vector<uint8_t> getEmulatorOutputData();
 

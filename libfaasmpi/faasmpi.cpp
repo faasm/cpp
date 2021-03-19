@@ -1,3 +1,6 @@
 #include "faasmpi/faasmpi.h"
 
-int helloFaabricWasm() { return 0; }
+int helloFaabricWasm()
+{
+    return 0;
+}
