@@ -3,6 +3,8 @@ from os.path import join, splitext
 
 from invoke import task
 
+import requests
+
 from faasmtools.env import PROJ_ROOT
 from faasmtools.compile_util import wasm_cmake, wasm_copy_upload
 
@@ -25,6 +27,40 @@ def compile(ctx, user, func, clean=False, debug=False):
 
     # Copy into place
     _copy_built_function(user, func)
+
+
+@task()
+def upload(ctx, user, func, host="upload", port=8002):
+    func_file = join(FUNC_BUILD_DIR, user, "{}.wasm".format(func))
+    url = "http://{}:{}/f/{}/{}".format(host, port, user, func)
+    response = requests.put(url, data=open(func_file, "rb"))
+
+    print("Response {}: {}".format(response.status_code, response.text))
+
+
+@task()
+def invoke(ctx, user, func, input_data=None, host="worker", port=8080):
+    url = "http://{}:{}".format(host, port)
+    data = {
+        "function": func,
+        "user": user,
+    }
+
+    if input_data:
+        data["input_data"] = input_data
+
+    response = requests.post(url, json=data)
+
+    print("Response {}:\n{}".format(response.status_code, response.text))
+
+
+@task()
+def flush(host="worker", port=8080):
+    url = "http://{}:{}".format(host, port)
+    data = {"type": "flush"}
+    response = requests.post(url, json=data)
+
+    print("Response {}: {}".format(response.status_code, response.text))
 
 
 @task

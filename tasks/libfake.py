@@ -41,9 +41,8 @@ def fake(ctx, clean=False):
     # Copy shared object into place
     sysroot_files = join(WASM_SYSROOT, "lib", "wasm32-wasi", "libfake*.so")
 
-    runtime_lib_dir = join(FAASM_RUNTIME_ROOT, "lib")
-    if not exists(runtime_lib_dir):
-        makedirs(runtime_lib_dir)
+    runtime_lib_dir = join(FAASM_RUNTIME_ROOT, "lib", "fake")
+    makedirs(runtime_lib_dir, exist_ok=True)
 
     run(
         "cp {} {}".format(sysroot_files, runtime_lib_dir),

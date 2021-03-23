@@ -33,8 +33,8 @@ int main(int argc, char* argv[])
     printf("mmaped location %p\n", dummyPtr);
 
     // Open both the modules
-    void* handleA = dlopen("lib/libfakeLibA.so", RTLD_NOW);
-    void* handleB = dlopen("lib/libfakeLibB.so", RTLD_NOW);
+    void* handleA = dlopen("lib/fake/libfakeLibA.so", RTLD_NOW);
+    void* handleB = dlopen("lib/fake/libfakeLibB.so", RTLD_NOW);
 
     if (handleA == nullptr || handleB == nullptr) {
         printf("Importing dynamic libs failed\n");
