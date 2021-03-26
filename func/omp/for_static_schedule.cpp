@@ -1,8 +1,6 @@
 #include <cstdio>
 #include <omp.h>
 
-#include <faasm/faasm.h>
-
 #define ITERATIONS 10
 
 bool compareArrays(const char* label, int* actual, int* expected)
