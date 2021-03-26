@@ -18,6 +18,8 @@ FAASM_ZYGOTE()
 // Thread should see global changes made in the main thread
 void* threadFunc(void* arg)
 {
+    printf("Thread global var %i (%p)\n", globalVar, &globalVar);
+
     if (globalVar != 30) {
         printf("Expected thread to see 30 but got %i\n", globalVar);
         return FAILURE;
@@ -37,6 +39,7 @@ int main(int argc, char* argv[])
 
     // Update the global var, this should be captured in the snapshot
     globalVar = 30;
+    printf("Main global var %i (%p)\n", globalVar, &globalVar);
 
     // Run a thread
     pthread_t t;
