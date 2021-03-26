@@ -7,7 +7,7 @@ int globalVar = 10;
 #define SUCCESS (void*)100
 #define FAILURE (void*)101
 
-// Zygote function should be seen by main function by default
+// Effects of zygote should be seen by main function by default
 FAASM_ZYGOTE()
 {
     globalVar = 20;
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // Update the global var
+    // Update the global var, this should be captured in the snapshot
     globalVar = 30;
 
     // Run a thread
