@@ -7,7 +7,7 @@ int globalVar = 10;
 #define SUCCESS (void*)100
 #define FAILURE (void*)101
 
-// Zygote function should be seen by main function by default
+// Effects of zygote should be seen by main function by default
 FAASM_ZYGOTE()
 {
     globalVar = 20;
@@ -18,6 +18,8 @@ FAASM_ZYGOTE()
 // Thread should see global changes made in the main thread
 void* threadFunc(void* arg)
 {
+    printf("Thread global var %i (%p)\n", globalVar, &globalVar);
+
     if (globalVar != 30) {
         printf("Expected thread to see 30 but got %i\n", globalVar);
         return FAILURE;
@@ -35,8 +37,9 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // Update the global var
+    // Update the global var, this should be captured in the snapshot
     globalVar = 30;
+    printf("Main global var %i (%p)\n", globalVar, &globalVar);
 
     // Run a thread
     pthread_t t;
