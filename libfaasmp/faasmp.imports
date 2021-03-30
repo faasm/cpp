@@ -31,4 +31,5 @@ omp_get_level
 omp_get_max_active_levels
 omp_set_default_device
 omp_set_max_active_levels
+omp_get_wtime
 
