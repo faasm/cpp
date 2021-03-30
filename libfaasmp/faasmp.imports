@@ -33,3 +33,6 @@ omp_set_default_device
 omp_set_max_active_levels
 omp_get_wtime
 
+# Closely related atomics
+__atomic_load
+__atomic_compare_exchange
