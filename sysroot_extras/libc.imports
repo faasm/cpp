@@ -29,6 +29,7 @@ __syscall_cp
 mmap
 munmap
 shm_open
+__sbrk
 
 # Dynamic linking
 dlopen
