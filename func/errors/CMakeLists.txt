@@ -7,7 +7,6 @@ function(error_func exec_name dir_path)
 endfunction(error_func)
 
 error_func(bad_malloc bad_malloc.cpp)
-error_func(munmap munmap.cpp)
 error_func(open_blocked open_blocked.cpp)
 error_func(ret_one ret_one.cpp)
 error_func(stdin_poll stdin_poll.cpp)

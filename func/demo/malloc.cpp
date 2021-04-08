@@ -33,7 +33,8 @@ int main(int argc, char* argv[])
     free(another);
 
     // Malloc something big
-    void* bigPtr = malloc(1024 * 1024);
+    size_t bigSize = 30 * 1024 * 1024;
+    void* bigPtr = malloc(bigSize);
     if (bigPtr == nullptr) {
         printf("Big malloc failed\n");
         return 1;
@@ -44,6 +45,15 @@ int main(int argc, char* argv[])
     printf("Malloced big: %s\n", bigStrPtr);
 
     free(bigPtr);
+
+    void* yetAnother = malloc(bigSize);
+    if (yetAnother != bigPtr) {
+        int ptrDiff = ((char*)yetAnother) - ((char*)bigPtr);
+        printf("Not reusing big malloced memory, gap=%i\n", ptrDiff);
+        return 1;
+    }
+
+    free(yetAnother);
 
     return 0;
 }
