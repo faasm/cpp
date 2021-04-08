@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
     free(bigPtr);
 
     void* yetAnother = malloc(bigSize);
-    if(yetAnother != bigPtr) {
+    if (yetAnother != bigPtr) {
         int ptrDiff = ((char*)yetAnother) - ((char*)bigPtr);
         printf("Not reusing big malloced memory, gap=%i\n", ptrDiff);
         return 1;

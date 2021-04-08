@@ -9,8 +9,8 @@ int main(int argc, char* argv[])
     // Map some memory
     void* memPtr =
       mmap(nullptr, memLen, PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-    
-    if(memPtr == MAP_FAILED) {
+
+    if (memPtr == MAP_FAILED) {
         printf("mmap failed\n");
         return 1;
     }
