@@ -151,19 +151,19 @@ int main()
 #pragma omp atomic
         baseLevelCount++;
 
-#pragma omp parallel num_threads(3) default(none)                              \
+#pragma omp parallel num_threads(2) default(none)                              \
   shared(nestedLevelCount, doubleNestedLevelCount, failed)
         // Nested block
         {
-            failed |= checkLevel(2, 3, 100);
+            failed |= checkLevel(2, 2, 100);
 #pragma omp atomic
             nestedLevelCount++;
 
-#pragma omp parallel num_threads(4) default(none)                              \
+#pragma omp parallel num_threads(2) default(none)                              \
   shared(doubleNestedLevelCount, failed)
             // Doubly nested block
             {
-                failed |= checkLevel(3, 4, 100);
+                failed |= checkLevel(3, 2, 100);
 
 #pragma omp atomic
                 doubleNestedLevelCount++;
@@ -176,13 +176,13 @@ int main()
         return 1;
     }
 
-    if (nestedLevelCount != 6) {
+    if (nestedLevelCount != 4) {
         printf("Expected nested count to be 6 but was %i\n", nestedLevelCount);
         return 1;
     }
 
-    if (doubleNestedLevelCount != 24) {
-        printf("Expected double nested count to be 24 but was %i\n",
+    if (doubleNestedLevelCount != 8) {
+        printf("Expected double nested count to be 12 but was %i\n",
                doubleNestedLevelCount);
         return 1;
     }
