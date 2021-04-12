@@ -22,11 +22,15 @@ jobs:
         run: git fetch origin ${GITHUB_REF}:ci-branch
       - name: "Check out branch"
         run: git checkout --force ci-branch
+      - name: "Update Faabric submodule"
+        run: git submodule update --init -f third-party/faabric
       # --- Run checks ---
       - name: "Install requirements"
         run: pip3 install -r requirements.txt
       - name: "Update CMake files"
         run: inv dev.cmake
+      - name: "Rebuild emulator"
+        run: inv dev.cc emulator
       - name: "Check python"
         run: ./bin/check_python.sh
       - name: "Run C/C++ formatting"

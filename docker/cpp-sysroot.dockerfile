@@ -1,6 +1,6 @@
 FROM faasm/llvm:10.0.1 as llvm
 
-FROM faasm/grpc-root:0.0.16
+FROM faasm/grpc-root:0.0.19
 ARG SYSROOT_VERSION
 
 # Copy the toolchain in from the LLVM container
