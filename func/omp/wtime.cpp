@@ -18,12 +18,16 @@ int main(int argc, char* argv[])
 
         usleep(THREAD_SLEEP_MICROS);
 
+        usleep(50 * 1000);
+
         double threadEnd = omp_get_wtime();
 
         threadTime = threadEnd - threadStart;
     }
 
     usleep(MAIN_SLEEP_MICROS);
+
+    usleep(50 * 1000);
 
     double mainEnd = omp_get_wtime();
 
