@@ -1,11 +1,12 @@
-#include "faasm/faasm.h"
-
 #include <faasm/input.h>
 #include <stdio.h>
+#include <string>
 
 int main(int argc, char* argv[])
 {
-    int inputVal = faasm::getTypedInput<int>(1);
+    const char* inputStr = faasm::getStringInput("1");
+    int inputVal = std::stoi(inputStr);
+    printf("Input value = %i\n", inputVal);
 
     // Writing constants like this can result in a call to puts, not writev
     int i = 7;

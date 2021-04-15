@@ -4,6 +4,7 @@
 #include <faasm/random.h>
 
 #include <stdio.h>
+#include <string>
 #include <vector>
 
 #define N_GUESSES 1000000
@@ -39,7 +40,8 @@ int piStep()
  */
 int main(int argc, char* argv[])
 {
-    int nWorkers = faasm::getTypedInput<int>(4);
+    const char* inputStr = faasm::getStringInput("4");
+    int nWorkers = std::stoi(inputStr);
 
     // Write chunk size to state
     int chunkSize = N_GUESSES / nWorkers;

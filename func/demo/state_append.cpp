@@ -1,13 +1,16 @@
 #include <faasm/faasm.h>
 #include <faasm/input.h>
+
 #include <stdio.h>
+#include <string>
 #include <vector>
 
 #define APPEND_KEY "dummy_append"
 
 int appender()
 {
-    long appendCount = faasm::getTypedInput<long>(0);
+    const char* inputStr = faasm::getStringInput("0");
+    int appendCount = std::stoi(inputStr);
     if (appendCount == 0) {
         printf("Append count was zero\n");
         return 1;
