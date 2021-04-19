@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <omp.h>
+#include <vector>
 
 /*
  * Sums the numbers up to the total
@@ -15,6 +16,23 @@ int getSum(int total)
 
 int main()
 {
+    // Check very overloaded yet simple check
+    int nThreads = 100;
+    omp_set_num_threads(nThreads);
+    std::vector<bool> flags(nThreads, false);
+#pragma omp parallel default(shared)
+    {
+        printf("Setting thread %i\n", omp_get_thread_num());
+        flags.at(omp_get_thread_num()) = true;
+    }
+
+    for (int i = 0; i < nThreads; i++) {
+        if (!flags.at(i)) {
+            printf("Basic check at %i failed\n", i);
+            return 1;
+        }
+    }
+
     int actual = 0;
     const int max = omp_get_max_threads();
     int expected = getSum(max);
