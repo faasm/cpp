@@ -1,4 +1,3 @@
-#include "faasm/faasm.h"
 #include <faasm/input.h>
 #include <string>
 
@@ -18,7 +17,10 @@ int doFib(int n)
 
 int main(int argc, char* argv[])
 {
-    int fibNum = faasm::getTypedInput<int>(2);
+    const char* inputStr = faasm::getStringInput("4");
+    int fibNum = std::stoi(inputStr);
+
+    printf("Running fibonacci with %i\n", fibNum);
     int result = doFib(fibNum);
 
     std::string output =
