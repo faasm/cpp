@@ -31,3 +31,4 @@ __faasm_get_py_func
 __faasm_get_py_entry
 __faasm_chain_py
 __faasm_conf_flag
+__faasm_backtrace

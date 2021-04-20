@@ -1,13 +1,13 @@
-# Faasm C/C++ Support [![CPP tests](https://github.com/faasm/faasm-toolchain/workflows/Tests/badge.svg?branch=master)](https://github.com/faasm/faasm-toolchain/actions) [![License](https://img.shields.io/github/license/faasm/faasm-toolchain.svg)](https://github.com/faasm/faasm-toolchain/blob/master/LICENSE.md) 
+# Faasm C/C++ Support [![CPP tests](https://github.com/faasm/cpp/workflows/Tests/badge.svg?branch=master)](https://github.com/faasm/cpp/actions) [![License](https://img.shields.io/github/license/faasm/cpp.svg)](https://github.com/faasm/cpp/blob/master/LICENSE.md) 
 
 This repo contains everything needed to build C/C++ applications for
 [Faasm](https://github.com/faasm/faasm):
 
-Faasm aims to support a range of legacy applications, so requires a toolchain
-capable of compiling large projects that may require threading, C++ exceptions
-and dynamic linking. To do this we have to use a custom [fork of
-wasi-libc](https://github.com/faasm/wasi-libc), and our own build of the
-LLVM toolchain via [this Makefile](Makefile).  
+Faasm supports a range of legacy applications, so requires a toolchain capable
+of compiling large projects that may require threading, C++ exceptions and
+dynamic linking. To do this we have to use a custom [fork of
+wasi-libc](https://github.com/faasm/wasi-libc), and our own build of the LLVM
+toolchain via [this Makefile](Makefile).  
 
 We have made some small changes to the toolchain itself to support building
 WebAssembly shared libraries outside of the Emscripten target. You can see these

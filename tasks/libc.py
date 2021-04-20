@@ -1,6 +1,7 @@
 from subprocess import run
 
-from os.path import join
+from os.path import join, exists
+from shutil import rmtree
 
 from invoke import task
 
@@ -25,9 +26,13 @@ def build(ctx, clean=False):
     Builds the wasi libc fork in this directory
     """
     libc_dir = join(THIRD_PARTY_DIR, "wasi-libc")
+    libc_build_dir = join(libc_dir, "build")
 
     if clean:
         run("make clean", shell=True, check=True, cwd=libc_dir)
+
+        if exists(libc_build_dir):
+            rmtree(libc_build_dir)
 
     make_cmd = [
         "make",

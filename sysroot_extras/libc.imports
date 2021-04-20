@@ -29,6 +29,7 @@ __syscall_cp
 mmap
 munmap
 shm_open
+__sbrk
 
 # Dynamic linking
 dlopen
@@ -72,7 +73,7 @@ getrusage
 getrlimit
 setrlimit
 
-# Threading
+# Pthreads
 pthread_create
 pthread_exit
 pthread_join
@@ -80,6 +81,7 @@ pthread_mutex_init
 pthread_mutex_lock
 pthread_mutex_unlock
 pthread_mutex_destroy
+pthread_once
 pthread_attr_init
 pthread_attr_setstacksize
 pthread_attr_destroy

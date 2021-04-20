@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(PUBLIC_HEADERS
         faasmp/faasmp.h
-        faasmp/reduction.h
         )
 
 set(LIB_FILES
@@ -15,7 +14,7 @@ set(LIB_FILES
         )
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
-    message(STATUS "Libfaasmp  WebAssembly build")
+    message(STATUS "Libfaasmp WebAssembly build")
 
     set(LIBOMP_ASMFILES "z_Linux_asm.S")
     set_source_files_properties(${LIBOMP_ASMFILES} PROPERTIES LANGUAGE C)
@@ -36,13 +35,19 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
             DESTINATION ${CMAKE_SYSROOT}/lib/wasm32-wasi
             RENAME libfaasmp.imports)
 
-    # Add omp header (already present in native builds)
+    # Add omp header
     install(FILES omp.h
             DESTINATION ${CMAKE_SYSROOT}/include)
+
 else ()
-    message(STATUS "Libfaasmp  native build")
- 
-    add_library(faasmp SHARED ${LIB_FILES})
+    message(STATUS "Libfaasmp native build")
+
+    if(BUILD_SHARED_LIBS)
+        add_library(faasmp SHARED ${LIB_FILES})
+    else()
+        add_library(faasmp STATIC ${LIB_FILES})
+    endif()
+
     set_target_properties(faasmp PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 
     install(TARGETS faasmp

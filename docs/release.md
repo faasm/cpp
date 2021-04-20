@@ -5,7 +5,7 @@ The toolchain repo is based on two Docker images:
 - `faasm/llvm` - the base image holding just the custom LLVM tools
 - `faasm/cpp-sysroot` - the image holding both the tools and sysroot
 
-See the [Actions page](https://github.com/faasm/faasm-toolchain/actions) and
+See the [Actions page](https://github.com/faasm/cpp/actions) and
 [Dockerfiles](docker) for more info.
 
 You only need to rebuild the `llvm` image when upgrading LLVM (see 
@@ -21,7 +21,7 @@ Dockerhub.
 To do this:
 
 - Create a branch with your changes
-- Update the version in [`VERSION`](../VERSION), and `.github/workflows`.
+- Update the version in `VERSION`, `.env` and `.github/workflows/tests.yml`
 - Push this to your branch
 - Run `inv git.tag` to create the tag (from the head of the current branch)
 - Let the CI build run through and build the container

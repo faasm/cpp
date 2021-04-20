@@ -5,20 +5,38 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
   formatting:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
+    container:
+      image: faasm/cpp-sysroot:0.0.24
+    defaults:
+      run:
+        working-directory: /code/cpp
     steps:
-      - name: "Get the latest code"
-        uses: actions/checkout@v2
+      # --- Update code ---
+      - name: "Fetch ref"
+        run: git fetch origin ${GITHUB_REF}:ci-branch
+      - name: "Check out branch"
+        run: git checkout --force ci-branch
+      - name: "Update Faabric submodule"
+        run: git submodule update --init -f third-party/faabric
+      # --- Run checks ---
       - name: "Install requirements"
         run: pip3 install -r requirements.txt
-      - name: "Run Black"
-        run: ./bin/check_black.sh
+      - name: "Update CMake files"
+        run: inv dev.cmake
+      - name: "Rebuild emulator"
+        run: inv dev.cc emulator
+      - name: "Check python"
+        run: ./bin/check_python.sh
       - name: "Run C/C++ formatting"
         run: ./bin/run_clang_format.sh
+      - name: "Run C/C++ linter"
+        run: ./bin/run_clang_tidy.sh
       - name: "Check no formatting changes"
         run: git diff --exit-code
 
@@ -30,10 +48,10 @@ jobs:
       REDIS_QUEUE_HOST: redis
       REDIS_STATE_HOST: redis
     container:
-      image: faasm/cpp-sysroot:0.0.12
+      image: faasm/cpp-sysroot:0.0.24
     defaults:
       run:
-        working-directory: /code/faasm-toolchain
+        working-directory: /code/cpp
     services:
       redis:
         image: redis
@@ -49,4 +67,61 @@ jobs:
       - name: "Build the tests"
         run: inv dev.cc tests
       - name: "Run the tests"
-        run: /build/faasm-toolchain/bin/tests
+        run: /build/cpp/static/bin/tests
+  
+  wasm:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-20.04
+    env:
+      HOST_TYPE: ci
+    container:
+      image: faasm/cpp-sysroot:0.0.24
+    defaults:
+      run:
+        working-directory: /code/cpp
+    steps:
+      - name: "Fetch ref"
+        run: git fetch origin ${GITHUB_REF}:ci-branch
+      - name: "Check out branch"
+        run: git checkout --force ci-branch
+      - name: "Build the functions to check doesn't error"
+        run: inv func.local
+      - name: "Build libfake to check doesn't error"
+        run: inv libfake
+
+  examples:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-20.04
+    env:
+      HOST_TYPE: ci
+      REDIS_QUEUE_HOST: redis
+      REDIS_STATE_HOST: redis
+    container:
+      image: faasm/cpp-sysroot:0.0.24
+    defaults:
+      run:
+        working-directory: /code/cpp
+    services:
+      redis:
+        image: redis
+    steps:
+      - name: "Fetch ref"
+        run: git fetch origin ${GITHUB_REF}:ci-branch
+      - name: "Check out branch"
+        run: git checkout --force ci-branch
+      - name: "Build the faasm shared lib"
+        run: inv libfaasm --native --shared
+      - name: "Build the faasmp shared lib"
+        run: inv libfaasmp --native --shared
+      - name: "Build the faasmpi shared lib"
+        run: inv libfaasmpi --native --shared
+      - name: "Set up shared CMake build"
+        run: inv dev.cmake --shared
+      - name: "Build the emulator shared lib"
+        run: inv dev.cc emulator --shared
+      - name: "Install the emulator shared lib"
+        run: inv dev.install emulator --shared
+      - name: "Build the examples"
+        run: inv examples --shared
+      - name: "Run the example check"
+        run: inv examples.execute --shared

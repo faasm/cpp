@@ -3,12 +3,11 @@
 #include <catch2/catch.hpp>
 #include <faabric/util/logging.h>
 
-int main(int argc, char *argv[]) {
-  faabric::util::initLogging();
+int main(int argc, char* argv[])
+{
+    int result = Catch::Session().run(argc, argv);
 
-  int result = Catch::Session().run(argc, argv);
+    fflush(stdout);
 
-  fflush(stdout);
-
-  return result;
+    return result;
 }

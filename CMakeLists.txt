@@ -13,13 +13,14 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+if (BUILD_SHARED_LIBS AND CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+    message(FATAL_ERROR "Building Wasm shared libs not currently supported")
+endif()
+
 # Add Faabric dependency
 add_subdirectory(third-party/faabric)
 
-# Generated protobuf headers
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/third-party/faabric/src)
-
+# Build emulator and tests
 add_subdirectory(libfaasm)
-add_subdirectory(libfaasmpi)
 add_subdirectory(emulator)
 add_subdirectory(tests)

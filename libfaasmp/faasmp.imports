@@ -31,10 +31,8 @@ omp_get_level
 omp_get_max_active_levels
 omp_set_default_device
 omp_set_max_active_levels
+omp_get_wtime
 
-# Redis state
-__faasmp_incrby
-__faasmp_getLong
-
-# Debug functions
-__faasmp_debug_copy
+# Closely related atomics
+__atomic_load
+__atomic_compare_exchange
