@@ -19,20 +19,20 @@ TEST_CASE("Test parse string to ints", "[input]")
     delete[] actual;
 }
 
-TEST_CASE("Test string input", "[input]") {
-    faabric::Message msg = faabric::util::messageFactory("foo", "bar"); 
-    
+TEST_CASE("Test string input", "[input]")
+{
+    faabric::Message msg = faabric::util::messageFactory("foo", "bar");
+
     std::string expected;
     std::string defaultVal = "default";
-    SECTION("No input") {
-        expected = defaultVal;
-    }
+    SECTION("No input") { expected = defaultVal; }
 
-    SECTION("Input") {
+    SECTION("Input")
+    {
         expected = "foobar baz blah";
         msg.set_inputdata(expected);
     }
-   
+
     setEmulatedMessage(msg);
 
     const char* actual = faasm::getStringInput(defaultVal.c_str());

@@ -1,17 +1,17 @@
-#include <catch2/catch.hpp>
 #include "utils.h"
+#include <catch2/catch.hpp>
 
 #include "matrix_utils.h"
 
 #include <faasm/matrix.h>
 #include <faasm/sgd.h>
 
-#include <faasm/emulator.h>
 #include <faabric/redis/Redis.h>
 #include <faabric/state/StateServer.h>
 #include <faabric/util/environment.h>
 #include <faabric/util/network.h>
 #include <faabric/util/state.h>
+#include <faasm/emulator.h>
 
 using namespace faasm;
 

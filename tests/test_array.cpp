@@ -1,10 +1,10 @@
-#include <catch2/catch.hpp>
 #include "utils.h"
+#include <catch2/catch.hpp>
 
 #include <faabric/redis/Redis.h>
 #include <faabric/state/State.h>
-#include <faasm/emulator.h>
 #include <faasm/array.h>
+#include <faasm/emulator.h>
 
 namespace tests {
 TEST_CASE("Test array operations", "[counter]")

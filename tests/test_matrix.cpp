@@ -1,5 +1,5 @@
-#include <catch2/catch.hpp>
 #include "utils.h"
+#include <catch2/catch.hpp>
 
 #include "matrix_utils.h"
 
@@ -9,10 +9,10 @@
 #include <faabric/redis/Redis.h>
 #include <faabric/state/State.h>
 
-#include <faasm/emulator.h>
 #include <faabric/state/DummyStateServer.h>
 #include <faabric/util/network.h>
 #include <faabric/util/state.h>
+#include <faasm/emulator.h>
 
 using namespace Eigen;
 using namespace faabric::state;

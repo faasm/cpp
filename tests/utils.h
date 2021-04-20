@@ -3,4 +3,3 @@
 namespace tests {
 void cleanCppTests();
 }
-

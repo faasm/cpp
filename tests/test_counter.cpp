@@ -1,9 +1,9 @@
-#include <catch2/catch.hpp>
 #include "utils.h"
+#include <catch2/catch.hpp>
 
-#include <faasm/emulator.h>
 #include <faabric/redis/Redis.h>
 #include <faabric/state/State.h>
+#include <faasm/emulator.h>
 
 #include "faasm/counter.h"
 

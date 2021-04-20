@@ -1,5 +1,5 @@
-#include <catch2/catch.hpp>
 #include "utils.h"
+#include <catch2/catch.hpp>
 
 extern "C"
 {
@@ -80,4 +80,4 @@ TEST_CASE("Test emulation", "[emulator]")
         REQUIRE(actual == offsetData);
     }
 }
-} 
+}
