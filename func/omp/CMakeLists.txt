@@ -26,6 +26,7 @@ endfunction(omp_func)
 
 # Single host parallelism only
 omp_func(custom_reduce custom_reduce.cpp)
+omp_func(complex_reduce complex_reduce.cpp)
 omp_func(for_static_schedule for_static_schedule.cpp)
 omp_func(header_api_support header_api_support.cpp)
 omp_func(hellomp hellomp.cpp)
@@ -44,6 +45,7 @@ omp_func(simple_for simple_for.cpp)
 omp_func(simple_master simple_master.cpp)
 omp_func(simple_reduce simple_reduce.cpp)
 omp_func(simple_single simple_single.cpp)
+omp_func(single_thread_reduce single_thread_reduce.cpp)
 omp_func(wtime wtime.cpp)
 
 # Intel OMP files
