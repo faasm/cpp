@@ -1,7 +1,6 @@
 #include <cstdio>
 #include <math.h>
 #include <omp.h>
-#include <unistd.h>
 
 /**
  * We want to check the single thread case works for everything we test
