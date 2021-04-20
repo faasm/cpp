@@ -29,10 +29,17 @@ int main(int argc, char* argv[])
     long appendCountA = 100;
     long appendCountB = 200;
 
+    std::string appendCountAStr = std::to_string(appendCountA);
+    std::string appendCountBStr = std::to_string(appendCountB);
+
     unsigned int callIdA =
-      faasmChain(appender, (uint8_t*)&appendCountA, sizeof(long));
+      faasmChain(appender,
+                 reinterpret_cast<const uint8_t*>(appendCountAStr.c_str()),
+                 sizeof(long));
     unsigned int callIdB =
-      faasmChain(appender, (uint8_t*)&appendCountB, sizeof(long));
+      faasmChain(appender,
+                 reinterpret_cast<const uint8_t*>(appendCountBStr.c_str()),
+                 sizeof(long));
 
     // Wait for calls to finish
     unsigned int resultA = faasmAwaitCall(callIdA);
