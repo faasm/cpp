@@ -1,5 +1,6 @@
-#include "utils.h"
 #include <catch2/catch.hpp>
+#include "utils.h"
+
 #include <faabric/util/files.h>
 
 #include "faasm/files.h"
@@ -7,6 +8,8 @@
 namespace tests {
 TEST_CASE("Test reading file to string", "[files]")
 {
+    cleanCppTests();
+
     // Fixed path
     std::string path("/etc/hosts");
 

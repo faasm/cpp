@@ -1,20 +1,15 @@
 #include <catch2/catch.hpp>
-
 #include "utils.h"
 
 #include <faabric/redis/Redis.h>
 #include <faabric/state/State.h>
-
-#include <emulator/emulator.h>
+#include <faasm/emulator.h>
 #include <faasm/array.h>
-
-using namespace faasm;
 
 namespace tests {
 TEST_CASE("Test array operations", "[counter]")
 {
-    cleanSystem();
-
+    cleanCppTests();
     faabric::state::State& state = faabric::state::getGlobalState();
     std::string user = getEmulatorUser();
 

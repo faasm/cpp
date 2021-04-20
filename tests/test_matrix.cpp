@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
+#include "utils.h"
 
 #include "matrix_utils.h"
-#include "utils.h"
 
 #include "faasm/faasm.h"
 #include "faasm/matrix.h"
@@ -9,7 +9,7 @@
 #include <faabric/redis/Redis.h>
 #include <faabric/state/State.h>
 
-#include <emulator/emulator.h>
+#include <faasm/emulator.h>
 #include <faabric/state/DummyStateServer.h>
 #include <faabric/util/network.h>
 #include <faabric/util/state.h>
@@ -20,7 +20,7 @@ using namespace faabric::state;
 namespace tests {
 TEST_CASE("Test byte offsets for matrix elements", "[matrix]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     // 0,0 should always be zero
     REQUIRE(faasm::getChunkSizeUpToMatrixElement(0, 0, 10) == 0);
@@ -47,7 +47,7 @@ TEST_CASE("Test byte offsets for matrix elements", "[matrix]")
 
 TEST_CASE("Test sparse matrix generation", "[matrix]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     const SparseMatrix<double> actual = faasm::randomSparseMatrix(10, 5, 0.4);
 
@@ -82,7 +82,7 @@ static size_t setUpDummyStateServer(DummyStateServer& server,
 
 TEST_CASE("Test matrix to remote state round trip", "[matrix]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     DummyStateServer server;
     const char* stateKey = "test_matrix_state";
@@ -118,7 +118,7 @@ TEST_CASE("Test matrix to remote state round trip", "[matrix]")
 
 void checkReadingMatrixColumnsFromState(bool local)
 {
-    cleanSystem();
+    cleanCppTests();
 
     const char* stateKey = "test_matrix_cols_state";
 
@@ -171,7 +171,7 @@ TEST_CASE("Test reading columns from state locally", "[matrix]")
 
 TEST_CASE("Test shuffling matrix", "[matrix]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     MatrixXd mat = faasm::randomSparseMatrix(10, 20, 0.4);
     MatrixXd copy = mat;
@@ -187,7 +187,7 @@ TEST_CASE("Test shuffling matrix", "[matrix]")
 
 TEST_CASE("Test shuffling paired matrices", "[matrix]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     MatrixXd matA(2, 10);
     MatrixXd matB(1, 10);
@@ -224,7 +224,7 @@ TEST_CASE("Test shuffling paired matrices", "[matrix]")
 
 TEST_CASE("Test root mean squared error", "[matrix]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     MatrixXd matA(1, 3);
     matA << 8.5, 10.1, 15.5;
@@ -245,7 +245,7 @@ TEST_CASE("Test root mean squared error", "[matrix]")
 
 TEST_CASE("Test calculating squared error", "[matrix]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     MatrixXd matA(1, 4);
     matA << 11.1, 0.0, 12.2, 13.3;
@@ -264,7 +264,7 @@ TEST_CASE("Test calculating squared error", "[matrix]")
 
 TEST_CASE("Test calculating hinge loss", "[matrix]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     // Some correctly classified (i.e. correct sign), some not
     MatrixXd matA(1, 4);
@@ -284,7 +284,7 @@ TEST_CASE("Test calculating hinge loss", "[matrix]")
 
 TEST_CASE("Test sparse matrix round trip", "[matrix]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     SparseMatrix<double> mat = faasm::randomSparseMatrix(5, 10, 0.4);
 
@@ -298,7 +298,7 @@ TEST_CASE("Test sparse matrix round trip", "[matrix]")
 
 void doInMemoryStateRoundTripCheck(int rows, int cols, int colStart, int colEnd)
 {
-    cleanSystem();
+    cleanCppTests();
 
     const char* key = "sparse_trip_offset_test";
     SparseMatrix<double> mat = faasm::randomSparseMatrix(rows, cols, 0.7);
@@ -352,7 +352,7 @@ void doInMemoryStateRoundTripCheck(int rows, int cols, int colStart, int colEnd)
 
 void doRedisStateRoundTripCheck(int rows, int cols, int colStart, int colEnd)
 {
-    cleanSystem();
+    cleanCppTests();
 
     const char* key = "sparse_trip_offset_test";
     SparseMatrix<double> mat = faasm::randomSparseMatrix(rows, cols, 0.7);
@@ -392,7 +392,7 @@ void doLocalSparseMatrixRoundTripCheck(int rows,
                                        int colStart,
                                        int colEnd)
 {
-    cleanSystem();
+    cleanCppTests();
 
     const char* key = "sparse_trip_offset_test";
     SparseMatrix<double> mat = faasm::randomSparseMatrix(rows, cols, 0.7);

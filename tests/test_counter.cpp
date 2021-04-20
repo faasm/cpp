@@ -1,18 +1,18 @@
 #include <catch2/catch.hpp>
+#include "utils.h"
 
-#include <emulator/emulator.h>
+#include <faasm/emulator.h>
 #include <faabric/redis/Redis.h>
 #include <faabric/state/State.h>
 
 #include "faasm/counter.h"
-#include "utils.h"
 
 using namespace faasm;
 
 namespace tests {
 TEST_CASE("Test normal counter operation", "[counter]")
 {
-    faabric::state::getGlobalState().forceClearAll(true);
+    cleanCppTests();
 
     const char* key = "test_counter";
     initCounter(key);
@@ -34,7 +34,7 @@ TEST_CASE("Test normal counter operation", "[counter]")
 
 TEST_CASE("Test counter over big number", "[counter]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     const char* key = "test_counter";
     initCounter(key);
@@ -48,7 +48,7 @@ TEST_CASE("Test counter over big number", "[counter]")
 
 TEST_CASE("Test uninitialised counter", "[counter]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     const char* key = "test_uninit_key";
     initCounter(key);

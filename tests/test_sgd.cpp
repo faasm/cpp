@@ -1,12 +1,12 @@
 #include <catch2/catch.hpp>
+#include "utils.h"
 
 #include "matrix_utils.h"
-#include "utils.h"
 
 #include <faasm/matrix.h>
 #include <faasm/sgd.h>
 
-#include <emulator/emulator.h>
+#include <faasm/emulator.h>
 #include <faabric/redis/Redis.h>
 #include <faabric/state/StateServer.h>
 #include <faabric/util/environment.h>
@@ -41,7 +41,7 @@ void checkSgdParamEquality(SgdParams& a, SgdParams& b)
 
 TEST_CASE("Test serialising params round trip", "[sgd]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     SgdParams params = getDummySgdParams();
 
@@ -57,7 +57,7 @@ TEST_CASE("Test serialising params round trip", "[sgd]")
 
 TEST_CASE("Test setting up dummy data", "[sgd]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     // Set up the problem
     SgdParams params = getDummySgdParams();
@@ -81,7 +81,7 @@ TEST_CASE("Test setting up dummy data", "[sgd]")
 
 TEST_CASE("Test hinge loss updates", "[sgd]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     int nWeights = 4;
     SgdParams params;
@@ -180,7 +180,7 @@ void checkAppendOnlyInState(const std::string& user,
 
 TEST_CASE("Test writing errors to state", "[sgd]")
 {
-    cleanSystem();
+    cleanCppTests();
 
     MatrixXd a = randomDenseMatrix(1, 5);
     MatrixXd b = randomDenseMatrix(1, 5);
@@ -206,7 +206,7 @@ TEST_CASE("Test writing errors to state", "[sgd]")
 
 TEST_CASE("Test reading errors from state", "[sgd]")
 {
-    cleanSystem();
+    cleanCppTests();
     const std::string user = getEmulatorUser();
 
     SgdParams p = getDummySgdParams();
