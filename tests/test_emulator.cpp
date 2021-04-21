@@ -1,3 +1,4 @@
+#include "utils.h"
 #include <catch2/catch.hpp>
 
 extern "C"
@@ -16,7 +17,7 @@ namespace tests {
 
 TEST_CASE("Test emulation", "[emulator]")
 {
-    faabric::state::getGlobalState().forceClearAll(true);
+    cleanCppTests();
 
     std::vector<uint8_t> dummyBytes = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
     long dummyLen = dummyBytes.size();
@@ -79,4 +80,4 @@ TEST_CASE("Test emulation", "[emulator]")
         REQUIRE(actual == offsetData);
     }
 }
-} // namespace tests
+}

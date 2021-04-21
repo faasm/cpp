@@ -12,7 +12,8 @@
 
 int piStep()
 {
-    int chunkSize = faasm::getTypedInput<int>(0);
+    const char* inputStr = faasm::getStringInput("0");
+    int chunkSize = std::stoi(inputStr);
     if (chunkSize == 0) {
         printf("Didn't get told a chunk size\n");
         return 1;
