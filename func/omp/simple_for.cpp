@@ -1,31 +1,33 @@
 #include <cstdio>
-#include <faasm/faasm.h>
+#include <faasm/compare.h>
 #include <omp.h>
 
-#define TOTAL 10
+#define TOTAL 15
 
 int main(int argc, char* argv[])
 {
-    auto results = new int[TOTAL];
+    int expected[TOTAL] = { 0,  1,  2,  3,  4,  10, 12, 14,
+                            16, 18, 30, 33, 36, 39, 42 };
+    int stackResults[TOTAL];
+    auto heapResults = new int[TOTAL];
     bool failed = false;
 
-#pragma omp parallel for num_threads(2) schedule(static, 5) default(none)      \
-  shared(results)
+#pragma omp parallel for num_threads(3) schedule(static, 5) default(none)      \
+  shared(stackResults, heapResults)
     for (int i = 0; i < TOTAL; i++) {
-        results[i] = i * (1 + omp_get_thread_num());
+        int val = i * (1 + omp_get_thread_num());
+        stackResults[i] = val;
+        heapResults[i] = val;
     }
 
-    for (int i = 0; i < TOTAL; i++) {
-        int expected = i < 5 ? i : 2 * i;
-        if (results[i] != expected) {
-            printf("Element %i falsely set to %d, expected %d\n",
-                   i,
-                   results[i],
-                   expected);
-            failed = true;
-        }
+    if (!faasm::compareArrays(heapResults, expected, TOTAL)) {
+        return 1;
     }
 
-    delete[] results;
-    return failed ? EXIT_FAILURE : EXIT_SUCCESS;
+    if (!faasm::compareArrays(stackResults, expected, TOTAL)) {
+        return 1;
+    }
+
+    delete[] heapResults;
+    return 0;
 }
