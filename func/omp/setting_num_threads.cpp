@@ -16,7 +16,7 @@ int getSum(int total)
 
 int main()
 {
-    // Check very overloaded yet simple check
+    // Run very overloaded yet simple check
     int nThreads = 100;
     omp_set_num_threads(nThreads);
     std::vector<bool> flags(nThreads, false);
