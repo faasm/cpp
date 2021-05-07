@@ -14,7 +14,7 @@ int main(int argc, char** argv)
     int expectedLoops = 3 * ITERATIONS;
 
     if (argc == 1) {
-        nThreads = 2;
+        nThreads = 50;
     } else {
         nThreads = std::stoi(argv[1]);
     }
