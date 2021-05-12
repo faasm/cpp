@@ -16,11 +16,20 @@ int getSum(int total)
 
 int main()
 {
-    // Check very overloaded yet simple check
+    // Run very overloaded yet simple check
     int nThreads = 100;
     omp_set_num_threads(nThreads);
     std::vector<bool> flags(nThreads, false);
-#pragma omp parallel default(shared)
+
+    const int max = omp_get_max_threads();
+    if (max != nThreads) {
+        printf("Expected num threads and max to be equal, %i != %i\n",
+               nThreads,
+               max);
+        return 1;
+    }
+
+#pragma omp parallel default(none) shared(flags)
     {
         printf("Setting thread %i\n", omp_get_thread_num());
         flags.at(omp_get_thread_num()) = true;
@@ -34,14 +43,12 @@ int main()
     }
 
     int actual = 0;
-    const int max = omp_get_max_threads();
-    int expected = getSum(max);
-
 #pragma omp parallel default(none) reduction(+ : actual)
     {
         actual = omp_get_thread_num();
     }
 
+    int expected = getSum(nThreads);
     if (actual != expected) {
         printf("Failed to set default num threads. Expected %d, got %d\n",
                expected,

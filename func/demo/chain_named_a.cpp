@@ -1,6 +1,17 @@
 #include "faasm/core.h"
 #include <faasm/faasm.h>
+#include <string>
 #include <vector>
+
+bool doChainedCall(const std::string& name, std::vector<uint8_t> inputData)
+{
+    unsigned int callId =
+      faasmChainNamed(name.c_str(), inputData.data(), inputData.size());
+
+    unsigned int result = faasmAwaitCall(callId);
+
+    return result == 0;
+}
 
 int main(int argc, char* argv[])
 {
@@ -8,17 +19,17 @@ int main(int argc, char* argv[])
     std::vector<uint8_t> inputB2 = { 3, 4, 5 };
     std::vector<uint8_t> inputC1 = { 6, 7 };
 
-    unsigned int idB1 = faasmChainNamed("chain_named_b", inputB1.data(), 3);
-    unsigned int idB2 = faasmChainNamed("chain_named_b", inputB2.data(), 3);
-    unsigned int idC1 = faasmChainNamed("chain_named_c", inputC1.data(), 2);
+    std::string nameB("chain_named_b");
+    std::string nameC("chain_named_c");
 
-    unsigned int resB1 = faasmAwaitCall(idB1);
-    unsigned int resB2 = faasmAwaitCall(idB2);
-    unsigned int resC1 = faasmAwaitCall(idC1);
+    bool success = true;
+    success &= doChainedCall(nameB, inputB1);
+    success &= doChainedCall(nameB, inputB2);
+    success &= doChainedCall(nameC, inputC1);
 
-    if (resB1 != 0 || resB2 != 0 || resC1 != 0) {
+    if (!success) {
         return 1;
+    } else {
+        return 0;
     }
-
-    return 0;
 }

@@ -2,24 +2,7 @@
 #include <faasm/faasm.h>
 #include <omp.h>
 
-double integral_atomic();
-double integral_roundrobin();
-double integral_reduction();
-double integral_better_reduction();
-bool checkResult(const char* func, double reduction);
-
-int main(int argc, char* argv[])
-{
-    bool failed = false;
-    failed |= checkResult("Atomic", integral_atomic());
-    failed |= checkResult("RR", integral_roundrobin());
-    failed |= checkResult("Reduction", integral_reduction());
-    failed |= checkResult("Better reduction", integral_better_reduction());
-    if (failed) {
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
-}
+#define NTHREADS 10
 
 bool checkResult(const char* func, double reduction)
 {
@@ -30,25 +13,19 @@ bool checkResult(const char* func, double reduction)
     return false;
 }
 
-double omp_get_wtime()
+double roundRobin()
 {
-    // TODO - actually return time
-    return 1.0;
-}
-
-double integral_roundrobin()
-{
-    int NTHREADS = 48, nthreads;
-    long num_steps = 100000000;
+    int nthreads;
+    long nSteps = 100000000;
     double step = 0;
     double pi = 0.0;
     double sum[NTHREADS];
 
-    step = 1.0 / (double)num_steps;
-    double timer_start = omp_get_wtime();
+    step = 1.0 / (double)nSteps;
+    double timerStart = omp_get_wtime();
     omp_set_num_threads(NTHREADS);
 
-#pragma omp parallel default(none) shared(nthreads, num_steps, step, sum)
+#pragma omp parallel default(none) shared(nthreads, nSteps, step, sum)
     {
         int i, id, lnthreads;
         double x;
@@ -59,7 +36,7 @@ double integral_roundrobin()
             nthreads = lnthreads;
         }
 
-        for (i = id, sum[id] = 0; i < num_steps; i += lnthreads) {
+        for (i = id, sum[id] = 0; i < nSteps; i += lnthreads) {
             x = (i + 0.5) * step;
             sum[id] += 4.0 / (1.0 + x * x);
         }
@@ -68,27 +45,22 @@ double integral_roundrobin()
         pi += sum[i] * step;
     }
 
-    double timer_took = omp_get_wtime() - timer_start;
-    printf("RR took %f, pi: %f\n", timer_took, pi);
+    double timerEnd = omp_get_wtime() - timerStart;
+    printf("RR took %f, pi: %f\n", timerEnd, pi);
     return pi;
-    // 1 threads  --> 0.57 seconds.
-    // 4 threads  --> 1.34 seconds.
-    // 24 threads --> 0.59 seconds.
-    // 48 threads --> 0.46 seconds.
 }
 
-double integral_atomic()
+double doAtomic()
 {
-    int NTHREADS = 4;
-    long num_steps = 100000000;
+    long nSteps = 100000000;
     double step = 0;
     double pi = 0.0;
 
-    step = 1.0 / (double)num_steps;
-    double timer_start = omp_get_wtime();
-    omp_set_num_threads(NTHREADS);
+    step = 1.0 / (double)nSteps;
+    double timerStart = omp_get_wtime();
+    omp_set_num_threads(4);
 
-#pragma omp parallel default(none) shared(num_steps, step, pi)
+#pragma omp parallel default(none) shared(nSteps, step, pi)
     {
         int i, id, lnthreads;
         double x, sum = 0;
@@ -96,7 +68,7 @@ double integral_atomic()
         lnthreads = omp_get_num_threads();
         id = omp_get_thread_num();
 
-        for (i = id; i < num_steps; i += lnthreads) {
+        for (i = id; i < nSteps; i += lnthreads) {
             x = (i + 0.5) * step;
             sum += 4.0 / (1.0 + x * x);
         }
@@ -105,75 +77,74 @@ double integral_atomic()
         pi += sum * step;
     }
 
-    double timer_took = omp_get_wtime() - timer_start;
-    printf("Atomic took %f, pi: %f\n", timer_took, pi);
+    double timerEnd = omp_get_wtime() - timerStart;
+    printf("Atomic took %f, pi: %f\n", timerEnd, pi);
     return pi;
-    // 1 threads  --> 0.53 seconds.
-    // 4 threads  --> 0.25 seconds.
-    // 24 threads --> 0.24 seconds.
-    // 48 threads --> 0.21 seconds.
 }
 
-double integral_reduction()
+double doReduction()
 {
-    int NTHREADS = 48;
-    long num_steps = 100000000;
+    long nSteps = 100000000;
     double step = 0;
     double pi = 0.0;
     double sum = 0;
     int i = 0;
 
-    step = 1.0 / (double)num_steps;
+    step = 1.0 / (double)nSteps;
 
     omp_set_num_threads(NTHREADS);
-    double timer_start = omp_get_wtime();
+    double timerStart = omp_get_wtime();
 
-#pragma omp parallel for default(none) shared(num_steps, step) reduction(+:sum)
-    for (i = 0; i < num_steps; ++i) {
+#pragma omp parallel for default(none) shared(nSteps, step) reduction(+ : sum)
+    for (i = 0; i < nSteps; ++i) {
         int x = (i + 0.5) * step;
         sum += 4.0 / (1.0 + x * x);
     }
 
     pi = sum * step;
 
-    double timer_took = omp_get_wtime() - timer_start;
-    printf("Reduction took %f, pi: %f\n", timer_took, pi);
+    double timerEnd = omp_get_wtime() - timerStart;
+    printf("Reduction took %f, pi: %f\n", timerEnd, pi);
     return pi;
-    // 1 threads  --> 0.55 seconds.
-    // 4 threads  --> 0.24 seconds.
-    // 24 threads --> 0.24 seconds.
-    // 48 threads --> 0.23 seconds.
 }
 
-double integral_better_reduction()
+double doBetterReduction()
 {
-    // this version is better because it can work in the case of non-threaded
-    // environments.
-    int NTHREADS = 48;
-    long num_steps = 100000000;
+    // This version is better because it can work in non-threaded environments.
+    long nSteps = 100000000;
     double step = 0;
     double pi = 0.0;
     double sum = 0;
     int i = 0, x;
 
-    step = 1.0 / (double)num_steps;
+    step = 1.0 / (double)nSteps;
 
     omp_set_num_threads(NTHREADS);
-    double timer_start = omp_get_wtime();
+    double timerStart = omp_get_wtime();
 
-#pragma omp parallel for private(x) default(none) shared(num_steps, step) reduction(+:sum)
-    for (i = 0; i < num_steps; ++i) {
+#pragma omp parallel for private(x) default(none) shared(nSteps, step) reduction(+:sum)
+    for (i = 0; i < nSteps; ++i) {
         x = (i + 0.5) * step;
         sum += 4.0 / (1.0 + x * x);
     }
 
     pi = sum * step;
 
-    double timer_took = omp_get_wtime() - timer_start;
-    printf("Better reduction took %f, pi: %f\n", timer_took, pi);
+    double timerEnd = omp_get_wtime() - timerStart;
+    printf("Better reduction took %f, pi: %f\n", timerEnd, pi);
     return pi;
-    // 1 threads  --> 0.55 seconds.
-    // 4 threads  --> 0.24 seconds.
-    // 24 threads --> 0.24 seconds.
-    // 48 threads --> 0.23 seconds.
+}
+
+int main(int argc, char* argv[])
+{
+    bool failed = false;
+    failed |= checkResult("Atomic", doAtomic());
+    failed |= checkResult("RR", roundRobin());
+    failed |= checkResult("Reduction", doReduction());
+    failed |= checkResult("Better reduction", doBetterReduction());
+
+    if (failed) {
+        return 1;
+    }
+    return 0;
 }

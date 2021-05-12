@@ -14,7 +14,7 @@ int main(int argc, char** argv)
     int expectedLoops = 3 * ITERATIONS;
 
     if (argc == 1) {
-        nThreads = 2;
+        nThreads = 50;
     } else {
         nThreads = std::stoi(argv[1]);
     }
@@ -67,7 +67,7 @@ int main(int argc, char** argv)
     bool failed = false;
     for (int i = 0; i < ITERATIONS; i++) {
         if (counts[i] != 3) {
-            printf("counts[%i]=%i\n", counts[i], i);
+            printf("counts[%i]=%i\n", i, counts[i]);
 
             failed = true;
         }
