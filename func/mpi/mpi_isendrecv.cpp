@@ -2,6 +2,8 @@
 #include <mpi.h>
 #include <stdio.h>
 
+#include <unistd.h>
+
 int main(int argc, char* argv[])
 {
     MPI_Init(NULL, NULL);
@@ -16,15 +18,15 @@ int main(int argc, char* argv[])
     int maxRank = worldSize - 1;
     int left = rank > 0 ? rank - 1 : maxRank;
 
-    // Asynchronously receive from the left
-    int recvValue = -1;
-    MPI_Request recvRequest;
-    MPI_Irecv(&recvValue, 1, MPI_INT, left, 0, MPI_COMM_WORLD, &recvRequest);
-
     // Asynchronously send to the right
     int sendValue = rank;
     MPI_Request sendRequest;
     MPI_Isend(&sendValue, 1, MPI_INT, right, 0, MPI_COMM_WORLD, &sendRequest);
+
+    // Asynchronously receive from the left
+    int recvValue = -1;
+    MPI_Request recvRequest;
+    MPI_Irecv(&recvValue, 1, MPI_INT, left, 0, MPI_COMM_WORLD, &recvRequest);
 
     // Wait for both
     MPI_Wait(&recvRequest, MPI_STATUS_IGNORE);
