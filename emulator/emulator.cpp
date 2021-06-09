@@ -88,16 +88,15 @@ void setEmulatorState(faabric::state::State* state)
 
 void emulatorSetCallStatus(bool success)
 {
-    const std::shared_ptr<spdlog::logger>& logger = faabric::util::getLogger();
     faabric::Message resultMsg = _emulatedCall;
 
     const std::string funcStr = faabric::util::funcToString(resultMsg, true);
 
     if (success) {
-        logger->debug("Setting success status for {}", funcStr);
+        SPDLOG_DEBUG("Setting success status for {}", funcStr);
         resultMsg.set_returnvalue(0);
     } else {
-        logger->debug("Setting failed status for {}", funcStr);
+        SPDLOG_DEBUG("Setting failed status for {}", funcStr);
         resultMsg.set_returnvalue(1);
     }
 
@@ -117,10 +116,9 @@ unsigned int setEmulatedMessage(const faabric::Message& msg)
     _emulatedCall = msg;
     unsigned int msgId = faabric::util::setMessageId(_emulatedCall);
 
-    const std::shared_ptr<spdlog::logger>& logger = faabric::util::getLogger();
     const std::string funcStr =
       faabric::util::funcToString(_emulatedCall, true);
-    logger->debug("Emulator set to {}", funcStr);
+    SPDLOG_DEBUG("Emulator set to {}", funcStr);
 
     return msgId;
 }
@@ -128,9 +126,7 @@ unsigned int setEmulatedMessage(const faabric::Message& msg)
 std::string getEmulatedUser()
 {
     if (_emulatedCall.user().empty()) {
-        const std::shared_ptr<spdlog::logger>& logger =
-          faabric::util::getLogger();
-        logger->debug("Setting dummy emulator user {}", DUMMY_USER);
+        SPDLOG_DEBUG("Setting dummy emulator user {}", DUMMY_USER);
         setEmulatorUser(DUMMY_USER);
     }
 
