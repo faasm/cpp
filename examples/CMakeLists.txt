@@ -16,6 +16,7 @@ target_link_libraries(native_lib
     emulator
     faabric
     faabricmpi
+    zmq
     protobuf
     pthread
     pistache
