@@ -14,6 +14,8 @@
 #include <faabric/util/state.h>
 #include <faasm/emulator.h>
 
+#include <unistd.h>
+
 using namespace Eigen;
 using namespace faabric::state;
 
@@ -321,7 +323,7 @@ void doInMemoryStateRoundTripCheck(int rows, int cols, int colStart, int colEnd)
           faasm::writeSparseMatrixToState(key, mat, false);
 
           // Process messages. Run the server in _this_ thread.
-          stateServer.start(false);
+          stateServer.start();
       });
 
     // Give it time to start
