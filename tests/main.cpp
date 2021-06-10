@@ -9,15 +9,16 @@ struct LogListener : Catch::TestEventListenerBase
 
     void testCaseStarting(Catch::TestCaseInfo const& testInfo) override
     {
-        auto logger = faabric::util::getLogger();
-        logger->debug("---------------------------------------------");
-        logger->debug("TEST: {}", testInfo.name);
-        logger->debug("---------------------------------------------");
+        SPDLOG_INFO("---------------------------------------------");
+        SPDLOG_INFO("TEST: {}", testInfo.name);
+        SPDLOG_INFO("---------------------------------------------");
     }
 };
 
 int main(int argc, char* argv[])
 {
+    faabric::util::initLogging();
+
     int result = Catch::Session().run(argc, argv);
 
     fflush(stdout);

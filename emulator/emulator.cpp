@@ -88,16 +88,15 @@ void setEmulatorState(faabric::state::State* state)
 
 void emulatorSetCallStatus(bool success)
 {
-    const std::shared_ptr<spdlog::logger>& logger = faabric::util::getLogger();
     faabric::Message resultMsg = _emulatedCall;
 
     const std::string funcStr = faabric::util::funcToString(resultMsg, true);
 
     if (success) {
-        logger->debug("Setting success status for {}", funcStr);
+        SPDLOG_DEBUG("Setting success status for {}", funcStr);
         resultMsg.set_returnvalue(0);
     } else {
-        logger->debug("Setting failed status for {}", funcStr);
+        SPDLOG_DEBUG("Setting failed status for {}", funcStr);
         resultMsg.set_returnvalue(1);
     }
 
@@ -117,10 +116,9 @@ unsigned int setEmulatedMessage(const faabric::Message& msg)
     _emulatedCall = msg;
     unsigned int msgId = faabric::util::setMessageId(_emulatedCall);
 
-    const std::shared_ptr<spdlog::logger>& logger = faabric::util::getLogger();
     const std::string funcStr =
       faabric::util::funcToString(_emulatedCall, true);
-    logger->debug("Emulator set to {}", funcStr);
+    SPDLOG_DEBUG("Emulator set to {}", funcStr);
 
     return msgId;
 }
@@ -128,9 +126,7 @@ unsigned int setEmulatedMessage(const faabric::Message& msg)
 std::string getEmulatedUser()
 {
     if (_emulatedCall.user().empty()) {
-        const std::shared_ptr<spdlog::logger>& logger =
-          faabric::util::getLogger();
-        logger->debug("Setting dummy emulator user {}", DUMMY_USER);
+        SPDLOG_DEBUG("Setting dummy emulator user {}", DUMMY_USER);
         setEmulatorUser(DUMMY_USER);
     }
 
@@ -158,14 +154,13 @@ std::shared_ptr<faabric::state::StateKeyValue> getKv(const char* key)
 
 void __faasm_write_output(const unsigned char* output, long outputLen)
 {
-    faabric::util::getLogger()->debug(
-      "E - write_output {} {}", output, outputLen);
+    SPDLOG_DEBUG("E - write_output {} {}", output, outputLen);
     _emulatedCall.set_outputdata(output, outputLen);
 }
 
 long __faasm_read_state(const char* key, unsigned char* buffer, long bufferLen)
 {
-    faabric::util::getLogger()->debug("E - read_state {} {}", key, bufferLen);
+    SPDLOG_DEBUG("E - read_state {} {}", key, bufferLen);
     faabric::state::State* s = getEmulatorState();
     std::string emulatedUser = getEmulatedUser();
 
@@ -180,8 +175,7 @@ long __faasm_read_state(const char* key, unsigned char* buffer, long bufferLen)
 
 unsigned char* __faasm_read_state_ptr(const char* key, long totalLen)
 {
-    faabric::util::getLogger()->debug(
-      "E - read_state_ptr {} {}", key, totalLen);
+    SPDLOG_DEBUG("E - read_state_ptr {} {}", key, totalLen);
     auto kv = getKv(key, totalLen);
     return kv->get();
 }
@@ -192,7 +186,7 @@ void __faasm_read_state_offset(const char* key,
                                unsigned char* buffer,
                                long bufferLen)
 {
-    faabric::util::getLogger()->debug(
+    SPDLOG_DEBUG(
       "E - read_state_offset {} {} {} {}", key, totalLen, offset, bufferLen);
     auto kv = getKv(key, totalLen);
     kv->getChunk(offset, buffer, bufferLen);
@@ -203,7 +197,7 @@ unsigned char* __faasm_read_state_offset_ptr(const char* key,
                                              long offset,
                                              long len)
 {
-    faabric::util::getLogger()->debug(
+    SPDLOG_DEBUG(
       "E - read_state_offset_ptr {} {} {} {}", key, totalLen, offset, len);
     auto kv = getKv(key, totalLen);
     return kv->getChunk(offset, len);
@@ -211,14 +205,14 @@ unsigned char* __faasm_read_state_offset_ptr(const char* key,
 
 void __faasm_write_state(const char* key, const uint8_t* data, long dataLen)
 {
-    faabric::util::getLogger()->debug("E - write_state {} {}", key, dataLen);
+    SPDLOG_DEBUG("E - write_state {} {}", key, dataLen);
     auto kv = getKv(key, dataLen);
     kv->set(data);
 }
 
 void __faasm_append_state(const char* key, const uint8_t* data, long dataLen)
 {
-    faabric::util::getLogger()->debug("E - append_state {} {}", key, dataLen);
+    SPDLOG_DEBUG("E - append_state {} {}", key, dataLen);
     auto kv = getKv(key);
     kv->append(data, dataLen);
 }
@@ -228,8 +222,7 @@ void __faasm_read_appended_state(const char* key,
                                  long bufferLen,
                                  long nElems)
 {
-    faabric::util::getLogger()->debug(
-      "E - read_appended_state {} {} {}", key, bufferLen, nElems);
+    SPDLOG_DEBUG("E - read_appended_state {} {} {}", key, bufferLen, nElems);
 
     const std::string user = getEmulatorUser();
     auto kv = getKv(key);
@@ -238,7 +231,7 @@ void __faasm_read_appended_state(const char* key,
 
 void __faasm_clear_appended_state(const char* key)
 {
-    faabric::util::getLogger()->debug("E - clear_appended_state {}", key);
+    SPDLOG_DEBUG("E - clear_appended_state {}", key);
     auto kv = getKv(key);
     kv->clearAppended();
 }
@@ -250,7 +243,7 @@ void __faasm_write_state_offset(const char* key,
                                 long dataLen)
 {
     // Avoid excessive logging
-    // faabric::util::getLogger()->debug("E - write_state_offset {} {} {} {}",
+    // SPDLOG_DEBUG("E - write_state_offset {} {} {} {}",
     // key, totalLen, offset, dataLen);
     auto kv = getKv(key, totalLen);
     kv->setChunk(offset, data, dataLen);
@@ -259,8 +252,7 @@ void __faasm_write_state_offset(const char* key,
 unsigned int __faasm_write_state_from_file(const char* key,
                                            const char* filePath)
 {
-    faabric::util::getLogger()->debug(
-      "E - write_state_from_file - {} {}", key, filePath);
+    SPDLOG_DEBUG("E - write_state_from_file - {} {}", key, filePath);
 
     // Read file into bytes
     const std::vector<uint8_t> bytes = faabric::util::readFileToBytes(filePath);
@@ -278,7 +270,7 @@ unsigned int __faasm_write_state_from_file(const char* key,
 void __faasm_flag_state_dirty(const char* key, long totalLen)
 {
     // Avoid excessive logging
-    // faabric::util::getLogger()->debug("E - flag_state_dirty {} {}", key,
+    // SPDLOG_DEBUG("E - flag_state_dirty {} {}", key,
     // totalLen);
     auto kv = getKv(key, totalLen);
     kv->flagDirty();
@@ -290,7 +282,7 @@ void __faasm_flag_state_offset_dirty(const char* key,
                                      long dataLen)
 {
     // Avoid excessive logging
-    // faabric::util::getLogger()->debug("E - flag_state_offset_dirty {} {} {}
+    // SPDLOG_DEBUG("E - flag_state_offset_dirty {} {} {}
     // {}", key, totalLen, offset, dataLen);
     auto kv = getKv(key, totalLen);
     kv->flagChunkDirty(offset, dataLen);
@@ -299,7 +291,7 @@ void __faasm_flag_state_offset_dirty(const char* key,
 void __faasm_push_state_partial_mask(const char* key, const char* maskKey)
 {
     // Avoid excessive logging
-    // faabric::util::getLogger()->debug("E - push_state_partial_mask {}", key,
+    // SPDLOG_DEBUG("E - push_state_partial_mask {}", key,
     // maskKey);
     auto kv = getKv(key, 0);
     auto maskKv = getKv(maskKey, 0);
@@ -309,28 +301,28 @@ void __faasm_push_state_partial_mask(const char* key, const char* maskKey)
 
 void __faasm_push_state(const char* key)
 {
-    faabric::util::getLogger()->debug("E - push_state {}", key);
+    SPDLOG_DEBUG("E - push_state {}", key);
     auto kv = getKv(key, 0);
     kv->pushFull();
 }
 
 void __faasm_push_state_partial(const char* key)
 {
-    faabric::util::getLogger()->debug("E - push_state_partial {}", key);
+    SPDLOG_DEBUG("E - push_state_partial {}", key);
     auto kv = getKv(key, 0);
     kv->pushPartial();
 }
 
 void __faasm_pull_state(const char* key, long stateLen)
 {
-    faabric::util::getLogger()->debug("E - pull_state {}", key);
+    SPDLOG_DEBUG("E - pull_state {}", key);
     auto kv = getKv(key, stateLen);
     kv->pull();
 }
 
 long __faasm_read_input(unsigned char* buffer, long bufferLen)
 {
-    faabric::util::getLogger()->debug("E - read_input len {}", bufferLen);
+    SPDLOG_DEBUG("E - read_input len {}", bufferLen);
 
     long inputLen;
     inputLen = _emulatedCall.inputdata().size();

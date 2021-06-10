@@ -11,8 +11,8 @@ else()
     add_library(native_lib STATIC native_lib.cpp)
 endif()
 
-target_link_libraries(native_lib 
-    faasm 
+target_link_libraries(native_lib
+    faasm
     emulator
     faabric
     faabricmpi

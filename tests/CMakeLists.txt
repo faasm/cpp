@@ -11,6 +11,7 @@ add_executable(
 
 target_include_directories(tests PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 target_include_directories(tests PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../libfaasm")
+target_include_directories(tests PUBLIC "${FAABRIC_SRC_DIR}/tests/utils")
 
 target_link_libraries(tests emulator faasm faabric_test_utils)
 
