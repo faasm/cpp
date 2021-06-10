@@ -19,6 +19,7 @@ target_include_directories(emulator PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 target_link_libraries(emulator 
     faasm 
     faabric
+    faabric_test_utils
     )
 
 set_target_properties(emulator PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
