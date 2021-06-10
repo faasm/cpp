@@ -19,6 +19,7 @@ endif()
 
 # Add Faabric dependency
 add_subdirectory(third-party/faabric)
+set(FAABRIC_SRC_DIR "${CMAKE_CURRENT_LIST_DIR}/third-party/faabric")
 
 # Build emulator and tests
 add_subdirectory(libfaasm)
