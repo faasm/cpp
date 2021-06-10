@@ -24,4 +24,8 @@ set(FAABRIC_SRC_DIR "${CMAKE_CURRENT_LIST_DIR}/third-party/faabric")
 # Build emulator and tests
 add_subdirectory(libfaasm)
 add_subdirectory(emulator)
-add_subdirectory(tests)
+
+if (BUILD_SHARED_LIBS)
+else()
+    add_subdirectory(tests)
+endif()
