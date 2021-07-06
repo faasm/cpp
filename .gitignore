@@ -1,5 +1,6 @@
 build-wasm/
 build-native/
+build-native-shared/
 compile_commands.json
 .clangd/
 
