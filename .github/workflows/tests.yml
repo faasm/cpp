@@ -8,11 +8,11 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  formatting:
+  checks:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     container:
-      image: faasm/cpp-sysroot:0.0.25
+      image: faasm/cpp-sysroot:0.0.26
     defaults:
       run:
         working-directory: /code/cpp
@@ -22,104 +22,45 @@ jobs:
         run: git fetch origin ${GITHUB_REF}:ci-branch
       - name: "Check out branch"
         run: git checkout --force ci-branch
+      - name: "Update Eigen submodule"
+        run: git submodule update --init -f third-party/eigen
       - name: "Update Faabric submodule"
         run: git submodule update --init -f third-party/faabric
-      # --- Run checks ---
+      - name: "Update FFI submodule"
+        run: git submodule update --init -f third-party/libffi
+      - name: "Update wasi-libc submodule"
+        run: git submodule update --init -f third-party/wasi-libc
       - name: "Install requirements"
         run: pip3 install -r requirements.txt
-      - name: "Update CMake files"
-        run: inv dev.cmake
-      - name: "Rebuild emulator"
-        run: inv dev.cc emulator
+      # --- Build libraries to wasm ---
+      - name: "Build libc"
+        run: inv libc
+      - name: "Build libfaasm"
+        run: inv libfaasm 
+      - name: "Build libfaasmp"
+        run: inv libfaasmp
+      - name: "Build libfaasmpi"
+        run: inv libfaasmpi
+      - name: "Build libffi"
+        run: inv libffi
+      - name: "Build libfake"
+        run: inv libfake
+      - name: "Build libemscripten"
+        run: inv libemscripten
+      # --- Build functions to wasm ---
+      - name: "Build the functions"
+        run: inv func.local --clean
+      # --- Build libraries natively ---
+      - name: "Build libfaasm native"
+        run: inv libfaasm --native --clean
+      - name: "Build libfaasmp native"
+        run: inv libfaasmp --native --clean
+      - name: "Build libfaasmpi native"
+        run: inv libfaasmpi --native --clean
+      # --- Formatting ---
       - name: "Check python"
         run: ./bin/check_python.sh
       - name: "Run C/C++ formatting"
         run: ./bin/run_clang_format.sh
       - name: "Check no formatting changes"
         run: git diff --exit-code
-
-  tests:
-    if: github.event.pull_request.draft == false
-    runs-on: ubuntu-20.04
-    env:
-      HOST_TYPE: ci
-      REDIS_QUEUE_HOST: redis
-      REDIS_STATE_HOST: redis
-    container:
-      image: faasm/cpp-sysroot:0.0.24
-    defaults:
-      run:
-        working-directory: /code/cpp
-    services:
-      redis:
-        image: redis
-    steps:
-      - name: "Fetch ref"
-        run: git fetch origin ${GITHUB_REF}:ci-branch
-      - name: "Check out branch"
-        run: git checkout --force ci-branch
-      - name: "Update Faabric submodule"
-        run: git submodule update --init -f third-party/faabric
-      - name: "Update CMake build"
-        run: inv dev.cmake
-      - name: "Build the tests"
-        run: inv dev.cc tests
-      - name: "Run the tests"
-        run: /build/cpp/static/bin/tests
-
-  wasm:
-    if: github.event.pull_request.draft == false
-    runs-on: ubuntu-20.04
-    env:
-      HOST_TYPE: ci
-    container:
-      image: faasm/cpp-sysroot:0.0.24
-    defaults:
-      run:
-        working-directory: /code/cpp
-    steps:
-      - name: "Fetch ref"
-        run: git fetch origin ${GITHUB_REF}:ci-branch
-      - name: "Check out branch"
-        run: git checkout --force ci-branch
-      - name: "Build the functions to check doesn't error"
-        run: inv func.local
-      - name: "Build libfake to check doesn't error"
-        run: inv libfake
-
-  examples:
-    if: github.event.pull_request.draft == false
-    runs-on: ubuntu-20.04
-    env:
-      HOST_TYPE: ci
-      REDIS_QUEUE_HOST: redis
-      REDIS_STATE_HOST: redis
-    container:
-      image: faasm/cpp-sysroot:0.0.24
-    defaults:
-      run:
-        working-directory: /code/cpp
-    services:
-      redis:
-        image: redis
-    steps:
-      - name: "Fetch ref"
-        run: git fetch origin ${GITHUB_REF}:ci-branch
-      - name: "Check out branch"
-        run: git checkout --force ci-branch
-      - name: "Build the faasm shared lib"
-        run: inv libfaasm --native --shared
-      - name: "Build the faasmp shared lib"
-        run: inv libfaasmp --native --shared
-      - name: "Build the faasmpi shared lib"
-        run: inv libfaasmpi --native --shared
-      - name: "Set up shared CMake build"
-        run: inv dev.cmake --shared
-      - name: "Build the emulator shared lib"
-        run: inv dev.cc emulator --shared
-      - name: "Install the emulator shared lib"
-        run: inv dev.install emulator --shared
-      - name: "Build the examples"
-        run: inv examples --shared
-      - name: "Run the example check"
-        run: inv examples.execute --shared

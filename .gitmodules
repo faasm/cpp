@@ -19,4 +19,4 @@
     url = https://github.com/faasm/faasm-clapack
 [submodule "third-party/faabric"]
 	path = third-party/faabric
-	url = https://github.com/faasm/faabric/
+	url = https://github.com/faasm/faabric.git

@@ -2,9 +2,7 @@ from invoke import Collection
 
 from . import clapack
 from . import container
-from . import dev
 from . import eigen
-from . import examples
 from . import func
 from . import git
 from . import install
@@ -19,9 +17,7 @@ from . import libffi
 ns = Collection(
     clapack,
     container,
-    dev,
     eigen,
-    examples,
     func,
     git,
     install,
