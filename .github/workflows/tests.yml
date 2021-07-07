@@ -8,7 +8,7 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  formatting:
+  checks:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     container:
@@ -22,13 +22,42 @@ jobs:
         run: git fetch origin ${GITHUB_REF}:ci-branch
       - name: "Check out branch"
         run: git checkout --force ci-branch
+      - name: "Update Eigen submodule"
+        run: git submodule update --init -f third-party/eigen
       - name: "Update Faabric submodule"
         run: git submodule update --init -f third-party/faabric
-      # --- Run checks ---
+      - name: "Update FFI submodule"
+        run: git submodule update --init -f third-party/libffi
+      - name: "Update wasi-libc submodule"
+        run: git submodule update --init -f third-party/wasi-libc
       - name: "Install requirements"
         run: pip3 install -r requirements.txt
-      - name: "Update CMake files"
-        run: inv dev.cmake
+      # --- Build libraries to wasm ---
+      - name: "Build libc"
+        run: inv libc
+      - name: "Build libfaasm"
+        run: inv libfaasm 
+      - name: "Build libfaasmp"
+        run: inv libfaasmp
+      - name: "Build libfaasmpi"
+        run: inv libfaasmpi
+      - name: "Build libffi"
+        run: inv libffi
+      - name: "Build libfake"
+        run: inv libfake
+      - name: "Build libemscripten"
+        run: inv libemscripten
+      # --- Build functions to wasm ---
+      - name: "Build the functions"
+        run: inv func.local --clean
+      # --- Build libraries natively ---
+      - name: "Build libfaasm native"
+        run: inv libfaasm --native --clean
+      - name: "Build libfaasmp native"
+        run: inv libfaasmp --native --clean
+      - name: "Build libfaasmpi native"
+        run: inv libfaasmpi --native --clean
+      # --- Formatting ---
       - name: "Check python"
         run: ./bin/check_python.sh
       - name: "Run C/C++ formatting"
@@ -51,7 +80,3 @@ jobs:
         run: git fetch origin ${GITHUB_REF}:ci-branch
       - name: "Check out branch"
         run: git checkout --force ci-branch
-      - name: "Build the functions to check doesn't error"
-        run: inv func.local
-      - name: "Build libfake to check doesn't error"
-        run: inv libfake
