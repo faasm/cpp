@@ -39,21 +39,10 @@ RUN pip3 install .
 # Install eigen
 RUN inv eigen --native
 
-# CPP emulator static build
-ENV LD_LIBRARY_PATH=/usr/local/lib
-RUN inv dev.cmake
-RUN inv dev.cc emulator
-RUN inv dev.install emulator
-
 # Native static libraries
 RUN inv libfaasm --native
 RUN inv libfaasmp --native
 RUN inv libfaasmpi --native
-
-# CPP emulator shared build
-RUN inv dev.cmake --shared
-RUN inv dev.cc emulator --shared
-RUN inv dev.install emulator --shared
 
 # Native shared libraries
 RUN inv libfaasm --native --shared
