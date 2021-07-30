@@ -12,6 +12,20 @@ FUNC_DIR = join(PROJ_ROOT, "func")
 FUNC_BUILD_DIR = join(PROJ_ROOT, "build", "func")
 
 
+def _get_all_user_funcs(user):
+    # Work out all the functions for this user (that we assume will have been
+    # built)
+    funcs = list()
+    for func_file in listdir(join(FUNC_BUILD_DIR, user)):
+        name, ext = splitext(func_file)
+        if ext != ".wasm":
+            continue
+
+        funcs.append(name)
+
+    return funcs
+
+
 def _copy_built_function(user, func):
     src_file = join(FUNC_BUILD_DIR, user, ".".join([func, "wasm"]))
     wasm_copy_upload(user, func, src_file)
@@ -31,6 +45,9 @@ def compile(ctx, user, func, clean=False, debug=False):
 
 @task()
 def upload(ctx, user, func, host="upload", port=8002):
+    """
+    Upload a compiled function
+    """
     func_file = join(FUNC_BUILD_DIR, user, "{}.wasm".format(func))
     url = "http://{}:{}/f/{}/{}".format(host, port, user, func)
     response = requests.put(url, data=open(func_file, "rb"))
@@ -39,7 +56,20 @@ def upload(ctx, user, func, host="upload", port=8002):
 
 
 @task()
+def upload_user(ctx, user, host="upload", port=8002):
+    """
+    Upload all compiled functions for a user
+    """
+    funcs = _get_all_user_funcs(user)
+    for f in funcs:
+        upload(ctx, user, f, host=host, port=port)
+
+
+@task()
 def invoke(ctx, user, func, input_data=None, host="worker", port=8080):
+    """
+    Invoke a given function
+    """
     url = "http://{}:{}".format(host, port)
     data = {
         "function": func,
@@ -72,14 +102,9 @@ def user(ctx, user, clean=False, debug=False):
     target = "{}_all_funcs".format(user)
     wasm_cmake(FUNC_DIR, FUNC_BUILD_DIR, target, clean, debug)
 
-    # Work out all the functions for this user (that we assume will have been
-    # built)
-    for func_file in listdir(join(FUNC_BUILD_DIR, user)):
-        name, ext = splitext(func_file)
-        if ext != ".wasm":
-            continue
-
-        _copy_built_function(user, name)
+    funcs = _get_all_user_funcs(user)
+    for f in funcs:
+        _copy_built_function(user, f)
 
 
 @task
