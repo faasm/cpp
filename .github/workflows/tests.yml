@@ -12,7 +12,7 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     container:
-      image: faasm/cpp-sysroot:0.0.26
+      image: faasm/cpp-sysroot:0.0.27
     defaults:
       run:
         working-directory: /code/cpp
@@ -28,6 +28,8 @@ jobs:
         run: git submodule update --init -f third-party/faabric
       - name: "Update FFI submodule"
         run: git submodule update --init -f third-party/libffi
+      - name: "Update FFmpeg submodule"
+        run: git submodule update --init -f third-party/FFmpeg
       - name: "Update wasi-libc submodule"
         run: git submodule update --init -f third-party/wasi-libc
       - name: "Install requirements"
@@ -36,7 +38,7 @@ jobs:
       - name: "Build libc"
         run: inv libc
       - name: "Build libfaasm"
-        run: inv libfaasm 
+        run: inv libfaasm
       - name: "Build libfaasmp"
         run: inv libfaasmp
       - name: "Build libfaasmpi"
@@ -47,6 +49,8 @@ jobs:
         run: inv libfake
       - name: "Build libemscripten"
         run: inv libemscripten
+      - name: "Build FFmpeg"
+        run: inv ffmpeg
       # --- Build functions to wasm ---
       - name: "Build the functions"
         run: inv func.local --clean
