@@ -23,3 +23,4 @@
 [submodule "third-party/FFmpeg"]
 	path = third-party/FFmpeg
 	url = https://github.com/faasm/FFmpeg.git
+    branch = faasm
