@@ -111,22 +111,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     # include_directories(/usr/local/faasm/llvm-sysroot/include/clapack)
     # demo_func_c(blas_check blas_check.c)
     # target_link_libraries(blas_check ${FAASM_BLAS_LIBS})
-
-    # FFmpeg build
-    set(FFMPEG_INCLUDE_DIRS
-        ${CMAKE_SYSROOT}/include/libavcodec
-        ${CMAKE_SYSROOT}/include/libavformat
-    )
-    set(FFMPEG_LIBS
-        ${CMAKE_SYSROOT}/lib/libavcodec.a
-        ${CMAKE_SYSROOT}/lib/libavformat.a
-        ${CMAKE_SYSROOT}/lib/libavutil.a
-        ${CMAKE_SYSROOT}/lib/libswscale.a
-        ${CMAKE_SYSROOT}/lib/libswresample.a
-    )
-    demo_func(ffmpeg_check ffmpeg_check.c)
-    target_include_directories(ffmpeg_check PUBLIC ${FFMPEG_INCLUDE_DIRS})
-    target_link_libraries(ffmpeg_check ${FFMPEG_LIBS})
 endif()
 
 faasm_dynamic_func(dynlink dynlink.cpp)

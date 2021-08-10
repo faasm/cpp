@@ -1,4 +1,7 @@
+extern "C"
+{
 #include <libavformat/avformat.h>
+}
 
 #define INPUT_FILE_PATH "file:faasm://ffmpeg/sample_video.mp4"
 
