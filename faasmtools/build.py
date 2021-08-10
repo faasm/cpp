@@ -20,7 +20,7 @@ WASM_CC = join(WASM_TOOLCHAIN_BIN, "clang")
 WASM_CXX = join(WASM_TOOLCHAIN_BIN, "clang++")
 WASM_CPP = join(WASM_TOOLCHAIN_BIN, "clang-cpp")
 WASM_AR = join(WASM_TOOLCHAIN_BIN, "llvm-ar")
-WASM_NM = join(WASM_TOOLCHAIN_BIN, "llvm.nm")
+WASM_NM = join(WASM_TOOLCHAIN_BIN, "llvm-nm")
 WASM_RANLIB = join(WASM_TOOLCHAIN_BIN, "llvm-ranlib")
 
 # Use top-level clang as the linker rather than invoking wasm-ld directly

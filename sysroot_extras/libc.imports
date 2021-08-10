@@ -134,7 +134,7 @@ dcgettext
 dgettext
 gettext
 
-# Non-WASI filesystem 
+# Non-WASI filesystem
 dup
 chmod
 umask
@@ -142,6 +142,7 @@ mkdtemp
 tmpfile
 memfd_create
 msync
+tempnam
 
 # Non-WASI timing
 utime

@@ -27,6 +27,7 @@ RUN git submodule update --init -f third-party/faabric
 RUN git submodule update --init -f third-party/faasm-clapack
 RUN git submodule update --init -f third-party/libffi
 RUN git submodule update --init -f third-party/wasi-libc
+RUN git submodule update --init -f third-party/FFmpeg
 
 # Install the faasmtools Python lib
 RUN pip3 install -r requirements.txt
@@ -60,6 +61,7 @@ RUN inv install
 RUN inv libc
 RUN inv libffi
 RUN inv eigen
+RUN inv ffmpeg
 
 # Both static and shared clapack
 RUN inv clapack
