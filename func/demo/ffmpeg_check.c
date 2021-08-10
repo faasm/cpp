@@ -10,7 +10,7 @@
  */
 int main()
 {
-    AVFormatContext *pFormatContext = avformat_alloc_context();
+    AVFormatContext* pFormatContext = avformat_alloc_context();
 
     int ret = avformat_open_input(&pFormatContext, INPUT_FILE_PATH, NULL, NULL);
     if (ret != 0) {
@@ -20,10 +20,9 @@ int main()
     }
 
     printf("Format %s\nDuration %lld [us]\nBit_rate %lld\n",
-        pFormatContext->iformat->name,
-        pFormatContext->duration,
-        pFormatContext->bit_rate
-    );
+           pFormatContext->iformat->name,
+           pFormatContext->duration,
+           pFormatContext->bit_rate);
 
     avformat_close_input(&pFormatContext);
     return 0;
