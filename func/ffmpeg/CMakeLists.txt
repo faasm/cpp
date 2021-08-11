@@ -18,6 +18,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
 
     target_include_directories(check PUBLIC ${FFMPEG_INCLUDE_DIRS})
     target_link_libraries(check ${FFMPEG_LIBS})
+
+    add_custom_target(ffmpeg_all_funcs DEPENDS check)
 else ()
     set(STATUS "FFmpeg must be built to WASM")
 endif()
