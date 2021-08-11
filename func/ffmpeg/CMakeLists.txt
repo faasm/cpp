@@ -7,11 +7,11 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
         ${CMAKE_SYSROOT}/include/libavformat
     )
     set(FFMPEG_LIBS
-        ${CMAKE_SYSROOT}/lib/libavcodec.a
-        ${CMAKE_SYSROOT}/lib/libavformat.a
-        ${CMAKE_SYSROOT}/lib/libavutil.a
-        ${CMAKE_SYSROOT}/lib/libswscale.a
-        ${CMAKE_SYSROOT}/lib/libswresample.a
+        ${CMAKE_SYSROOT}/lib/wasm32-wasi/libavcodec.a
+        ${CMAKE_SYSROOT}/lib/wasm32-wasi/libavformat.a
+        ${CMAKE_SYSROOT}/lib/wasm32-wasi/libavutil.a
+        ${CMAKE_SYSROOT}/lib/wasm32-wasi/libswscale.a
+        ${CMAKE_SYSROOT}/lib/wasm32-wasi/libswresample.a
     )
 
     faasm_func(check check.cpp)
