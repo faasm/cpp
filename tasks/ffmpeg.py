@@ -10,6 +10,7 @@ from faasmtools.env import (
 
 from faasmtools.build import (
     WASM_SYSROOT,
+    WASM_LIB_INSTALL,
     WASM_CC,
     WASM_CXX,
     WASM_AR,
@@ -35,6 +36,7 @@ def ffmpeg(ctx, clean=False):
     configure_cmd = [
         "./configure",
         "--prefix={}".format(WASM_SYSROOT),
+        "--libdir={}".format(WASM_LIB_INSTALL),
         "--target-os=none",
         "--arch=x86_32",
         "--enable-cross-compile",
