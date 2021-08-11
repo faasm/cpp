@@ -81,7 +81,11 @@ def invoke(ctx, user, func, input_data=None, host="worker", port=8080):
 
     response = requests.post(url, json=data)
 
-    print("Response {}:\n{}".format(response.status_code, response.text))
+    if not response.status_code != 200:
+        print("Error ({}):\n{}".format(response.status_code, response.text))
+        exit(1)
+
+    print("Success:\n{}".format(response.text))
 
 
 @task()
