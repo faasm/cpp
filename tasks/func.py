@@ -11,6 +11,8 @@ from faasmtools.compile_util import wasm_cmake, wasm_copy_upload
 FUNC_DIR = join(PROJ_ROOT, "func")
 FUNC_BUILD_DIR = join(PROJ_ROOT, "build", "func")
 
+KNATIVE_HEADERS = {"Host": "faasm-worker.faasm.example.com"}
+
 
 def _get_all_user_funcs(user):
     # Work out all the functions for this user (that we assume will have been
@@ -79,7 +81,7 @@ def invoke(ctx, user, func, input_data=None, host="worker", port=8080):
     if input_data:
         data["input_data"] = input_data
 
-    response = requests.post(url, json=data)
+    response = requests.post(url, json=data, headers=KNATIVE_HEADERS)
 
     if response.status_code != 200:
         print("Error ({}):\n{}".format(response.status_code, response.text))
