@@ -1,6 +1,7 @@
 FROM faasm/llvm:10.0.1 as llvm
 
-FROM faasm/faabric:0.1.1
+# faabric-base image is not re-built often, so tag may be behind
+FROM faasm/faabric-base:0.1.0
 ARG SYSROOT_VERSION
 
 # Copy the toolchain in from the LLVM container
