@@ -8,14 +8,7 @@ ARG SYSROOT_VERSION
 COPY --from=llvm /usr/local/faasm /usr/local/faasm
 
 RUN apt update
-RUN apt install -y \
-    autoconf \
-    autotools-dev \
-    clang-tidy-10 \
-    libtool \
-    python3-dev \
-    python3-venv \
-    python3-pip
+RUN apt install -y autotools-dev
 
 # Get the code
 WORKDIR /code
@@ -73,3 +66,10 @@ RUN inv libfaasm
 RUN inv libemscripten
 RUN inv libfaasmp
 RUN inv libfaasmpi
+
+# CLI setup
+ENV TERM xterm-256color
+SHELL ["/bin/bash", "-c"]
+
+RUN echo ". /code/cpp/bin/workon.sh" >> ~/.bashrc
+CMD ["/bin/bash", "-l"]
