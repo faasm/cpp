@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
     }
 
     // Check counts
-    for (int t; t < nThreads; t++) {
+    for (int t = 0; t < nThreads; t++) {
         if (counts[t] != chunkSize) {
             printf(
               "Loop count for thread %i: %i != %i\n", t, counts[t], chunkSize);

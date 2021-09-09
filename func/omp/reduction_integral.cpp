@@ -1,5 +1,4 @@
 #include <cstdio>
-#include <faasm/faasm.h>
 #include <omp.h>
 
 #define NTHREADS 10
