@@ -25,9 +25,9 @@ bool doReduce()
         int threadNum = omp_get_thread_num();
         counts[threadNum]++;
 
-        reducedA = 10 * threadNum;
-
-        reducedB += 15 * (threadNum / 4.2);
+        // Add one here so that thread zero still has an effect
+        reducedA = 10 * (threadNum + 1);
+        reducedB += 15 * ((threadNum +1)/ 4.2);
     }
 
     // Check counts
@@ -40,8 +40,8 @@ bool doReduce()
     }
 
     // Note - to get these values you can just compile and run natively
-    int expectedReducedA = 100;
-    double expectedReducedB = 714.285714;
+    int expectedReducedA = 150;
+    double expectedReducedB = 1071.428571;
 
     if (reducedA != expectedReducedA) {
         printf("reducedA %i != %i\n", reducedA, expectedReducedA);
