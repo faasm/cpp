@@ -18,16 +18,36 @@ bool doReduce()
     int reducedA = 0;
     double reducedB = 0;
 
+    bool success = true;
+
 #pragma omp parallel for num_threads(nThreads) default(none) \
-    shared(counts,loopSize,chunkSize) \
+    shared(counts,loopSize,success) \
     reduction(+ : reducedA,reducedB)
     for (int i = 0; i < loopSize; i++) {
         int threadNum = omp_get_thread_num();
         counts[threadNum]++;
+        int thisCount = counts[threadNum];
 
         // Add one here so that thread zero still has an effect
-        reducedA = 10 * (threadNum + 1);
+        reducedA += 10 * (threadNum + 1);
         reducedB += 15 * ((threadNum + 1) / 4.2);
+
+        int expectedReduceA = thisCount * 10 * (threadNum + 1);
+        if (reducedA != expectedReduceA) {
+            printf("Thread %i iteration %i count %i: reducedA %i != %i\n",
+                   threadNum,
+                   i,
+                   thisCount,
+                   reducedA,
+                   expectedReduceA);
+
+            success = false;
+        }
+    }
+
+    if (!success) {
+        printf("Problem within repeated reduce loop\n");
+        return 1;
     }
 
     // Check counts
@@ -40,18 +60,16 @@ bool doReduce()
     }
 
     // Note - to get these values you can just compile and run natively
-    int expectedReducedA = 150;
-    double expectedReducedB = 1071.428571;
+    int expectedFinalReducedA = 3000;
+    double expectedFinalReducedB = 1071.428571;
 
-    if (reducedA != expectedReducedA) {
-        printf("reducedA %i != %i\n", reducedA, expectedReducedA);
+    if (reducedA != expectedFinalReducedA) {
+        printf("reducedA %i != %i\n", reducedA, expectedFinalReducedA);
         return false;
     }
 
-    if (!approxCompare(reducedB, expectedReducedB)) {
-        printf("reducedB %f != %f (based on approx compare)\n",
-               reducedB,
-               expectedReducedB);
+    if (!approxCompare(reducedB, expectedFinalReducedB)) {
+        printf("reducedB %f != %f (approx)\n", reducedB, expectedFinalReducedB);
         return false;
     }
 
