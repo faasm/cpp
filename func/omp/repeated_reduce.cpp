@@ -27,7 +27,7 @@ bool doReduce()
 
         // Add one here so that thread zero still has an effect
         reducedA = 10 * (threadNum + 1);
-        reducedB += 15 * ((threadNum +1)/ 4.2);
+        reducedB += 15 * ((threadNum + 1) / 4.2);
     }
 
     // Check counts
