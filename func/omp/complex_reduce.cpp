@@ -21,8 +21,6 @@ bool approxCompare(float a, float b)
 
 int main(int argc, char* argv[])
 {
-    int count = 0;
-
     int chunkSize = 20;
     int nThreads = 5;
     int counts[] = { 0, 0, 0, 0, 0 };
@@ -52,7 +50,7 @@ int main(int argc, char* argv[])
         privateA = expectedPrivateA;
         privateB = expectedPrivateB;
 
-        reducedA = sharedA * threadNum;
+        reducedA += sharedA * threadNum;
 
         // Note we need this to be a fraction to check we're not rounding to an
         // integer
@@ -71,7 +69,7 @@ int main(int argc, char* argv[])
     }
 
     // Check counts
-    for (int t; t < nThreads; t++) {
+    for (int t = 0; t < nThreads; t++) {
         if (counts[t] != chunkSize) {
             printf(
               "Loop count for thread %i: %i != %i\n", t, counts[t], chunkSize);
@@ -80,7 +78,7 @@ int main(int argc, char* argv[])
     }
 
     // Note - to get these values you can just compile and run natively
-    int expectedReducedA = 1000;
+    int expectedReducedA = 20000;
     double expectedReducedB = 1195.238095;
 
     if (reducedA != expectedReducedA) {
