@@ -6,6 +6,7 @@ puts
 fork
 kill
 wait
+waitpid
 execv
 execve
 raise
