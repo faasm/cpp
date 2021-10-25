@@ -91,7 +91,7 @@ def invoke(ctx, user, func, input_data=None, host="worker", port=8080):
 
 
 @task()
-def flush(host="worker", port=8080):
+def flush(ctx, host="worker", port=8080):
     url = "http://{}:{}".format(host, port)
     data = {"type": "flush"}
     response = requests.post(url, json=data)
