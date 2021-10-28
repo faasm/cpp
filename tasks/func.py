@@ -8,6 +8,8 @@ import requests
 from faasmtools.env import PROJ_ROOT
 from faasmtools.compile_util import wasm_cmake, wasm_copy_upload
 
+FAABRIC_MSG_TYPE_FLUSH = 3
+
 FUNC_DIR = join(PROJ_ROOT, "func")
 FUNC_BUILD_DIR = join(PROJ_ROOT, "build", "func")
 
@@ -93,7 +95,7 @@ def invoke(ctx, user, func, input_data=None, host="worker", port=8080):
 @task()
 def flush(ctx, host="worker", port=8080):
     url = "http://{}:{}".format(host, port)
-    data = {"type": "flush"}
+    data = {"type": FAABRIC_MSG_TYPE_FLUSH}
     response = requests.post(url, json=data)
 
     print("Response {}: {}".format(response.status_code, response.text))
