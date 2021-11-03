@@ -15,6 +15,7 @@ bool doReduce()
     int loopSize = nThreads * chunkSize;
     int counts[] = { 0, 0, 0, 0, 0 };
 
+    short reducedO = 0;
     int reducedA = 0;
     double reducedB = 0;
 
@@ -22,7 +23,7 @@ bool doReduce()
 
 #pragma omp parallel for num_threads(nThreads) default(none) \
     shared(counts,loopSize,success) \
-    reduction(+ : reducedA,reducedB)
+    reduction(+ : reducedO,reducedA,reducedB)
     for (int i = 0; i < loopSize; i++) {
         int threadNum = omp_get_thread_num();
         counts[threadNum]++;
@@ -31,6 +32,7 @@ bool doReduce()
         // Add one here so that thread zero still has an effect
         reducedA += 10 * (threadNum + 1);
         reducedB += 15 * ((threadNum + 1) / 4.2);
+        reducedO += 10;
 
         int expectedReduceA = thisCount * 10 * (threadNum + 1);
         if (reducedA != expectedReduceA) {
