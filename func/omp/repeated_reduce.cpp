@@ -73,7 +73,7 @@ bool doReduce()
 int main(int argc, char* argv[])
 {
     // Run reduce in a loop and check each iteration is correct
-    int nLoops = 10000;
+    int nLoops = 10;
     for (int i = 0; i < nLoops; i++) {
         bool success = doReduce();
         if (!success) {
