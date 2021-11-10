@@ -25,17 +25,17 @@ int main(int argc, char* argv[])
             }
 
             // Do a load of modifications to the critical variable that will be
-            // picked up if the critical isn't working.
+            // picked up by other threads if the critical isn't working.
             criticalVar = 2;
             for (int j = 0; j < 10000; j++) {
                 criticalVar = (criticalVar + randomValue) % 4 + 10;
             }
 
-            // Sets back to original value
+            randomValue = ((omp_get_thread_num() + 1) * randomValue) % 7;
+
+            // Set back to original value
             criticalVar = expected;
         }
-
-        randomValue = (omp_get_thread_num() + 1 * randomValue) % 7;
     }
 
     if (failed || criticalVar != expected) {
