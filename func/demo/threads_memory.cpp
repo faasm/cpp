@@ -11,6 +11,9 @@
 #define WASM_PAGE_SIZE 65536
 #define DATA_SIZE 20
 
+// Global array
+bool successFlags[N_THREADS];
+
 struct ThreadArgs
 {
     int threadIdx;
@@ -23,11 +26,14 @@ void* threadFunc(void* arg)
 
     int idx = threadArgs->threadIdx;
     printf("Thread memory check %i\n", idx);
+
+    // Write a value to the global shared array
+    successFlags[idx] = true;
+
+    // Write to the mmapped shared memory
     int offset = idx * WASM_PAGE_SIZE;
     uint8_t* target = threadArgs->basePtr + offset;
-
     std::vector<uint8_t> data(DATA_SIZE, idx);
-
     ::memcpy(target, data.data(), data.size());
 
     return nullptr;
@@ -45,6 +51,9 @@ int main(int argc, char* argv[])
 
     // Spawn the threads
     for (int i = 0; i < N_THREADS; i++) {
+        // Initialise the global array
+        successFlags[i] = false;
+
         inputs[i].threadIdx = i;
         inputs[i].basePtr = sharedMem;
         int ret = pthread_create(&threads[i], nullptr, threadFunc, &inputs[i]);
@@ -65,6 +74,11 @@ int main(int argc, char* argv[])
 
     // Check changes have been applied
     for (int i = 0; i < N_THREADS; i++) {
+        if (!successFlags[i]) {
+            printf("Global success flag not set for %d\n", i);
+            return 1;
+        }
+
         int offset = i * WASM_PAGE_SIZE;
         uint8_t* target = sharedMem + offset;
 
