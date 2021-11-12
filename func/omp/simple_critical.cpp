@@ -1,36 +1,47 @@
 #include <cstdio>
-#include <faasm/faasm.h>
 #include <omp.h>
 
 int main(int argc, char* argv[])
 {
     const int expected = 1;
-    int mine = expected; // Only modified in critical section
     bool failed = false;
 
-    int veryRandom = 2;
+    // Variable only modified in critical section
+    int criticalVar = expected;
+
+    int randomValue = 2;
+
 #pragma omp parallel for num_threads(4) default(none)                          \
-  shared(veryRandom, mine, expected, failed)
+  shared(randomValue, criticalVar, expected, failed)
     for (int i = 0; i < 1000; i++) {
 #pragma omp critical
         {
-            if (mine != expected) {
-                printf("Mine is %d, thread %d\n", mine, omp_get_thread_num());
+            if (criticalVar != expected) {
+                printf("Thread %d critical unexpected %d != %d\n",
+                       omp_get_thread_num(),
+                       criticalVar,
+                       expected);
                 failed = true;
             }
-            mine = 2;
+
+            // Do a load of modifications to the critical variable that will be
+            // picked up by other threads if the critical isn't working.
+            criticalVar = 2;
             for (int j = 0; j < 10000; j++) {
-                mine = (mine + veryRandom) % 4 + 10;
+                criticalVar = (criticalVar + randomValue) % 4 + 10;
             }
-            // sets back to original value
-            mine = expected;
+
+            randomValue = ((omp_get_thread_num() + 1) * randomValue) % 7;
+
+            // Set back to original value
+            criticalVar = expected;
         }
-        veryRandom = (omp_get_thread_num() + 1 * veryRandom) % 7;
     }
 
-    if (failed || mine != expected) {
-        printf("Critical section error, assumption failed: %d\n", mine);
+    if (failed || criticalVar != expected) {
+        printf("Critical section error, assumption failed: %d\n", criticalVar);
         return EXIT_FAILURE;
     }
+
     return EXIT_SUCCESS;
 }

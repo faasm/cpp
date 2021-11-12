@@ -1,45 +1,39 @@
 #include <cstdio>
-#include <faasm/faasm.h>
 #include <omp.h>
 
-#define ITERATIONS 50
-
-struct Reducer
+struct complex_t
 {
-    Reducer(int x = 0)
-      : x(x)
-    {}
-    int x;
-    Reducer& operator+=(const Reducer& other)
-    {
-        x += other.x;
-        return *this;
-    }
+    int real;
+    int imag;
 };
 
-#pragma omp declare reduction(MyReducer:Reducer : omp_out += omp_in)
-
-int main(int argc, char* argv[])
+complex_t complex_add(complex_t a, complex_t b)
 {
-    Reducer sum(0);
-    Reducer a[ITERATIONS];
-    for (int i = 0; i < ITERATIONS; i++) {
-        a[i].x = i;
+    complex_t c;
+    c.real = a.real + b.real;
+    c.imag = a.imag + b.imag;
+    return c;
+}
+
+#pragma omp declare reduction(cmplxAdd:complex_t                               \
+                              : omp_out = complex_add(omp_out, omp_in))        \
+  initializer(omp_priv = { 0, 0 })
+
+int main()
+{
+    complex_t x = { 0, 0 };
+
+#pragma omp parallel num_threads(10) reduction(cmplxAdd : x)
+    {
+        x = (complex_t){ 1, -1 };
     }
 
-#pragma omp parallel for num_threads(4) default(none) reduction(MyReducer      \
-                                                                : sum)         \
-  shared(a)
-    for (int i = 0; i < ITERATIONS; i++) {
-        Reducer val(i * 2 + a[i].x);
-        sum += val;
+    if (x.real != 10 || x.imag != -10) {
+        printf("Reduction result unexpected: %i %ii\n", x.real, x.imag);
+        return 1;
     }
 
-    const int expected = 3675;
-    if (sum.x != expected) {
-        printf(
-          "Custom reduction failed. Expected %d but got %d\n", expected, sum.x);
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
+    printf("Reduction result: %i %ii\n", x.real, x.imag);
+
+    return 0;
 }
