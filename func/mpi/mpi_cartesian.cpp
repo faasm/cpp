@@ -71,7 +71,6 @@ int main(int argc, char* argv[])
     printf("MPI_Cart_rank succesful check.\n");
 
     printf("MPI Cartesian Topology Checks Succesful.\n");
-    MPI_Finalize();
 
     // Test MPI_Cart_shift
     // Shift cartesian coordinates along first axis
@@ -93,6 +92,8 @@ int main(int argc, char* argv[])
         }
     }
     printf("MPI_Cart_shift succesful check.\n");
+
+    MPI_Finalize();
 
     return 0;
 }
