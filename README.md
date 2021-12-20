@@ -22,5 +22,5 @@ More detailed docs can be found in:
 
 - [Usage and Development](docs/usage.md)
 - [Releasing](docs/release.md)
-- [Upgrading LLVM](docs/upgrading-llvm.md)
+- [Upgrading LLVM](docs/upgrade-llvm.md)
 - [Python library](docs/python.md)
