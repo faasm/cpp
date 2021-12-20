@@ -12,17 +12,21 @@ extern "C"
  * Faasm shared memory markup
  */
 
-#define FAASM_TYPE_BOOL 0
-#define FAASM_TYPE_INT 1
-#define FAASM_TYPE_DOUBLE 2
-#define FAASM_TYPE_FLOAT 3
+// NOTE - these types must correspond to the enums defined in the Faabric
+// codebase, stored here at time of writing:
+// https://github.com/faasm/faabric/blob/master/include/faabric/util/snapshot.h
+#define FAASM_TYPE_RAW 0
+#define FAASM_TYPE_BOOL 1
+#define FAASM_TYPE_INT 2
+#define FAASM_TYPE_DOUBLE 3
+#define FAASM_TYPE_FLOAT 4
 
-#define FAASM_OP_SUM 0
-#define FAASM_OP_SUB 1
-#define FAASM_OP_MULT 2
-#define FAASM_OP_DIV 3
-#define FAASM_OP_MIN 4
-#define FAASM_OP_MAX 5
+#define FAASM_OP_OVERWRITE 0
+#define FAASM_OP_SUM 1
+#define FAASM_OP_PRODUCT 2
+#define FAASM_OP_SUBTRACT 3
+#define FAASM_OP_MAX 4
+#define FAASM_OP_MIN 5
 
 #define FAASM_REDUCE(var, type, op) \
     __faasm_sm_reduce((void*)&(var), type, op);
