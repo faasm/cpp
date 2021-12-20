@@ -139,4 +139,14 @@ unsigned int __faasm_conf_flag(const char* key);
 
 HOST_IFACE_FUNC
 void __faasm_backtrace(const int depth);
+
+HOST_IFACE_FUNC
+void __faasm_sm_reduce(void* var, int varType, int reduceOp);
+
+HOST_IFACE_FUNC
+void __faasm_sm_array(void* var, int varType, int arrayLen);
+
+HOST_IFACE_FUNC
+void __faasm_sm_var(void* var, int varType);
+
 #endif
