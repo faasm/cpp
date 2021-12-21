@@ -1,6 +1,9 @@
 from setuptools import setup, find_packages
 from os.path import join, abspath, dirname
 
+import site
+
+site.ENABLE_USER_SITE = True
 
 PROJ_ROOT = dirname(abspath(__file__))
 
