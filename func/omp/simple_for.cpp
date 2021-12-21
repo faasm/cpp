@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     auto heapResults = new int[TOTAL];
 
     FAASM_SHARED_ARRAY(stackResults, FAASM_TYPE_INT, TOTAL)
-    FAASM_SHARED_ARRAY(heapResults, FAASM_TYPE_INT, TOTAL)
+    FAASM_SHARED_ARRAY(*heapResults, FAASM_TYPE_INT, TOTAL)
 
 #pragma omp parallel for num_threads(3) schedule(static, 5) default(none)      \
   shared(stackResults, heapResults)

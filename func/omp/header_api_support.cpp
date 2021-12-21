@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
     int max = omp_get_max_threads();
     auto infos = new ThreadInfo[max];
 
-    FAASM_SHARED_RAW(infos, max * sizeof(ThreadInfo) * 5);
+    FAASM_SHARED_RAW(*infos, max * sizeof(ThreadInfo));
 
 #pragma omp parallel num_threads(max) default(none) shared(infos)
     {
