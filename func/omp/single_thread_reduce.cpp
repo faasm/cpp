@@ -2,6 +2,8 @@
 #include <math.h>
 #include <omp.h>
 
+#include <faasm/shared_mem.h>
+
 /**
  * We want to check the single thread case works for everything we test
  * elsewhere with multiple threads.
@@ -24,6 +26,11 @@ int main(int argc, char* argv[])
     double reducedB = 0;
 
     double sharedA = 105.5;
+
+    FAASM_REDUCE(reducedA, FAASM_TYPE_INT, FAASM_OP_SUM)
+    FAASM_REDUCE(reducedB, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
+    FAASM_SHARED_VAR(loopSize, FAASM_TYPE_INT)
+    FAASM_SHARED_VAR(sharedA, FAASM_TYPE_DOUBLE)
 
 #pragma omp parallel for num_threads(1) default(none) \
     private(privateA,privateB) \

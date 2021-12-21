@@ -25,8 +25,8 @@ endfunction(omp_func)
 
 
 # Single host parallelism only
-omp_func(custom_reduce custom_reduce.cpp)
 omp_func(complex_reduce complex_reduce.cpp)
+omp_func(custom_reduce custom_reduce.cpp)
 omp_func(for_static_schedule for_static_schedule.cpp)
 omp_func(header_api_support header_api_support.cpp)
 omp_func(hellomp hellomp.cpp)
@@ -41,7 +41,6 @@ omp_func(repeated_reduce repeated_reduce.cpp)
 omp_func(setting_num_threads setting_num_threads.cpp)
 omp_func(simple_barrier simple_barrier.cpp)
 omp_func(simple_critical simple_critical.cpp)
-omp_func(simple_flush simple_flush.cpp)
 omp_func(simple_for simple_for.cpp)
 omp_func(simple_master simple_master.cpp)
 omp_func(simple_reduce simple_reduce.cpp)

@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <omp.h>
 
+#include <faasm/shared_mem.h>
+
 #define ITERATIONS 10
 
 bool compareArrays(const char* label, int* actual, int* expected)
@@ -34,6 +36,8 @@ int main(int argc, char* argv[])
     int countsA[4] = { 0, 0, 0, 0 };
     int expectedA[4] = { 3, 3, 3, 1 }; // Based on native behaviour
 
+    FAASM_SHARED_ARRAY(countsA, FAASM_TYPE_INT, 4)
+
 #pragma omp parallel for schedule(static, 3) num_threads(4) default(none)      \
   shared(countsA)
     for (int i = 0; i < ITERATIONS; i++) {
@@ -47,6 +51,8 @@ int main(int argc, char* argv[])
 
     int countsB[4] = { 0, 0, 0, 0 };
     int expectedB[4] = { 3, 3, 2, 2 }; // Based on native behaviour
+
+    FAASM_SHARED_ARRAY(countsB, FAASM_TYPE_INT, 4)
 
 #pragma omp parallel for schedule(static) num_threads(4) default(none)         \
   shared(countsB)

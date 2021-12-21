@@ -14,6 +14,8 @@
 #include <cstdio>
 #include <omp.h>
 
+#include <faasm/shared_mem.h>
+
 bool levelOneFailed = false;
 bool levelTwoFailed = false;
 bool levelThreeFailed = false;
@@ -68,6 +70,10 @@ int main()
     omp_set_max_active_levels(0);
 
     int baseLevelCount = 0;
+
+    FAASM_SHARED_VAR(baseLevelCount, FAASM_TYPE_INT)
+    FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL)
+
 #pragma omp parallel num_threads(4) default(none) shared(baseLevelCount, failed)
     {
         failed |= checkLevel(1, 1, 0);
@@ -94,6 +100,10 @@ int main()
     baseLevelCount = 0;
     int nestedLevelCount = 0;
 
+    FAASM_SHARED_VAR(baseLevelCount, FAASM_TYPE_INT)
+    FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL)
+    FAASM_SHARED_VAR(nestedLevelCount, FAASM_TYPE_INT)
+
 #pragma omp parallel num_threads(4) default(none)                              \
   shared(baseLevelCount, nestedLevelCount, failed)
     // Base level
@@ -101,6 +111,9 @@ int main()
         failed |= checkLevel(1, 4, 1);
 #pragma omp atomic
         baseLevelCount++;
+
+        FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL)
+        FAASM_SHARED_VAR(nestedLevelCount, FAASM_TYPE_INT)
 
 #pragma omp parallel num_threads(4) default(none)                              \
   shared(nestedLevelCount, failed)
@@ -142,6 +155,11 @@ int main()
     nestedLevelCount = 0;
     int doubleNestedLevelCount = 0;
 
+    FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL)
+    FAASM_SHARED_VAR(baseLevelCount, FAASM_TYPE_INT)
+    FAASM_SHARED_VAR(nestedLevelCount, FAASM_TYPE_INT)
+    FAASM_SHARED_VAR(doubleNestedLevelCount, FAASM_TYPE_INT)
+
 #pragma omp parallel num_threads(2) default(none)                              \
   shared(baseLevelCount, nestedLevelCount, doubleNestedLevelCount, failed)
     // Base level
@@ -151,6 +169,10 @@ int main()
 #pragma omp atomic
         baseLevelCount++;
 
+        FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL)
+        FAASM_SHARED_VAR(nestedLevelCount, FAASM_TYPE_INT)
+        FAASM_SHARED_VAR(doubleNestedLevelCount, FAASM_TYPE_INT)
+
 #pragma omp parallel num_threads(2) default(none)                              \
   shared(nestedLevelCount, doubleNestedLevelCount, failed)
         // Nested block
@@ -158,6 +180,9 @@ int main()
             failed |= checkLevel(2, 2, 100);
 #pragma omp atomic
             nestedLevelCount++;
+
+        FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL)
+        FAASM_SHARED_VAR(doubleNestedLevelCount, FAASM_TYPE_INT)
 
 #pragma omp parallel num_threads(2) default(none)                              \
   shared(doubleNestedLevelCount, failed)

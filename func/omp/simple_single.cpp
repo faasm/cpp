@@ -1,6 +1,8 @@
 #include <atomic>
 #include <stdexcept>
 
+#include <faasm/shared_mem.h>
+
 std::atomic_bool test = false;
 
 void run_once_only()

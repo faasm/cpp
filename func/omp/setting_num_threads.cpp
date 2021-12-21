@@ -2,6 +2,8 @@
 #include <omp.h>
 #include <vector>
 
+#include <faasm/shared_mem.h>
+
 /*
  * Sums the numbers up to the total
  */
@@ -29,6 +31,8 @@ int main()
         return 1;
     }
 
+    FAASM_SHARED_ARRAY(flags, FAASM_TYPE_BOOL, nThreads)
+
 #pragma omp parallel default(none) shared(flags)
     {
         printf("Setting thread %i\n", omp_get_thread_num());
@@ -43,6 +47,8 @@ int main()
     }
 
     int actual = 0;
+    FAASM_REDUCE(actual, FAASM_TYPE_INT, FAASM_OP_SUM)
+
 #pragma omp parallel default(none) reduction(+ : actual)
     {
         actual = omp_get_thread_num();
@@ -65,6 +71,9 @@ int main()
     // Test setting with num_threads
     expected = getSum(wanted);
     actual = 0;
+
+    FAASM_REDUCE(actual, FAASM_TYPE_INT, FAASM_OP_SUM)
+
 #pragma omp parallel num_threads(wanted) default(none) reduction(+ : actual)
     {
         actual = omp_get_thread_num();
@@ -80,6 +89,9 @@ int main()
     // Test value resets at parallel exit
     actual = 0;
     expected = getSum(max);
+
+    FAASM_REDUCE(actual, FAASM_TYPE_INT, FAASM_OP_SUM)
+
 #pragma omp parallel default(none) reduction(+ : actual)
     {
         actual = omp_get_thread_num();
@@ -96,6 +108,9 @@ int main()
     omp_set_num_threads(wanted);
     expected = getSum(wanted);
     actual = 0;
+
+    FAASM_REDUCE(actual, FAASM_TYPE_INT, FAASM_OP_SUM)
+
 #pragma omp parallel default(none) reduction(+ : actual)
     {
         actual = omp_get_thread_num();
@@ -118,6 +133,9 @@ int main()
 
     actual = 0;
     expected = getSum(wanted);
+
+    FAASM_REDUCE(actual, FAASM_TYPE_INT, FAASM_OP_SUM)
+
 #pragma omp parallel default(none) reduction(+ : actual)
     {
         actual = omp_get_thread_num();
@@ -133,6 +151,9 @@ int main()
     // Test we can override set value with num_thread
     expected = getSum(max);
     actual = 0;
+
+    FAASM_REDUCE(actual, FAASM_TYPE_INT, FAASM_OP_SUM)
+
 #pragma omp parallel num_threads(max) default(none) reduction(+ : actual)
     {
         actual = omp_get_thread_num();

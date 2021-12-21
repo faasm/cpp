@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <omp.h>
 
+#include <faasm/shared_mem.h>
+
 int main()
 {
     int total = 0;
@@ -8,12 +10,15 @@ int main()
 
     omp_set_max_active_levels(2);
 
+    FAASM_SHARED_VAR(total, FAASM_TYPE_INT)
 #pragma omp parallel num_threads(2) default(none) shared(total)
     {
 #pragma omp critical
         {
             total += 1;
         }
+
+        FAASM_SHARED_VAR(total, FAASM_TYPE_INT)
 #pragma omp parallel num_threads(5) default(none) shared(total)
         {
 #pragma omp critical

@@ -1,6 +1,8 @@
-#include <faasm/faasm.h>
 #include <omp.h>
 #include <stdio.h>
+
+#include <faasm/faasm.h>
+#include <faasm/shared_mem.h>
 
 bool fail = false;
 bool accessed = false; /* racy: should be atomic bool */
@@ -8,6 +10,9 @@ bool accessed = false; /* racy: should be atomic bool */
 int main(int argc, char* argv[])
 {
     int mainNum = omp_get_thread_num();
+
+    FAASM_SHARED_VAR(mainNum, FAASM_TYPE_INT);
+
 #pragma omp parallel default(none) shared(mainNum)
     {
 #pragma omp master

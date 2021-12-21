@@ -3,6 +3,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <faasm/shared_mem.h>
+
 #define THREAD_SLEEP_MICROS 100 * 1000
 #define MAIN_SLEEP_MICROS 50 * 1000
 
@@ -11,6 +13,8 @@ double threadTime = 0;
 int main(int argc, char* argv[])
 {
     double mainStart = omp_get_wtime();
+
+    FAASM_SHARED_VAR(mainStart, FAASM_TYPE_DOUBLE)
 
 #pragma omp parallel num_threads(1) default(none) shared(threadTime)
     {

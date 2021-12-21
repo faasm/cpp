@@ -2,6 +2,8 @@
 #include <omp.h>
 #include <stdio.h>
 
+#include <faasm/shared_mem.h>
+
 void printThreadInfo(const char* label)
 {
     int thisThread = omp_get_thread_num();

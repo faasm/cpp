@@ -2,6 +2,8 @@
 #include <omp.h>
 #include <string>
 
+#include <faasm/shared_mem.h>
+
 #define ITERATIONS 100
 #define N_THREADS 20
 #define MALLOC_BIG 5 * 1024 * 1024
@@ -22,6 +24,10 @@ int main(int argc, char** argv)
     printf("Running mem stress test with %i threads\n", nThreads);
     uint8_t* ptrs[ITERATIONS];
     int counts[ITERATIONS];
+
+    FAASM_SHARED_RAW(ptrs, ITERATIONS * sizeof(void*))
+    FAASM_SHARED_ARRAY(counts, FAASM_TYPE_INT, ITERATIONS)
+    FAASM_REDUCE(totalLoops, FAASM_TYPE_INT, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(nThreads) default(none)                   \
   shared(ptrs, counts) reduction(+:totalLoops)

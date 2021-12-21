@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <omp.h>
 
+#include <faasm/shared_mem.h>
+
 int main(int argc, char* argv[])
 {
     const int expected = 1;
@@ -10,6 +12,11 @@ int main(int argc, char* argv[])
     int criticalVar = expected;
 
     int randomValue = 2;
+
+    FAASM_SHARED_VAR(randomValue, FAASM_TYPE_INT);
+    FAASM_SHARED_VAR(criticalVar, FAASM_TYPE_INT);
+    FAASM_SHARED_VAR(expected, FAASM_TYPE_INT);
+    FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL);
 
 #pragma omp parallel for num_threads(4) default(none)                          \
   shared(randomValue, criticalVar, expected, failed)

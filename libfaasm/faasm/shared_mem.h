@@ -18,8 +18,9 @@ extern "C"
 #define FAASM_TYPE_RAW 0
 #define FAASM_TYPE_BOOL 1
 #define FAASM_TYPE_INT 2
-#define FAASM_TYPE_DOUBLE 3
+#define FAASM_TYPE_LONG 3
 #define FAASM_TYPE_FLOAT 4
+#define FAASM_TYPE_DOUBLE 5
 
 #define FAASM_OP_OVERWRITE 0
 #define FAASM_OP_SUM 1
@@ -33,6 +34,9 @@ extern "C"
 
 #define FAASM_SHARED_ARRAY(var, type, len) \
     __faasm_sm_array((void*)&(var), type, len);
+
+#define FAASM_SHARED_RAW(var, len) \
+    __faasm_sm_raw((void*)&(var), len);
 
 #define FAASM_SHARED_VAR(var, type) \
     __faasm_sm_var((void*)&(var), type);

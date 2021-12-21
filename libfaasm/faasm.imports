@@ -38,5 +38,6 @@ __faasm_backtrace
 
 # Shared mem
 __faasm_sm_array
+__faasm_sm_raw
 __faasm_sm_reduce
 __faasm_sm_var

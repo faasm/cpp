@@ -1,6 +1,8 @@
 #include <omp.h>
 #include <stdio.h>
 
+#include <faasm/shared_mem.h>
+
 bool failed = false;
 
 /**
@@ -24,7 +26,11 @@ int main(int argc, char* argv[])
 
     bool* flags = new bool[nThreads];
 
-// Note the shared variables here are both local and global
+    // Note the shared variables here are both local and global
+    FAASM_SHARED_ARRAY(flags, FAASM_TYPE_BOOL, nThreads)
+    FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL)
+    FAASM_SHARED_VAR(nThreads, FAASM_TYPE_INT)
+
 #pragma omp parallel default(none) shared(flags, failed, nThreads)
     {
         int thisThreadNum = omp_get_thread_num();
