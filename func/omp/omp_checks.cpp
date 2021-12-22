@@ -3,8 +3,6 @@
 
 #include <faasm/shared_mem.h>
 
-bool failed = false;
-
 /**
  * Note - this function is designed to test basic OpenMP functionality.
  * The loop must include both globally and locally shared variables.
@@ -12,6 +10,8 @@ bool failed = false;
 
 int main(int argc, char* argv[])
 {
+    bool failed = false;
+
     int nThreads = omp_get_max_threads();
     if (nThreads < 2) {
         printf("Need 2 or more threads but got %i\n", nThreads);
@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     bool* flags = new bool[nThreads];
 
     // Note the shared variables here are both local and global
-    FAASM_SHARED_ARRAY(flags, FAASM_TYPE_BOOL, nThreads)
+    FAASM_SHARED_ARRAY(*flags, FAASM_TYPE_BOOL, nThreads)
     FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL)
     FAASM_SHARED_VAR(nThreads, FAASM_TYPE_INT)
 

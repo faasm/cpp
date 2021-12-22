@@ -21,7 +21,7 @@ int main()
     // Run very overloaded yet simple check
     int nThreads = 100;
     omp_set_num_threads(nThreads);
-    std::vector<bool> flags(nThreads, false);
+    auto flags = new bool[nThreads];
 
     const int max = omp_get_max_threads();
     if (max != nThreads) {
@@ -31,16 +31,16 @@ int main()
         return 1;
     }
 
-    FAASM_SHARED_ARRAY(flags, FAASM_TYPE_BOOL, nThreads)
+    FAASM_SHARED_ARRAY(*flags, FAASM_TYPE_BOOL, nThreads)
 
 #pragma omp parallel default(none) shared(flags)
     {
         printf("Setting thread %i\n", omp_get_thread_num());
-        flags.at(omp_get_thread_num()) = true;
+        flags[omp_get_thread_num()] = true;
     }
 
     for (int i = 0; i < nThreads; i++) {
-        if (!flags.at(i)) {
+        if (!flags[i]) {
             printf("Basic check at %i failed\n", i);
             return 1;
         }
@@ -76,7 +76,7 @@ int main()
 
 #pragma omp parallel num_threads(wanted) default(none) reduction(+ : actual)
     {
-        actual = omp_get_thread_num();
+        actual += omp_get_thread_num();
     }
 
     if (actual != expected) {
@@ -166,6 +166,8 @@ int main()
                actual);
         return EXIT_FAILURE;
     }
+
+    delete[] flags;
 
     // We're done
     return EXIT_SUCCESS;
