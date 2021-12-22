@@ -83,8 +83,10 @@ double doAtomic()
             sum += 4.0 / (1.0 + x * x);
         }
 
-#pragma omp atomic
-        pi += sum * step;
+#pragma omp critical
+        {
+            pi += sum * step;
+        }
     }
 
     double timerEnd = omp_get_wtime() - timerStart;

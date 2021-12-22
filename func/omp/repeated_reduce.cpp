@@ -17,11 +17,11 @@ bool doReduce()
 
     bool success = true;
 
-FAASM_SHARED_ARRAY(counts, FAASM_TYPE_INT, 5)
-FAASM_SHARED_VAR(loopSize, FAASM_TYPE_INT)
-FAASM_SHARED_VAR(success, FAASM_TYPE_BOOL)
-FAASM_REDUCE(reducedA, FAASM_TYPE_INT, FAASM_OP_SUM)
-FAASM_REDUCE(reducedB, FAASM_TYPE_INT, FAASM_OP_SUM)
+    FAASM_SHARED_ARRAY(counts, FAASM_TYPE_INT, 5)
+    FAASM_SHARED_VAR(loopSize, FAASM_TYPE_INT)
+    FAASM_SHARED_VAR(success, FAASM_TYPE_BOOL)
+    FAASM_REDUCE(reducedA, FAASM_TYPE_INT, FAASM_OP_SUM)
+    FAASM_REDUCE(reducedB, FAASM_TYPE_INT, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(nThreads) default(none) \
     shared(counts,loopSize,success) \

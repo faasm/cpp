@@ -33,8 +33,6 @@ omp_func(hellomp hellomp.cpp)
 omp_func(inspect_reduction inspect_reduction.cpp)
 omp_func(mem_stress mem_stress.cpp)
 omp_func(mt_pi mt_pi.cpp)
-omp_func(nested_levels_test nested_levels_test.cpp)
-omp_func(nested_parallel nested_parallel.cpp)
 omp_func(omp_checks omp_checks.cpp)
 omp_func(reduction_integral reduction_integral.cpp)
 omp_func(repeated_reduce repeated_reduce.cpp)
@@ -48,11 +46,6 @@ omp_func(simple_reduce simple_reduce.cpp)
 omp_func(simple_single simple_single.cpp)
 omp_func(single_thread_reduce single_thread_reduce.cpp)
 omp_func(wtime wtime.cpp)
-
-# Intel OMP files
-omp_func(intel_nstreams intel_nstreams.cpp)
-omp_func(intel_synch_p2p intel_synch_p2p.cpp)
-omp_func(intel_transpose intel_transpose.cpp)
 
 # Custom target for building all functions
 add_custom_target(omp_all_funcs DEPENDS ${ALL_OMP_FUNCS})

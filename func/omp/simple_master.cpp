@@ -5,7 +5,7 @@
 #include <faasm/shared_mem.h>
 
 bool fail = false;
-bool accessed = false; /* racy: should be atomic bool */
+bool accessed = false;
 
 int main(int argc, char* argv[])
 {
@@ -17,11 +17,15 @@ int main(int argc, char* argv[])
     {
 #pragma omp master
         {
-            if (accessed) {
-                printf("Master section was entered multiple times\n");
-                fail = true;
+#pragma omp critical
+            {
+                if (accessed) {
+                    printf("Master section was entered multiple times\n");
+                    fail = true;
+                }
+                accessed = true;
             }
-            accessed = true;
+
             int localNum = omp_get_thread_num();
             if (mainNum != localNum) {
                 printf("Master section not executed by master thread. "

@@ -29,17 +29,14 @@ extern "C"
 #define FAASM_OP_MAX 4
 #define FAASM_OP_MIN 5
 
-#define FAASM_REDUCE(var, type, op) \
-    __faasm_sm_reduce((void*)&(var), type, op);
+#define FAASM_REDUCE(var, type, op) __faasm_sm_reduce((void*)&(var), type, op);
 
-#define FAASM_SHARED_ARRAY(var, type, len) \
+#define FAASM_SHARED_ARRAY(var, type, len)                                     \
     __faasm_sm_array((void*)&(var), type, len);
 
-#define FAASM_SHARED_RAW(var, len) \
-    __faasm_sm_raw((void*)&(var), len);
+#define FAASM_SHARED_RAW(var, len) __faasm_sm_raw((void*)&(var), len);
 
-#define FAASM_SHARED_VAR(var, type) \
-    __faasm_sm_var((void*)&(var), type);
+#define FAASM_SHARED_VAR(var, type) __faasm_sm_var((void*)&(var), type);
 
 #ifdef __cplusplus
 }
