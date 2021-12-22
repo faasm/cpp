@@ -27,11 +27,13 @@ int main()
             }
         }
     }
+
     if (total != expected) {
         printf("Bad nested parallel sections. Expected %d, got %d\n",
                expected,
                total);
         return EXIT_FAILURE;
     }
+
     return EXIT_SUCCESS;
 }

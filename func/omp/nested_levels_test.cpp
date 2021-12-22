@@ -1,16 +1,11 @@
 /**
  * Checks a few invariants of nested levels.
  *
- * The functions apply at the device level and the active level between the two
- * is therefore independent.
- *
- * This example code does not test for multiple devices but rather looks at
- * reproducing the behaviour of clang.
- *
  * Level L is allowed parallelism if max_active_level >= L.
  * The initial region level is 1, and max_active_level can be set to zero,
  * which means the first region can also be disabled.
  */
+
 #include <cstdio>
 #include <omp.h>
 
@@ -181,8 +176,8 @@ int main()
 #pragma omp atomic
             nestedLevelCount++;
 
-        FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL)
-        FAASM_SHARED_VAR(doubleNestedLevelCount, FAASM_TYPE_INT)
+            FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL)
+            FAASM_SHARED_VAR(doubleNestedLevelCount, FAASM_TYPE_INT)
 
 #pragma omp parallel num_threads(2) default(none)                              \
   shared(doubleNestedLevelCount, failed)
