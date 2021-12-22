@@ -135,6 +135,7 @@ int main()
     // ----------------------------------
     // Check several levels of parallelism
     // ----------------------------------
+
     printf("------ THREE LEVEL ------\n");
     // Experiment changing levels
     omp_set_max_active_levels(100);

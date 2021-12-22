@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 {
     double mainStart = omp_get_wtime();
 
-    FAASM_SHARED_VAR(mainStart, FAASM_TYPE_DOUBLE)
+    FAASM_SHARED_VAR(threadTime, FAASM_TYPE_DOUBLE)
 
 #pragma omp parallel num_threads(1) default(none) shared(threadTime)
     {
