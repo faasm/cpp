@@ -27,6 +27,7 @@ endfunction(omp_func)
 # Single host parallelism only
 omp_func(complex_reduce complex_reduce.cpp)
 omp_func(custom_reduce custom_reduce.cpp)
+omp_func(default_shared default_shared.cpp)
 omp_func(for_static_schedule for_static_schedule.cpp)
 omp_func(header_api_support header_api_support.cpp)
 omp_func(hellomp hellomp.cpp)

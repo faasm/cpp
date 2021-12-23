@@ -6,22 +6,17 @@
 int main()
 {
     int nThreads = 100;
-    int counter = 0;
-
-    FAASM_SHARED_VAR(counter, FAASM_TYPE_INT)
+    int counter = 20;
 
 #pragma omp parallel num_threads(nThreads) default(none) shared(counter)
     {
         // NOTE - it appears OpenMP doesn't actually support compiling the
-        // atomic pragma to anything useful in wasm, so we have to implement it
-        // with a critical instead
-#pragma omp critical
-        {
-            counter += omp_get_thread_num();
-        }
+        // atomic pragma to anything useful in wasm, so we have to replace with
+        // our own custom stuff
+        FAASM_ATOMIC_INCR_BY(counter, omp_get_thread_num());
     }
 
-    int expected = 0;
+    int expected = 20;
     for (int i = 0; i < nThreads; i++) {
         expected += i;
     }
