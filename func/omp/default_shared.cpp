@@ -5,14 +5,12 @@
 #include <faasm/shared_mem.h>
 #else
 #define FAASM_REDUCE(...) (void)0;
-#define FAASM_DEFAULT_SHARED(...) (void)0;
 #endif
 
 int main(int argc, char* argv[])
 {
     int count = 0;
 
-    // Note: Loop will be divided evenly among the threads
     int nThreads = 5;
     int chunkSize = 20;
     int nLoops = nThreads * chunkSize;
@@ -20,7 +18,6 @@ int main(int argc, char* argv[])
     int* flagsHeap = new int[nThreads];
 
     FAASM_REDUCE(count, FAASM_TYPE_INT, FAASM_OP_SUM)
-    FAASM_DEFAULT_SHARED()
 
 #pragma omp parallel for num_threads(5) \
     default(none) \

@@ -38,8 +38,6 @@ extern "C"
 
 #define FAASM_SHARED_VAR(var, type) __faasm_sm_var((void*)&(var), type);
 
-#define FAASM_DEFAULT_SHARED() __faasm_sm_default_shared();
-
 #define FAASM_START_CRITICAL_LOCAL() __faasm_sm_critical_local();
 
 #define FAASM_END_CRITICAL_LOCAL() __faasm_sm_critical_local_end();

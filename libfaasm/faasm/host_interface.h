@@ -153,9 +153,6 @@ HOST_IFACE_FUNC
 void __faasm_sm_var(void* var, int varType);
 
 HOST_IFACE_FUNC
-void __faasm_sm_default_shared();
-
-HOST_IFACE_FUNC
 void __faasm_sm_critical_local();
 
 HOST_IFACE_FUNC
