@@ -1,11 +1,7 @@
 #include <cstdio>
 #include <omp.h>
 
-#ifdef __wasm
 #include <faasm/shared_mem.h>
-#else
-#define FAASM_REDUCE(...) (void)0;
-#endif
 
 int main(int argc, char* argv[])
 {
