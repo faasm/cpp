@@ -37,9 +37,6 @@ __faasm_conf_flag
 __faasm_backtrace
 
 # Shared mem
-__faasm_sm_array
-__faasm_sm_raw
 __faasm_sm_reduce
-__faasm_sm_var
 __faasm_sm_critical_local
 __faasm_sm_critical_local_end

@@ -1,8 +1,5 @@
 #include <cstdio>
-#include <faasm/faasm.h>
 #include <omp.h>
-
-#include <faasm/shared_mem.h>
 
 static int x1 = 0;
 static int x2 = 0;
@@ -15,15 +12,6 @@ static int result4 = 0;
 
 int main(int argc, char* argv[])
 {
-
-    FAASM_SHARED_VAR(x1, FAASM_TYPE_INT)
-    FAASM_SHARED_VAR(x2, FAASM_TYPE_INT)
-    FAASM_SHARED_VAR(x3, FAASM_TYPE_INT)
-    FAASM_SHARED_VAR(x4, FAASM_TYPE_INT)
-    FAASM_SHARED_VAR(result1, FAASM_TYPE_INT)
-    FAASM_SHARED_VAR(result2, FAASM_TYPE_INT)
-    FAASM_SHARED_VAR(result3, FAASM_TYPE_INT)
-    FAASM_SHARED_VAR(result4, FAASM_TYPE_INT)
 
 #pragma omp parallel num_threads(2) default(none)                              \
   shared(x1, x2, x3, x4, result1, result2, result3, result4)

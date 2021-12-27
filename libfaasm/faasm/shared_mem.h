@@ -31,13 +31,6 @@ extern "C"
 
 #define FAASM_REDUCE(var, type, op) __faasm_sm_reduce((void*)&(var), type, op);
 
-#define FAASM_SHARED_ARRAY(var, type, len)                                     \
-    __faasm_sm_array((void*)&(var), type, len);
-
-#define FAASM_SHARED_RAW(var, len) __faasm_sm_raw((void*)&(var), len);
-
-#define FAASM_SHARED_VAR(var, type) __faasm_sm_var((void*)&(var), type);
-
 #define FAASM_START_CRITICAL_LOCAL() __faasm_sm_critical_local();
 
 #define FAASM_END_CRITICAL_LOCAL() __faasm_sm_critical_local_end();

@@ -37,10 +37,6 @@ int main(int argc, char* argv[])
     int sharedA = 100;
     DummyStruct sharedB;
 
-    FAASM_SHARED_VAR(loopSize, FAASM_TYPE_INT)
-    FAASM_SHARED_VAR(sharedA, FAASM_TYPE_INT)
-    FAASM_SHARED_RAW(sharedB, sizeof(DummyStruct))
-    FAASM_SHARED_ARRAY(counts, FAASM_TYPE_INT, 5)
     FAASM_REDUCE(reducedA, FAASM_TYPE_INT, FAASM_OP_SUM)
     FAASM_REDUCE(reducedB, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
 

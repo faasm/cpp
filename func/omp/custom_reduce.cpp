@@ -1,8 +1,6 @@
 #include <cstdio>
 #include <omp.h>
 
-#include <faasm/shared_mem.h>
-
 struct complex_t
 {
     int real;
@@ -27,8 +25,6 @@ complex_t complex_add(complex_t a, complex_t b)
 int main()
 {
     complex_t x = { 0, 0 };
-
-    FAASM_SHARED_RAW(x, sizeof(complex_t));
 
 #pragma omp parallel num_threads(10) reduction(cmplxAdd : x)
     {

@@ -1,8 +1,6 @@
 #include <omp.h>
 #include <stdio.h>
 
-#include <faasm/shared_mem.h>
-
 /**
  * Note - this function is designed to test basic OpenMP functionality.
  * The loop must include both globally and locally shared variables.
@@ -25,11 +23,6 @@ int main(int argc, char* argv[])
     }
 
     bool* flags = new bool[nThreads];
-
-    // Note the shared variables here are both local and global
-    FAASM_SHARED_ARRAY(*flags, FAASM_TYPE_BOOL, nThreads)
-    FAASM_SHARED_VAR(failed, FAASM_TYPE_BOOL)
-    FAASM_SHARED_VAR(nThreads, FAASM_TYPE_INT)
 
 #pragma omp parallel default(none) shared(flags, failed, nThreads)
     {

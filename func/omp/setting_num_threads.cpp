@@ -31,8 +31,6 @@ int main()
         return 1;
     }
 
-    FAASM_SHARED_ARRAY(*flags, FAASM_TYPE_BOOL, nThreads)
-
 #pragma omp parallel default(none) shared(flags)
     {
         printf("Setting thread %i\n", omp_get_thread_num());

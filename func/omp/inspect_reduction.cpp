@@ -1,8 +1,6 @@
 #include <cstdio>
 #include <omp.h>
 
-#include <faasm/shared_mem.h>
-
 int inspectAdder(int a, int b)
 {
 #ifdef __wasm__
@@ -27,9 +25,6 @@ int main()
 #else
     printf("Result before: %i (%p) %i (%p)\n", x, &x, y, &y);
 #endif
-
-    FAASM_SHARED_VAR(x, FAASM_TYPE_INT);
-    FAASM_SHARED_VAR(y, FAASM_TYPE_INT);
 
 #pragma omp parallel num_threads(10) reduction(inspectAdd : x, y)
     {

@@ -12,7 +12,6 @@ int main(int argc, char* argv[])
     int nThreads = 5;
     int loopSize = nThreads * chunkSize;
 
-    FAASM_SHARED_VAR(loopSize, FAASM_TYPE_INT)
     FAASM_REDUCE(count, FAASM_TYPE_INT, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(5) default(none) shared(loopSize) reduction(+ : count)

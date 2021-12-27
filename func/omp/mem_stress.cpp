@@ -25,8 +25,6 @@ int main(int argc, char** argv)
     uint8_t* ptrs[ITERATIONS];
     int counts[ITERATIONS];
 
-    FAASM_SHARED_RAW(*ptrs, ITERATIONS * sizeof(void*))
-    FAASM_SHARED_ARRAY(counts, FAASM_TYPE_INT, ITERATIONS)
     FAASM_REDUCE(totalLoops, FAASM_TYPE_INT, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(nThreads) default(none)                   \
@@ -48,8 +46,6 @@ int main(int argc, char** argv)
     }
     printf("Memory allocated by %i threads\n", nThreads);
 
-    FAASM_SHARED_RAW(*ptrs, ITERATIONS * sizeof(void*))
-    FAASM_SHARED_ARRAY(counts, FAASM_TYPE_INT, ITERATIONS)
     FAASM_REDUCE(totalLoops, FAASM_TYPE_INT, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(nThreads) default(none)                   \
@@ -62,8 +58,6 @@ int main(int argc, char** argv)
     }
     printf("Memory freed by %i threads\n", nThreads);
 
-    FAASM_SHARED_RAW(*ptrs, ITERATIONS * sizeof(void*))
-    FAASM_SHARED_ARRAY(counts, FAASM_TYPE_INT, ITERATIONS)
     FAASM_REDUCE(totalLoops, FAASM_TYPE_INT, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(nThreads) default(none)                   \

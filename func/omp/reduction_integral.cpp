@@ -26,11 +26,6 @@ double roundRobin()
     double timerStart = omp_get_wtime();
     omp_set_num_threads(NTHREADS);
 
-    FAASM_SHARED_VAR(nthreads, FAASM_TYPE_INT)
-    FAASM_SHARED_VAR(nSteps, FAASM_TYPE_LONG)
-    FAASM_SHARED_VAR(step, FAASM_TYPE_DOUBLE)
-    FAASM_SHARED_ARRAY(sum, FAASM_TYPE_DOUBLE, NTHREADS)
-
 #pragma omp parallel default(none) shared(nthreads, nSteps, step, sum)
     {
         int i, id, lnthreads;
@@ -65,10 +60,6 @@ double doAtomic()
     step = 1.0 / (double)nSteps;
     double timerStart = omp_get_wtime();
     omp_set_num_threads(4);
-
-    FAASM_SHARED_VAR(nSteps, FAASM_TYPE_LONG)
-    FAASM_SHARED_VAR(step, FAASM_TYPE_DOUBLE)
-    FAASM_SHARED_VAR(pi, FAASM_TYPE_DOUBLE)
 
 #pragma omp parallel default(none) shared(nSteps, step, pi)
     {
@@ -107,8 +98,6 @@ double doReduction()
     omp_set_num_threads(NTHREADS);
     double timerStart = omp_get_wtime();
 
-    FAASM_SHARED_VAR(nSteps, FAASM_TYPE_LONG)
-    FAASM_SHARED_VAR(step, FAASM_TYPE_DOUBLE)
     FAASM_REDUCE(sum, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
 
 #pragma omp parallel for default(none) shared(nSteps, step) reduction(+ : sum)
@@ -138,8 +127,6 @@ double doBetterReduction()
     omp_set_num_threads(NTHREADS);
     double timerStart = omp_get_wtime();
 
-    FAASM_SHARED_VAR(nSteps, FAASM_TYPE_LONG)
-    FAASM_SHARED_VAR(step, FAASM_TYPE_DOUBLE)
     FAASM_REDUCE(sum, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
 
 #pragma omp parallel for private(x) default(none) shared(nSteps, step) reduction(+:sum)

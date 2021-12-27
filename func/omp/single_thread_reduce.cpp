@@ -29,8 +29,6 @@ int main(int argc, char* argv[])
 
     FAASM_REDUCE(reducedA, FAASM_TYPE_INT, FAASM_OP_SUM)
     FAASM_REDUCE(reducedB, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
-    FAASM_SHARED_VAR(loopSize, FAASM_TYPE_INT)
-    FAASM_SHARED_VAR(sharedA, FAASM_TYPE_DOUBLE)
 
 #pragma omp parallel for num_threads(1) default(none) \
     private(privateA,privateB) \
