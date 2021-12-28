@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <omp.h>
 
+#include <faasm/shared_mem.h>
+
 #define NTHREADS 10
 
 bool checkResult(const char* func, double reduction)
@@ -72,8 +74,10 @@ double doAtomic()
             sum += 4.0 / (1.0 + x * x);
         }
 
-#pragma omp atomic
-        pi += sum * step;
+#pragma omp critical
+        {
+            pi += sum * step;
+        }
     }
 
     double timerEnd = omp_get_wtime() - timerStart;
@@ -93,6 +97,8 @@ double doReduction()
 
     omp_set_num_threads(NTHREADS);
     double timerStart = omp_get_wtime();
+
+    FAASM_REDUCE(sum, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
 
 #pragma omp parallel for default(none) shared(nSteps, step) reduction(+ : sum)
     for (i = 0; i < nSteps; ++i) {
@@ -120,6 +126,8 @@ double doBetterReduction()
 
     omp_set_num_threads(NTHREADS);
     double timerStart = omp_get_wtime();
+
+    FAASM_REDUCE(sum, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
 
 #pragma omp parallel for private(x) default(none) shared(nSteps, step) reduction(+:sum)
     for (i = 0; i < nSteps; ++i) {

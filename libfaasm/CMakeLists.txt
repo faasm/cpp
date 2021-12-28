@@ -18,6 +18,7 @@ set(PUBLIC_HEADERS
         faasm/print.h
         faasm/random.h
         faasm/sgd.h
+        faasm/shared_mem.h
         faasm/state.h
         faasm/time.h
         )

@@ -3,6 +3,8 @@
 #include <omp.h>
 #include <unistd.h>
 
+#include <faasm/shared_mem.h>
+
 /**
  * We want to check handling of multipled private and shared variables as part
  * of a reduction of multiple variables.
@@ -34,6 +36,9 @@ int main(int argc, char* argv[])
 
     int sharedA = 100;
     DummyStruct sharedB;
+
+    FAASM_REDUCE(reducedA, FAASM_TYPE_INT, FAASM_OP_SUM)
+    FAASM_REDUCE(reducedB, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(nThreads) default(none) \
     private(privateA,privateB) \

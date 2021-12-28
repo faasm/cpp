@@ -1,3 +1,4 @@
+# State
 __faasm_push_state
 __faasm_push_state_partial
 __faasm_push_state_partial_mask
@@ -20,6 +21,8 @@ __faasm_lock_state_read
 __faasm_unlock_state_read
 __faasm_lock_state_write
 __faasm_unlock_state_write
+
+# Functions
 __faasm_read_input
 __faasm_write_output
 __faasm_chain_name
@@ -32,3 +35,8 @@ __faasm_get_py_entry
 __faasm_chain_py
 __faasm_conf_flag
 __faasm_backtrace
+
+# Shared mem
+__faasm_sm_reduce
+__faasm_sm_critical_local
+__faasm_sm_critical_local_end

@@ -1,3 +1,5 @@
+#include <faasm/shared_mem.h>
+
 #include <cstdio>
 #include <math.h>
 #include <omp.h>
@@ -14,6 +16,9 @@ bool doReduce()
     int reducedB = 0;
 
     bool success = true;
+
+    FAASM_REDUCE(reducedA, FAASM_TYPE_INT, FAASM_OP_SUM)
+    FAASM_REDUCE(reducedB, FAASM_TYPE_INT, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(nThreads) default(none) \
     shared(counts,loopSize,success) \

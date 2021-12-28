@@ -2,6 +2,8 @@
 #include <omp.h>
 #include <random>
 
+#include <faasm/shared_mem.h>
+
 #define ITERATIONS 100000
 #define N_THREADS 4
 
@@ -14,6 +16,8 @@ unsigned long threadSeed()
 int main(int argc, char** argv)
 {
     long result = 0;
+
+    FAASM_REDUCE(result, FAASM_TYPE_LONG, FAASM_OP_SUM)
 
 #pragma omp parallel num_threads(N_THREADS) default(none) reduction(+ : result)
     {

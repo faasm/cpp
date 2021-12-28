@@ -7,6 +7,9 @@ struct complex_t
     int imag;
 };
 
+// WARNING: custom reductions are not supported in a distributed Faasm
+// deployment
+
 complex_t complex_add(complex_t a, complex_t b)
 {
     complex_t c;

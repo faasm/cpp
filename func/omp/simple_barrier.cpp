@@ -1,5 +1,4 @@
 #include <cstdio>
-#include <faasm/faasm.h>
 #include <omp.h>
 
 static int x1 = 0;
@@ -13,6 +12,7 @@ static int result4 = 0;
 
 int main(int argc, char* argv[])
 {
+
 #pragma omp parallel num_threads(2) default(none)                              \
   shared(x1, x2, x3, x4, result1, result2, result3, result4)
     {

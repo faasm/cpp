@@ -13,8 +13,7 @@ void run_once_only()
 
 int main()
 {
-
-#pragma omp parallel num_threads(4)
+#pragma omp parallel num_threads(100)
 #pragma omp single nowait
     run_once_only();
 }

@@ -2,6 +2,8 @@
 #include <omp.h>
 #include <string>
 
+#include <faasm/shared_mem.h>
+
 #define ITERATIONS 100
 #define N_THREADS 20
 #define MALLOC_BIG 5 * 1024 * 1024
@@ -23,6 +25,8 @@ int main(int argc, char** argv)
     uint8_t* ptrs[ITERATIONS];
     int counts[ITERATIONS];
 
+    FAASM_REDUCE(totalLoops, FAASM_TYPE_INT, FAASM_OP_SUM)
+
 #pragma omp parallel for num_threads(nThreads) default(none)                   \
   shared(ptrs, counts) reduction(+:totalLoops)
     for (int i = 0; i < ITERATIONS; i++) {
@@ -42,6 +46,8 @@ int main(int argc, char** argv)
     }
     printf("Memory allocated by %i threads\n", nThreads);
 
+    FAASM_REDUCE(totalLoops, FAASM_TYPE_INT, FAASM_OP_SUM)
+
 #pragma omp parallel for num_threads(nThreads) default(none)                   \
   shared(ptrs, counts) reduction(+:totalLoops)
     for (int i = 0; i < ITERATIONS; i++) {
@@ -51,6 +57,8 @@ int main(int argc, char** argv)
         counts[i]++;
     }
     printf("Memory freed by %i threads\n", nThreads);
+
+    FAASM_REDUCE(totalLoops, FAASM_TYPE_INT, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(nThreads) default(none)                   \
   shared(ptrs, counts) reduction(+:totalLoops)
