@@ -76,10 +76,12 @@ double doAtomic()
             sum += 4.0 / (1.0 + x * x);
         }
 
-#pragma omp critical
-        {
-            pi += sum * step;
-        }
+#ifdef __wasm__
+        FAASM_ATOMIC_INCR_BY(pi, sum * step);
+#else
+#pragma omp atomic
+        pi += sum * step;
+#endif
     }
 
     double timerEnd = omp_get_wtime() - timerStart;
