@@ -43,11 +43,9 @@ extern "C"
     __faasm_sm_critical_local_end();
 
 #define FAASM_ATOMIC_INCR(var)                                                 \
-    FAASM_REDUCE(var, FAASM_TYPE_INT, FAASM_OP_SUM)                            \
     FAASM_CRITICAL_LOCAL(var++)
 
 #define FAASM_ATOMIC_INCR_BY(var, value)                                       \
-    FAASM_REDUCE(var, FAASM_TYPE_INT, FAASM_OP_SUM)                            \
     FAASM_CRITICAL_LOCAL(var += value)
 
 #ifdef __cplusplus

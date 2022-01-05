@@ -1,11 +1,7 @@
 #include <cstdio>
 #include <omp.h>
 
-#ifdef __wasm__
 #include <faasm/shared_mem.h>
-#else
-#define FAASM_REDUCE(...) (void)0;
-#endif
 
 #define NTHREADS 10
 
@@ -63,6 +59,7 @@ double doAtomic()
     double timerStart = omp_get_wtime();
     omp_set_num_threads(4);
 
+    FAASM_REDUCE(pi, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
 #pragma omp parallel default(none) shared(nSteps, step, pi)
     {
         int i, id, lnthreads;
@@ -76,12 +73,7 @@ double doAtomic()
             sum += 4.0 / (1.0 + x * x);
         }
 
-#ifdef __wasm__
         FAASM_ATOMIC_INCR_BY(pi, sum * step);
-#else
-#pragma omp atomic
-        pi += sum * step;
-#endif
     }
 
     double timerEnd = omp_get_wtime() - timerStart;

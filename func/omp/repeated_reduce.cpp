@@ -1,9 +1,4 @@
-
-#ifdef __wasm
 #include <faasm/shared_mem.h>
-#else
-#define FAASM_REDUCE(...) (void)0;
-#endif
 
 #include <cstdio>
 #include <math.h>

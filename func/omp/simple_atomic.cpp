@@ -8,6 +8,7 @@ int main()
     int nThreads = 100;
     int counter = 20;
 
+    FAASM_REDUCE(counter, FAASM_TYPE_INT, FAASM_OP_SUM)
 #pragma omp parallel num_threads(nThreads) default(none) shared(counter)
     {
         // NOTE - it appears OpenMP doesn't actually support compiling the
