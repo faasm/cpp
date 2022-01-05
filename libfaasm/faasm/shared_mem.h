@@ -42,11 +42,9 @@ extern "C"
     }                                                                          \
     __faasm_sm_critical_local_end();
 
-#define FAASM_ATOMIC_INCR(var)                                                 \
-    FAASM_CRITICAL_LOCAL(var++)
+#define FAASM_ATOMIC_INCR(var) FAASM_CRITICAL_LOCAL(var++)
 
-#define FAASM_ATOMIC_INCR_BY(var, value)                                       \
-    FAASM_CRITICAL_LOCAL(var += value)
+#define FAASM_ATOMIC_INCR_BY(var, value) FAASM_CRITICAL_LOCAL(var += value)
 
 #ifdef __cplusplus
 }
