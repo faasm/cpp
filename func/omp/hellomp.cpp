@@ -11,9 +11,11 @@ void printThreadInfo(const char* label)
 
 int main(int argc, char* argv[])
 {
+    int nThreads = 6;
+
     printThreadInfo("Main before");
 
-#pragma omp parallel default(none)
+#pragma omp parallel num_threads(nThreads) default(none)
     {
         printThreadInfo("OMP thread");
     }
