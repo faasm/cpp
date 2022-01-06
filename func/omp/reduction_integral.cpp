@@ -59,7 +59,6 @@ double doAtomic()
     double timerStart = omp_get_wtime();
     omp_set_num_threads(4);
 
-    FAASM_REDUCE(pi, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
 #pragma omp parallel default(none) shared(nSteps, step, pi)
     {
         int i, id, lnthreads;
