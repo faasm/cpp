@@ -7,10 +7,10 @@
 
 bool doReduce()
 {
-    int nThreads = 5;
-    int chunkSize = 20;
+    int nThreads = 10;
+    int chunkSize = 1000;
     int loopSize = nThreads * chunkSize;
-    int counts[] = { 0, 0, 0, 0, 0 };
+    int counts[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     int reducedA = 0;
     int reducedB = 0;
@@ -59,8 +59,8 @@ bool doReduce()
         }
     }
 
-    int expectedFinalReducedA = 3000;
-    int expectedFinalReducedB = 4500;
+    int expectedFinalReducedA = 550000;
+    int expectedFinalReducedB = 825000;
 
     if (reducedA != expectedFinalReducedA) {
         printf("reducedA %i != %i\n", reducedA, expectedFinalReducedA);
@@ -78,7 +78,7 @@ bool doReduce()
 int main(int argc, char* argv[])
 {
     // Run reduce in a loop and check each iteration is correct
-    int nLoops = 10;
+    int nLoops = 1000;
     for (int i = 0; i < nLoops; i++) {
         bool success = doReduce();
         if (!success) {

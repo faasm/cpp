@@ -147,7 +147,7 @@ HOST_IFACE_FUNC
 void __faasm_sm_raw(void* var, int varSize);
 
 HOST_IFACE_FUNC
-void __faasm_sm_reduce(void* var, int varType, int reduceOp);
+void __faasm_sm_reduce(void* var, int varType, int reduceOp, int currentBatch);
 
 HOST_IFACE_FUNC
 void __faasm_sm_var(void* var, int varType);

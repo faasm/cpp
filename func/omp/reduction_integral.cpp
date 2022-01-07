@@ -18,30 +18,29 @@ double roundRobin()
 {
     int nthreads;
     long nSteps = 100000000;
-    double step = 0;
     double pi = 0.0;
     double sum[NTHREADS];
 
-    step = 1.0 / (double)nSteps;
+    double step = 1.0 / (double)nSteps;
     double timerStart = omp_get_wtime();
     omp_set_num_threads(NTHREADS);
 
 #pragma omp parallel default(none) shared(nthreads, nSteps, step, sum)
     {
-        int i, id, lnthreads;
-        double x;
-
-        lnthreads = omp_get_num_threads();
-        id = omp_get_thread_num();
+        int lnthreads = omp_get_num_threads();
+        int id = omp_get_thread_num();
         if (id == 0) {
             nthreads = lnthreads;
         }
 
-        for (i = id, sum[id] = 0; i < nSteps; i += lnthreads) {
-            x = (i + 0.5) * step;
+        sum[id] = 0;
+        for (int i = id; i < nSteps; i += lnthreads) {
+            double x = (i + 0.5) * step;
             sum[id] += 4.0 / (1.0 + x * x);
         }
     }
+
+    printf("RR calculating pi over %i threads\n", nthreads);
     for (int i = 0; i < nthreads; ++i) {
         pi += sum[i] * step;
     }
@@ -54,10 +53,9 @@ double roundRobin()
 double doAtomic()
 {
     long nSteps = 100000000;
-    double step = 0;
     double pi = 0.0;
 
-    step = 1.0 / (double)nSteps;
+    double step = 1.0 / (double)nSteps;
     double timerStart = omp_get_wtime();
     omp_set_num_threads(4);
 
@@ -74,10 +72,7 @@ double doAtomic()
             sum += 4.0 / (1.0 + x * x);
         }
 
-#pragma omp critical
-        {
-            pi += sum * step;
-        }
+        FAASM_ATOMIC_INCR_BY(pi, sum * step);
     }
 
     double timerEnd = omp_get_wtime() - timerStart;
