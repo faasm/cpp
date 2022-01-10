@@ -2,6 +2,7 @@
 #include <faasm/faasm.h>
 #include <mpi.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
 int doAlltoAll(int rank, int worldSize)
@@ -40,13 +41,44 @@ int doAlltoAll(int rank, int worldSize)
     return retVal;
 }
 
+int doAllReduce(int rank, int worldSize)
+{
+    // Create an array of three numbers for this process
+    int numsThisProc[3] = { rank, 10 * rank, 100 * rank };
+    int* expected = new int[3];
+    int* result = new int[3];
+
+    // Build expectation
+    memset(expected, 0, 3 * sizeof(int));
+    for (int r = 0; r < worldSize; r++) {
+        expected[0] += r;
+        expected[1] += 10 * r;
+        expected[2] += 100 * r;
+    }
+
+    // Call allreduce
+    MPI_Allreduce(numsThisProc, result, 3, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+
+    // Check vs. expectation
+    if (!faasm::compareArrays<int>(result, expected, 3)) {
+        return 1;
+    }
+
+    return 0;
+}
+
 int main(int argc, char* argv[])
 {
     MPI_Init(NULL, NULL);
 
-    int rank, worldSize;
+    int rank;
+    int worldSize;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
+
+    // Before starting, sleep to give the scheduler a chance to detect the
+    // migration opportunity
+    sleep(5);
 
     // Do an all-to-all message
     if (doAlltoAll(rank, worldSize) != 0) {
@@ -55,10 +87,14 @@ int main(int argc, char* argv[])
 
     printf("Rank %i: first alltoall as expected\n", rank);
 
-    // Sleep for some time
-    sleep(5);
+    // Force a migration point in all-reduce
+    if (doAllReduce(rank, worldSize) != 0) {
+        return 1;
+    }
 
-    // Do an all-to-all message again
+    printf("Rank %i: Allreduce as expected\n", rank);
+
+    // Do an all-to-all message
     if (doAlltoAll(rank, worldSize) != 0) {
         return 1;
     }
@@ -67,5 +103,5 @@ int main(int argc, char* argv[])
 
     MPI_Finalize();
 
-    return 0;
+    return MPI_SUCCESS;
 }
