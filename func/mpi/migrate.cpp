@@ -4,6 +4,9 @@
 #include <faasm/faasm.h>
 #include <faasm/migrate.h>
 
+#define RANK_THRESHOLD 0.5
+#define LOOP_THRESHOLD 100
+
 // Outer wrapper, and re-entry point after migration
 void doBenchmark(int nLoops)
 {
@@ -35,11 +38,16 @@ void doBenchmark(int nLoops)
                  MPI_COMM_WORLD,
                  MPI_STATUS_IGNORE);
 
-        // Migration point, which may or may not resume the
-        // benchmark on another host for the remaining iterations.
-        // This would eventually be MPI_Barrier
-        MPI_Barrier(MPI_COMM_WORLD);
-        __faasm_migrate_point(&doBenchmark, i);
+        int rankThreshold = worldSize  * RANK_THRESHOLD;
+        if (nLoops % LOOP_THRESHOLD == 0) {
+            // Migration point, which may or may not resume the
+            // benchmark on another host for the remaining iterations.
+            // This would eventually be MPI_Barrier
+            MPI_Barrier(MPI_COMM_WORLD);
+            if (rank > rankThreshold) {
+                __faasm_migrate_point(&doBenchmark, i);
+            }
+        }
     }
 }
 
