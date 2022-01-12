@@ -16,10 +16,24 @@ void doBenchmark(int nLoops)
         MPI_Comm_rank(MPI_COMM_WORLD, &rank);
         MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
 
+        // Make sure everyone is in sync (including those ranks that have been
+        // migrated)
+        MPI_Barrier(MPI_COMM_WORLD);
+
         // Send message to rank before
+        int sender = rank == worldSize - 1 ? 0 : rank + 1;
         int recipient = rank == 0 ? worldSize - 1 : rank - 1;
         int sentNumber = 123;
         MPI_Send(&sentNumber, 1, MPI_INT, recipient, 0, MPI_COMM_WORLD);
+
+        int receivedNumber;
+        MPI_Recv(&receivedNumber,
+                 sender,
+                 MPI_INT,
+                 0,
+                 0,
+                 MPI_COMM_WORLD,
+                 MPI_STATUS_IGNORE);
 
         // Migration point, which may or may not resume the
         // benchmark on another host for the remaining iterations.
