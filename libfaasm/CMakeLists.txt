@@ -15,6 +15,7 @@ set(PUBLIC_HEADERS
         faasm/files.h
         faasm/input.h
         faasm/matrix.h
+        faasm/migrate.h
         faasm/print.h
         faasm/random.h
         faasm/sgd.h

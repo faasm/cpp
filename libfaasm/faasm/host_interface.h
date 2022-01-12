@@ -8,6 +8,9 @@
 #define HOST_IFACE_FUNC
 #endif
 
+// Migration entry point
+typedef void (*FaasmMigrateEntryPoint)(int);
+
 HOST_IFACE_FUNC
 long __faasm_read_state(const char* key, unsigned char* buffer, long bufferLen);
 
@@ -158,4 +161,6 @@ void __faasm_sm_critical_local();
 HOST_IFACE_FUNC
 void __faasm_sm_critical_local_end();
 
+HOST_IFACE_FUNC
+void __faasm_migrate_point(FaasmMigrateEntryPoint f, int arg);
 #endif
