@@ -38,6 +38,7 @@ void doBenchmark(int nLoops)
         // Migration point, which may or may not resume the
         // benchmark on another host for the remaining iterations.
         // This would eventually be MPI_Barrier
+        MPI_Barrier(MPI_COMM_WORLD);
         __faasm_migrate_point(&doBenchmark, i);
     }
 }
