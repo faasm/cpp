@@ -25,6 +25,7 @@ endfunction(omp_func)
 
 
 # Single host parallelism only
+omp_func(barrier_stress barrier_stress.cpp)
 omp_func(complex_reduce complex_reduce.cpp)
 omp_func(custom_reduce custom_reduce.cpp)
 omp_func(default_shared default_shared.cpp)
