@@ -63,7 +63,7 @@ void doBenchmark(int nLoops)
     MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
 
     for (int i = 0; i < nLoops; i++) {
-        if (rank == 0 && i % (nLoops / 10) == 0)  {
+        if (rank == 0 && i % (nLoops / 10) == 0) {
             printf("Starting iteration %i/%i\n", i, nLoops);
         }
 
@@ -76,9 +76,8 @@ void doBenchmark(int nLoops)
         if (mustCheck && i % checkEvery == 0 && i / checkEvery > 0) {
             mustCheck = false;
             if (rank == 0) {
-                printf("Checking for migrations at iteration %i/%i\n",
-                        i,
-                        nLoops);
+                printf(
+                  "Checking for migrations at iteration %i/%i\n", i, nLoops);
             }
             // Migration point, which may or may not resume the
             // benchmark on another host for the remaining iterations.
@@ -108,11 +107,10 @@ int main(int argc, char* argv[])
     // support migrating a function twice.
     int checkEveryIn = atoi(argv[1]);
     int* checkEveryPtr = &checkEvery;
-    *checkEveryPtr = (int) (NUM_LOOPS * ((float) checkEveryIn / 10.0));
+    *checkEveryPtr = (int)(NUM_LOOPS * ((float)checkEveryIn / 10.0));
 
-    printf("Starting MPI migration checking at iter %i/%i\n",
-           checkEvery,
-           NUM_LOOPS);
+    printf(
+      "Starting MPI migration checking at iter %i/%i\n", checkEvery, NUM_LOOPS);
 
     doBenchmark(NUM_LOOPS);
 
