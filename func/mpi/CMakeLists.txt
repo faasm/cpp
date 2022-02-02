@@ -16,6 +16,7 @@ function(mpi_func exec_name dir_path)
     set(ALL_MPI_FUNCS ${ALL_MPI_FUNCS} ${exec_name} PARENT_SCOPE)
 endfunction(mpi_func)
 
+mpi_func(migrate migrate.cpp)
 mpi_func(mpi_allgather mpi_allgather.cpp)
 mpi_func(mpi_allreduce mpi_allreduce.cpp)
 mpi_func(mpi_alltoall mpi_alltoall.cpp)

@@ -40,3 +40,7 @@ __faasm_backtrace
 __faasm_sm_reduce
 __faasm_sm_critical_local
 __faasm_sm_critical_local_end
+
+# Migration
+__faasm_migrate_point
+
