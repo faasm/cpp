@@ -6,7 +6,7 @@
 #include <faasm/faasm.h>
 #include <faasm/migrate.h>
 
-#define NUM_LOOPS 500000
+#define NUM_LOOPS 50000
 int checkEvery = 1;
 
 int doAlltoAll(int rank, int worldSize, int i, int nLoops, int checkEvery)
