@@ -3,7 +3,7 @@
 
 // NOTE: The point of this file is to force the wasm linker to generate GOT
 // entries for both data and functions as detailed here:
-// https://github.com/WebAssembly/tool-conventions/blob/master/DynamicLinking.md
+// https://github.com/WebAssembly/tool-conventions/blob/main/DynamicLinking.md
 //
 // It seems quite convoluted fiddling with extern and pointers, but this is
 // needed to introduce sufficient ambiguity to force the modules to use the GOT
