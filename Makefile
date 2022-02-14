@@ -20,7 +20,7 @@ WASI_LIBC_DIR=$(PROJ_ROOT)/third-party/wasi-libc
 
 # -------------------------------------------
 # This is adapted from the wasi-sdk Makefile found here:
-# https://github.com/WebAssembly/wasi-sdk/blob/master/Makefile
+# https://github.com/WebAssembly/wasi-sdk/blob/main/Makefile
 # -------------------------------------------
 
 default: build

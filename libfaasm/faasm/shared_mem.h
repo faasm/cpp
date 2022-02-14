@@ -14,7 +14,7 @@ extern "C"
 
 // NOTE - these types must correspond to the enums defined in the Faabric
 // codebase, stored here at time of writing:
-// https://github.com/faasm/faabric/blob/master/include/faabric/util/snapshot.h
+// https://github.com/faasm/faabric/blob/main/include/faabric/util/snapshot.h
 #define FAASM_TYPE_RAW 0
 #define FAASM_TYPE_BOOL 1
 #define FAASM_TYPE_INT 2

@@ -319,7 +319,7 @@ void doInMemoryStateRoundTripCheck(int rows, int cols, int colStart, int colEnd)
           setEmulatorUser(emulatorUser.c_str());
           setEmulatorState(&remoteState);
 
-          // Write matrix to state to set master as this thread
+          // Write matrix to state to set main as this thread
           faasm::writeSparseMatrixToState(key, mat, false);
 
           // Process messages. Run the server in _this_ thread.

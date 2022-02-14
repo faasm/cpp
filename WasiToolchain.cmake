@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.4.0)
 
 # -----------------------------------------
 # A useful reference for this file is the wasi-sdk equivalent:
-# https://github.com/WebAssembly/wasi-sdk/blob/master/wasi-sdk.cmake
+# https://github.com/WebAssembly/wasi-sdk/blob/main/wasi-sdk.cmake
 #
 # BUT there are lots of crucial modifications in here and it's
 # used all over the place in this project, so be **very** careful
@@ -97,7 +97,7 @@ SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} \
 
 
 # This needs to be included to support libcxx with atomics
-# -Xlinker --shared-memory 
+# -Xlinker --shared-memory
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
     -Xlinker --stack-first \
     -Xlinker --no-check-features \

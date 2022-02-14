@@ -4,7 +4,7 @@ Everything in this repo is containerised, so to use the tooling you must do so
 from within one of the containers. You can also create your own images that
 extend those defined in this repo.
 
-The [here.py](../bin/here.py) script is a convenience wrapper that will mount 
+The [here.py](../bin/here.py) script is a convenience wrapper that will mount
 your cwd into the `cpp-sysroot` container at `/work`, e.g.
 
 ```bash
@@ -22,7 +22,7 @@ python3 <this repo>/bin/here.py
 ## Development
 
 To develop the project you need to go through Faasm as per [the
-docs](https://github.com/faasm/faasm/blob/master/docs/development.md).
+docs](https://github.com/faasm/faasm/blob/main/docs/development.md).
 
 From inside the `cpp` CLI container spawned from there:
 
@@ -59,10 +59,10 @@ compiler and linker flags:
 - Ensure all symbols are exported (otherwise modules with no `main` are empty)
 - Prodce relocatable code (`-fPIC` only works with the Emscripten target)
 
-We also have to add the `__wasi__` definition and remove the `__EMSCRIPTEN__` 
-definition, but this is done in our LLVM fork.  
+We also have to add the `__wasi__` definition and remove the `__EMSCRIPTEN__`
+definition, but this is done in our LLVM fork.
 
-There is some more detail on the Emscripten-only support for `-fPIC` 
+There is some more detail on the Emscripten-only support for `-fPIC`
 [here](https://bugs.llvm.org/show_bug.cgi?id=42714).
 
 The relevant sets of flags should all be captured in the toolchain files in this
@@ -71,21 +71,21 @@ repo.
 ### Dynamic Linking
 
 Faasm implements dynamic linking according to the [WebAssembly tool
-conventions](https://github.com/WebAssembly/tool-conventions/blob/master/DynamicLinking.md). 
+conventions](https://github.com/WebAssembly/tool-conventions/blob/main/DynamicLinking.md).
 
 ## SIMD
 
 SIMD support is switched on using the standard Clang flags, `-msimd128` and
-`-munimplemented-simd128`.  
+`-munimplemented-simd128`.
 
 At time of writing the [Clang WASM SIMD
-header](https://github.com/llvm/llvm-project/blob/master/clang/lib/Headers/wasm_simd128.h)
+header](https://github.com/llvm/llvm-project/blob/main/clang/lib/Headers/wasm_simd128.h)
 was not found in Clang, so we put our own copy into our wasi-libc fork
-[here](https://github.com/faasm/wasi-libc/blob/master/libc-bottom-half/headers/public/wasm_simd128.h). 
+[here](https://github.com/faasm/wasi-libc/blob/main/libc-bottom-half/headers/public/wasm_simd128.h).
 
 Support for SIMD in Faasm relies on the underlying WASM runtimes.
 
-We have a hacked fork of Eigen to support WebAssembly SIMD 
+We have a hacked fork of Eigen to support WebAssembly SIMD
 [here](https://github.com/faasm/eigen-git-mirror), although this is
 experimental.
 

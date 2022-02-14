@@ -19,7 +19,7 @@ Find the commit related to tag name for the desired release in
 
 ```bash
 cd third-party/llvm-project
-git checkout master
+git checkout main
 git fetch origin
 git checkout <tag-name>
 ```
