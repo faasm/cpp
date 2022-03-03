@@ -7,13 +7,14 @@
 #include <string>
 #include <vector>
 
+#define CHUNK_SIZE 100000
+
 int piStep()
 {
     auto sum = faasm::AtomicInt("pi");
-    int chunkSize = faasm::getIntInput();
 
     int count = 0;
-    for (int i = 0; i < chunkSize; i++) {
+    for (int i = 0; i < CHUNK_SIZE; i++) {
         // Two random points
         double x = faasm::randomFloat();
         double y = faasm::randomFloat();
@@ -34,21 +35,20 @@ int piStep()
  */
 int main(int argc, char* argv[])
 {
-    int nWorkers = faasm::getIntInput();
-    int nGuesses = 1000000;
-    int chunkSize = nGuesses / nWorkers;
+    std::string inputData = faasm::getStringInput("4");
+    int nWorkers = std::stoi(inputData);
 
     // Initialise the sum
     auto sum = faasm::AtomicInt("pi");
     sum.reset();
 
     // Dispatch chained calls
-    auto inputData = BYTES(&chunkSize);
-    faasmChainBatch(piStep, inputData, sizeof(int), nWorkers);
+    faasmChainBatch(piStep, "", nWorkers);
 
     // Get the final result and estimate Pi
+    int totalGuesses = CHUNK_SIZE * nWorkers;
     int finalCount = sum.get();
-    float piEstimate = 4 * ((float)finalCount / (nGuesses));
+    float piEstimate = 4 * ((float)finalCount / (totalGuesses));
 
     std::string output = "Pi estimate: " + std::to_string(piEstimate) + "\n";
     printf("%s", output.c_str());

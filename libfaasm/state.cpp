@@ -18,4 +18,4 @@ void zeroState(const char* key, size_t stateLen)
     faasmWriteState(key, arr, stateLen);
     faasmPushState(key);
 }
-} // namespace faasm
+}

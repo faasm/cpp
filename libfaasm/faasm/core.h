@@ -180,11 +180,11 @@ extern "C"
                             long inputDataSize);
 
     /**
-     * Chains a function from this module N times and awaits the results
+     * Chains a function from this module N times, passing the string as input
+     * data
      */
     unsigned int faasmChainBatch(FaasmFuncPtr funcPtr,
-                                 const uint8_t* inputData,
-                                 long inputDataSize,
+                                 const char* inputData,
                                  int nFuncs);
 
     /**

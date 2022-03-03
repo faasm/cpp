@@ -15,8 +15,7 @@ in [this fork](https://github.com/faasm/llvm-project) through [this
 diff](https://github.com/llvm/llvm-project/compare/llvmorg-10.0.1...faasm:faasm).
 
 The repo also contains the C/C++ definition of the [Faasm host
-interface](https://faasm.readthedocs.io/en/latest/source/host_interface.html)
-along with an emulator to compile and test native applications.
+interface](https://faasm.readthedocs.io/en/latest/source/host_interface.html).
 
 More detailed docs can be found in:
 

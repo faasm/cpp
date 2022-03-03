@@ -3,9 +3,6 @@
 
 #include <string>
 
-// TODO - make this per-counter
-#define COUNTER_KEY "atomic_counter"
-
 namespace faasm {
 void initCounter(const char* counterKey);
 
@@ -20,9 +17,7 @@ int incrementCounter(const char* counterKey,
 class AtomicInt
 {
   public:
-    AtomicInt();
-
-    AtomicInt(const std::string &keyIn);
+    AtomicInt(const char* keyIn);
 
     int operator+=(int other);
 

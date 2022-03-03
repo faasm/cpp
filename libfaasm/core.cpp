@@ -1,4 +1,5 @@
 #include "faasm/core.h"
+#include <string.h>
 
 extern "C"
 {
@@ -182,13 +183,16 @@ unsigned int faasmChain(FaasmFuncPtr funcPtr,
 }
 
 unsigned int faasmChainBatch(FaasmFuncPtr funcPtr,
-                             const uint8_t* inputData,
-                             long inputDataSize,
+                             const char* inputData,
                              int nFuncs)
 {
+    size_t inputDataSize = ::strlen(inputData);
     unsigned int* callIds = new unsigned int[nFuncs];
+    auto inputDataBytes = (uint8_t*)inputData;
+
     for (int i = 0; i < nFuncs; i++) {
-        unsigned int callId = faasmChain(funcPtr, inputData, inputDataSize);
+        unsigned int callId =
+          faasmChain(funcPtr, inputDataBytes, inputDataSize);
         callIds[i] = callId;
     }
 

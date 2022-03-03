@@ -9,7 +9,7 @@ int scaleWorker()
 {
     printf("Executing scale worker\n");
 
-    faasm::AtomicInt counter;
+    faasm::AtomicInt counter("scale");
     printf("Adding 1 to counter %i\n", counter.get());
 
     counter += 1;
@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     int nFuncs = std::stoi(input);
 
     // Set up a counter
-    faasm::AtomicInt counter;
+    faasm::AtomicInt counter("scale");
     counter.reset();
 
     printf("Chaining %i functions\n", nFuncs);
