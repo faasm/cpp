@@ -4,6 +4,7 @@
 #ifdef __wasm__
 #define HOST_IFACE_FUNC
 #else
+// Avoid need to define any of these functions when compiling natively
 #define HOST_IFACE_FUNC __attribute__((weak))
 #endif
 

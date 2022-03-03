@@ -36,18 +36,14 @@ inv dev.cc tests
 /build/bin/tests
 ```
 
-### Building functions natively
+## Resolving symbols in editors/ IDEs
 
-If your editor needs to build functions natively to resolve symbols, you can run
-the following. This will use stubbed versions of the Faasm host interface that
-will error when called.
+The wasm build outputs a `compile_commands.json` file at
+`./build/func/compile_commands.json`. You can symlink this to the root of this
+dir to help `clang-format` resolve symbols, i.e.
 
 ```bash
-inv libfaasm --native
-inv libfaasmp --native
-inv libfaasmpi --native
-
-inv func demo hello --native
+ln -s build/func/compile_commands.json .
 ```
 
 ## Shared libraries
