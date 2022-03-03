@@ -39,6 +39,7 @@ mpi_func(mpi_status mpi_status.cpp)
 mpi_func(mpi_typesize mpi_typesize.cpp)
 
 mpi_func(hellompi hellompi.cpp)
+mpi_func(mpi_pi mpi_pi.cpp)
 
 # Custom target for building all functions
 add_custom_target(mpi_all_funcs DEPENDS ${ALL_MPI_FUNCS})

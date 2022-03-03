@@ -8,6 +8,7 @@
 #include <vector>
 
 #define CHUNK_SIZE 100000
+#define PI 3.14159
 
 int piStep()
 {
@@ -37,6 +38,7 @@ int main(int argc, char* argv[])
 {
     std::string inputData = faasm::getStringInput("4");
     int nWorkers = std::stoi(inputData);
+    int nTotal = CHUNK_SIZE * nWorkers;
 
     // Initialise the sum
     auto sum = faasm::AtomicInt("pi");
@@ -45,12 +47,15 @@ int main(int argc, char* argv[])
     // Dispatch chained calls
     faasmChainBatch(piStep, "", nWorkers);
 
-    // Get the final result and estimate Pi
-    int totalGuesses = CHUNK_SIZE * nWorkers;
+    // Get the final result
     int finalCount = sum.get();
-    float pi = 4 * ((float)finalCount / (totalGuesses));
 
-    std::string output = "Pi estimate: " + std::to_string(pi) + "\n";
+    // Estimate pi
+    float pi = 4 * ((float)finalCount / (nTotal));
+    float error = abs(PI - pi);
+
+    std::string output = "Pi estimate: " + std::to_string(pi) + "(error " +
+                         std::to_string(error) + ")\n";
     printf("%s", output.c_str());
     faasm::setStringOutput(output.c_str());
 
