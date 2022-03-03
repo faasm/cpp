@@ -63,9 +63,9 @@ else ()
     message(STATUS "Libfaasm native build")
 
     if(BUILD_SHARED_LIBS)
-        add_library(faasm SHARED ${LIB_FILES})
+        add_library(faasm SHARED ${LIB_FILES} stubs.cpp)
     else()
-        add_library(faasm STATIC ${LIB_FILES})
+        add_library(faasm STATIC ${LIB_FILES} stubs.cpp)
     endif()
 
     set_target_properties(faasm PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")

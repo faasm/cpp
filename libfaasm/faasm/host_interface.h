@@ -4,8 +4,7 @@
 #ifdef __wasm__
 #define HOST_IFACE_FUNC
 #else
-//#define HOST_IFACE_FUNC __attribute__((weak))
-#define HOST_IFACE_FUNC
+#define HOST_IFACE_FUNC __attribute__((weak))
 #endif
 
 // Migration entry point

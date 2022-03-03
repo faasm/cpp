@@ -1,9 +1,9 @@
-from os import listdir
-from os.path import join, splitext
-
-from invoke import task
-
+from os import makedirs, listdir
+from os.path import join, exists, splitext
+from shutil import copy, rmtree
+from subprocess import run
 import requests
+from invoke import task
 
 from faasmtools.env import PROJ_ROOT
 from faasmtools.compile_util import wasm_cmake, wasm_copy_upload
@@ -12,6 +12,7 @@ FAABRIC_MSG_TYPE_FLUSH = 3
 
 FUNC_DIR = join(PROJ_ROOT, "func")
 FUNC_BUILD_DIR = join(PROJ_ROOT, "build", "func")
+NATIVE_FUNC_BUILD_DIR = join(PROJ_ROOT, "build", "native-func")
 
 KNATIVE_HEADERS = {"Host": "faasm-worker.faasm.example.com"}
 
@@ -36,15 +37,39 @@ def _copy_built_function(user, func):
 
 
 @task(default=True, name="compile")
-def compile(ctx, user, func, clean=False, debug=False):
+def compile(ctx, user, func, clean=False, debug=False, native=False):
     """
     Compile a function
     """
-    # Build the function (gets written to the build dir)
-    wasm_cmake(FUNC_DIR, FUNC_BUILD_DIR, func, clean, debug)
+    if native:
+        if exists(NATIVE_FUNC_BUILD_DIR) and clean:
+            rmtree(NATIVE_FUNC_BUILD_DIR)
 
-    # Copy into place
-    _copy_built_function(user, func)
+        makedirs(NATIVE_FUNC_BUILD_DIR, exist_ok=True)
+
+        build_cmd = ["cmake", "-GNinja", FUNC_DIR]
+
+        build_cmd = " ".join(build_cmd)
+        print(build_cmd)
+        run(
+            "cmake -GNinja {}".format(FUNC_DIR),
+            check=True,
+            shell=True,
+            cwd=NATIVE_FUNC_BUILD_DIR,
+        )
+
+        run(
+            "ninja {}".format(func),
+            shell=True,
+            check=True,
+            cwd=NATIVE_FUNC_BUILD_DIR,
+        )
+    else:
+        # Build the function (gets written to the build dir)
+        wasm_cmake(FUNC_DIR, FUNC_BUILD_DIR, func, clean, debug)
+
+        # Copy into place
+        _copy_built_function(user, func)
 
 
 @task()

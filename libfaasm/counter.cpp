@@ -64,17 +64,22 @@ int incrementCounter(const char* counterKey, int increment, bool globalLock)
 }
 
 AtomicInt::AtomicInt()
+  : AtomicInt(COUNTER_KEY)
+{}
+
+AtomicInt::AtomicInt(const std::string& keyIn)
   : value(0)
+  , key(keyIn)
 {}
 
 void AtomicInt::reset()
 {
-    initCounter(COUNTER_KEY);
+    initCounter(key.c_str());
 }
 
 int AtomicInt::operator+=(int other)
 {
-    value = incrementCounter(COUNTER_KEY, other, true);
+    value = incrementCounter(key.c_str(), other, true);
     return value;
 }
 
@@ -83,4 +88,4 @@ int AtomicInt::get()
     value = getCounter(COUNTER_KEY);
     return value;
 }
-} // namespace faasm
+}

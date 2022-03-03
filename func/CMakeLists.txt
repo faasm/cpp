@@ -3,6 +3,10 @@ project(faasm-func)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+set(FAASM_NATIVE_INSTALL "/usr/local/faasm/native")
+
 if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     message(STATUS "Detected wasm build (sysroot=${CMAKE_SYSROOT})")
 
@@ -71,7 +75,7 @@ else ()
         target_link_directories(${func_name} PRIVATE "${FAASM_NATIVE_INSTALL}/lib")
         target_include_directories(${func_name} PRIVATE "${FAASM_NATIVE_INSTALL}/include")
 
-        target_link_libraries(${func_name} faasm emulator dl)
+        target_link_libraries(${func_name} libfaasm.a)
     endfunction(faasm_func_c)
 
     function(faasm_func func_name file_name)

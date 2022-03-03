@@ -13,12 +13,16 @@ int getCounter(const char* counterKey);
 
 void incrementCounter(const char* counterKey);
 
-int incrementCounter(const char* counterKey, int increment, bool globalLock);
+int incrementCounter(const char* counterKey,
+                     int increment,
+                     bool globalLock = true);
 
 class AtomicInt
 {
   public:
     AtomicInt();
+
+    AtomicInt(const std::string &keyIn);
 
     int operator+=(int other);
 
@@ -28,7 +32,9 @@ class AtomicInt
 
   private:
     int value;
+
+    const std::string key;
 };
-} // namespace faasm
+}
 
 #endif

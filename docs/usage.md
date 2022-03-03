@@ -36,6 +36,20 @@ inv dev.cc tests
 /build/bin/tests
 ```
 
+### Building functions natively
+
+If your editor needs to build functions natively to resolve symbols, you can run
+the following. This will use stubbed versions of the Faasm host interface that
+will error when called.
+
+```bash
+inv libfaasm --native
+inv libfaasmp --native
+inv libfaasmpi --native
+
+inv func demo hello --native
+```
+
 ## Shared libraries
 
 For CMake projects, you should be able to add the following to your build:
