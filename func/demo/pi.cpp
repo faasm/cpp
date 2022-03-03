@@ -48,9 +48,9 @@ int main(int argc, char* argv[])
     // Get the final result and estimate Pi
     int totalGuesses = CHUNK_SIZE * nWorkers;
     int finalCount = sum.get();
-    float piEstimate = 4 * ((float)finalCount / (totalGuesses));
+    float pi = 4 * ((float)finalCount / (totalGuesses));
 
-    std::string output = "Pi estimate: " + std::to_string(piEstimate) + "\n";
+    std::string output = "Pi estimate: " + std::to_string(pi) + "\n";
     printf("%s", output.c_str());
     faasm::setStringOutput(output.c_str());
 
