@@ -7,17 +7,10 @@
 #include <string>
 #include <vector>
 
-#define N_GUESSES 1000000
-#define COUNT_KEY "count"
-
 int piStep()
 {
-    const char* inputStr = faasm::getStringInput("0");
-    int chunkSize = std::stoi(inputStr);
-    if (chunkSize == 0) {
-        printf("Didn't get told a chunk size\n");
-        return 1;
-    }
+    auto sum = faasm::AtomicInt("pi");
+    int chunkSize = faasm::getIntInput();
 
     int count = 0;
     for (int i = 0; i < chunkSize; i++) {
@@ -31,7 +24,7 @@ int piStep()
         }
     }
 
-    faasm::incrementCounter(COUNT_KEY, count, false);
+    sum += count;
 
     return 0;
 }
@@ -41,30 +34,21 @@ int piStep()
  */
 int main(int argc, char* argv[])
 {
-    const char* inputStr = faasm::getStringInput("4");
-    int nWorkers = std::stoi(inputStr);
+    int nWorkers = faasm::getIntInput();
+    int nGuesses = 1000000;
+    int chunkSize = nGuesses / nWorkers;
 
-    // Write chunk size to state
-    int chunkSize = N_GUESSES / nWorkers;
+    // Initialise the sum
+    auto sum = faasm::AtomicInt("pi");
+    sum.reset();
 
-    // Set count to zero
-    faasm::initCounter(COUNT_KEY);
+    // Dispatch chained calls
+    auto inputData = BYTES(&chunkSize);
+    faasmChainBatch(piStep, inputData, sizeof(int), nWorkers);
 
-    // Dispatch chained calls in a loop
-    std::vector<unsigned int> callIds;
-    for (int i = 0; i < nWorkers; i++) {
-        auto inputData = BYTES(&chunkSize);
-        unsigned int callId = faasmChain(piStep, inputData, sizeof(int));
-        callIds.push_back(callId);
-    }
-
-    // Wait for calls to finish
-    for (unsigned int callId : callIds) {
-        faasmAwaitCall(callId);
-    }
-
-    int finalCount = faasm::getCounter(COUNT_KEY);
-    float piEstimate = 4 * ((float)finalCount / (N_GUESSES));
+    // Get the final result and estimate Pi
+    int finalCount = sum.get();
+    float piEstimate = 4 * ((float)finalCount / (nGuesses));
 
     std::string output = "Pi estimate: " + std::to_string(piEstimate) + "\n";
     printf("%s", output.c_str());

@@ -180,6 +180,14 @@ extern "C"
                             long inputDataSize);
 
     /**
+     * Chains a function from this module N times and awaits the results
+     */
+    unsigned int faasmChainBatch(FaasmFuncPtr funcPtr,
+                                 const uint8_t* inputData,
+                                 long inputDataSize,
+                                 int nFuncs);
+
+    /**
      * Blocks waiting for the call
      */
     unsigned int faasmAwaitCall(unsigned int callId);

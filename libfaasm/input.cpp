@@ -24,6 +24,13 @@ const char* getStringInput(const char* defaultValue)
     return strIn;
 }
 
+int getIntInput()
+{
+    const char* inputStr = faasm::getStringInput("0");
+    int intVal = std::stoi(inputStr);
+    return intVal;
+}
+
 void setStringOutput(const char* val)
 {
     auto bytesOutput = reinterpret_cast<const uint8_t*>(val);
