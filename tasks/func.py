@@ -100,7 +100,7 @@ def upload_user(ctx, user):
 
 
 @task
-def invoke(ctx, user, func, input_data=None):
+def invoke(ctx, user, func, input_data=None, mpi=None, graph=False):
     """
     Invoke a given function
     """
@@ -114,6 +114,13 @@ def invoke(ctx, user, func, input_data=None):
     if input_data:
         data["input_data"] = input_data
 
+    if mpi is not None:
+        data["mpi_world_size"] = int(mpi)
+
+    if graph:
+        data["record_exec_graph"] = True
+        data["async"] = True
+
     headers = get_knative_headers()
     response = requests.post(url, json=data, headers=headers)
 
@@ -126,10 +133,12 @@ def invoke(ctx, user, func, input_data=None):
 
 @task
 def flush(ctx):
+    headers = get_knative_headers()
     host, port = get_faasm_invoke_host_port()
+
     url = "http://{}:{}".format(host, port)
     data = {"type": FAABRIC_MSG_TYPE_FLUSH}
-    response = requests.post(url, json=data)
+    response = requests.post(url, json=data, headers=headers)
 
     print("Response {}: {}".format(response.status_code, response.text))
 
