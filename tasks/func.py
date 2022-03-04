@@ -1,6 +1,6 @@
 from os import makedirs, listdir
 from os.path import join, exists, splitext
-from shutil import copy, rmtree
+from shutil import rmtree
 from subprocess import run
 import requests
 from invoke import task
