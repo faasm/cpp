@@ -6,14 +6,17 @@ from invoke import task
 import requests
 
 from faasmtools.env import PROJ_ROOT
+from faasmtools.endpoints import (
+    get_faasm_invoke_host_port,
+    get_faasm_upload_host_port,
+    get_knative_headers,
+)
 from faasmtools.compile_util import wasm_cmake, wasm_copy_upload
 
 FAABRIC_MSG_TYPE_FLUSH = 3
 
 FUNC_DIR = join(PROJ_ROOT, "func")
 FUNC_BUILD_DIR = join(PROJ_ROOT, "build", "func")
-
-KNATIVE_HEADERS = {"Host": "faasm-worker.faasm.example.com"}
 
 
 def _get_all_user_funcs(user):
@@ -47,11 +50,12 @@ def compile(ctx, user, func, clean=False, debug=False):
     _copy_built_function(user, func)
 
 
-@task()
-def upload(ctx, user, func, host="upload", port=8002):
+@task
+def upload(ctx, user, func):
     """
     Upload a compiled function
     """
+    host, port = get_faasm_upload_host_port()
     func_file = join(FUNC_BUILD_DIR, user, "{}.wasm".format(func))
     url = "http://{}:{}/f/{}/{}".format(host, port, user, func)
     response = requests.put(url, data=open(func_file, "rb"))
@@ -59,21 +63,23 @@ def upload(ctx, user, func, host="upload", port=8002):
     print("Response {}: {}".format(response.status_code, response.text))
 
 
-@task()
-def upload_user(ctx, user, host="upload", port=8002):
+@task
+def upload_user(ctx, user):
     """
     Upload all compiled functions for a user
     """
+    host, port = get_faasm_upload_host_port()
     funcs = _get_all_user_funcs(user)
     for f in funcs:
         upload(ctx, user, f, host=host, port=port)
 
 
-@task()
-def invoke(ctx, user, func, input_data=None, host="worker", port=8080):
+@task
+def invoke(ctx, user, func, input_data=None):
     """
     Invoke a given function
     """
+    host, port = get_faasm_invoke_host_port()
     url = "http://{}:{}".format(host, port)
     data = {
         "function": func,
@@ -83,7 +89,8 @@ def invoke(ctx, user, func, input_data=None, host="worker", port=8080):
     if input_data:
         data["input_data"] = input_data
 
-    response = requests.post(url, json=data, headers=KNATIVE_HEADERS)
+    headers = get_knative_headers()
+    response = requests.post(url, json=data, headers=headers)
 
     if response.status_code != 200:
         print("Error ({}):\n{}".format(response.status_code, response.text))
@@ -92,8 +99,9 @@ def invoke(ctx, user, func, input_data=None, host="worker", port=8080):
     print("Success:\n{}".format(response.text))
 
 
-@task()
-def flush(ctx, host="worker", port=8080):
+@task
+def flush(ctx):
+    host, port = get_faasm_invoke_host_port()
     url = "http://{}:{}".format(host, port)
     data = {"type": FAABRIC_MSG_TYPE_FLUSH}
     response = requests.post(url, json=data)
