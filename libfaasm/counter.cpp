@@ -25,25 +25,14 @@ void initCounter(const char* counterKey)
 
 int getCounter(const char* counterKey)
 {
-    int counterBuffer[1];
-    auto counterBytes = BYTES(counterBuffer);
-    faasmReadState(counterKey, counterBytes, sizeof(int));
+    faasmPullState(counterKey, sizeof(int));
 
-    int count = counterBuffer[0];
-
-    return count;
+    return readIntState(counterKey);
 }
 
 void incrementCounter(const char* counterKey)
 {
-    int count = getCounter(counterKey);
-    count++;
-
-    int counterBuffer[1];
-    counterBuffer[0] = count;
-    auto counterBytes = BYTES(counterBuffer);
-
-    faasmWriteState(counterKey, counterBytes, sizeof(int));
+    incrementCounter(counterKey, 1, true);
 }
 
 int incrementCounter(const char* counterKey, int increment, bool globalLock)
@@ -52,9 +41,13 @@ int incrementCounter(const char* counterKey, int increment, bool globalLock)
         faasmLockStateGlobal(counterKey);
     }
 
+    faasmPullState(counterKey, sizeof(int));
+
     int val = readIntState(counterKey);
     val += increment;
     writeIntState(counterKey, val);
+
+    faasmPushState(counterKey);
 
     if (globalLock) {
         faasmUnlockStateGlobal(counterKey);
@@ -63,24 +56,25 @@ int incrementCounter(const char* counterKey, int increment, bool globalLock)
     return val;
 }
 
-AtomicInt::AtomicInt()
+AtomicInt::AtomicInt(const char* keyIn)
   : value(0)
+  , key(keyIn)
 {}
 
 void AtomicInt::reset()
 {
-    initCounter(COUNTER_KEY);
+    initCounter(key.c_str());
 }
 
 int AtomicInt::operator+=(int other)
 {
-    value = incrementCounter(COUNTER_KEY, other, true);
+    value = incrementCounter(key.c_str(), other, true);
     return value;
 }
 
 int AtomicInt::get()
 {
-    value = getCounter(COUNTER_KEY);
+    value = getCounter(key.c_str());
     return value;
 }
-} // namespace faasm
+}

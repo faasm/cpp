@@ -8,7 +8,9 @@ const char* getStringInput(const char* defaultValue);
 
 void setStringOutput(const char* val);
 
+int getIntInput();
+
 int* parseStringToIntArray(const char* inStr, int expected);
-} // namespace faasm
+}
 
 #endif

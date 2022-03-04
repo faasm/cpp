@@ -1,4 +1,5 @@
 #include "faasm/core.h"
+#include <string.h>
 
 extern "C"
 {
@@ -179,6 +180,36 @@ unsigned int faasmChain(FaasmFuncPtr funcPtr,
                         long inputDataSize)
 {
     return __faasm_chain_ptr(funcPtr, inputData, inputDataSize);
+}
+
+unsigned int faasmChainBatch(FaasmFuncPtr funcPtr,
+                             const char* inputData,
+                             int nFuncs)
+{
+    size_t inputDataSize = ::strlen(inputData);
+    unsigned int* callIds = new unsigned int[nFuncs];
+    auto inputDataBytes = (uint8_t*)inputData;
+
+    for (int i = 0; i < nFuncs; i++) {
+        unsigned int callId =
+          faasmChain(funcPtr, inputDataBytes, inputDataSize);
+        callIds[i] = callId;
+    }
+
+    // Wait for calls to finish
+    bool failed = false;
+    for (int i = 0; i < nFuncs; i++) {
+        unsigned int callId = callIds[i];
+        int res = faasmAwaitCall(callId);
+
+        if (res != 0) {
+            failed = true;
+        }
+    }
+
+    delete[] callIds;
+
+    return failed ? 1 : 0;
 }
 
 char* faasmGetPythonUser()

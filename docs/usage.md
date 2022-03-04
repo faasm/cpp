@@ -36,6 +36,16 @@ inv dev.cc tests
 /build/bin/tests
 ```
 
+## Resolving symbols in editors/ IDEs
+
+The wasm build outputs a `compile_commands.json` file at
+`./build/func/compile_commands.json`. You can symlink this to the root of this
+dir to help `clang-format` resolve symbols, i.e.
+
+```bash
+ln -s build/func/compile_commands.json .
+```
+
 ## Shared libraries
 
 For CMake projects, you should be able to add the following to your build:
