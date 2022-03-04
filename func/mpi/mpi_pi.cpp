@@ -9,11 +9,14 @@
 #define CHUNK_SIZE 100000
 #define PI 3.14159
 
+unsigned long genSeed(int rank)
+{
+    return rank * rank * 77 - 22 * rank + 1927;
+}
+
 int main(int argc, char* argv[])
 {
     MPI_Init(NULL, NULL);
-
-    srand(12345);
 
     int rank;
     int worldSize;
@@ -22,19 +25,21 @@ int main(int argc, char* argv[])
 
     int nTotal = worldSize * CHUNK_SIZE;
 
+    // Different seed per thread
+    std::uniform_real_distribution<double> unif(0, 1);
+    std::mt19937_64 generator(genSeed(rank));
+
     int result = 0;
     for (int i = 0; i < CHUNK_SIZE; i++) {
-        double x = (double)rand() / RAND_MAX;
-        double y = (double)rand() / RAND_MAX;
+        double x = unif(generator);
+        double y = unif(generator);
 
         if ((x * x + y * y) <= 1.0) {
             result++;
         }
     }
 
-    printf("RANK %i RESULT: %i\n", rank, result);
-    MPI_Reduce(
-      &result, MPI_IN_PLACE, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(MPI_IN_PLACE, &result, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
     MPI_Finalize();
 
@@ -42,7 +47,7 @@ int main(int argc, char* argv[])
         float pi = 4 * (((float)result) / (float)nTotal);
         float error = abs(PI - pi);
 
-        std::string output = "Pi estimate: " + std::to_string(pi) + "(error " +
+        std::string output = "Pi estimate: " + std::to_string(pi) + " (error " +
                              std::to_string(error) + ")\n";
         printf("%s", output.c_str());
         faasm::setStringOutput(output.c_str());
