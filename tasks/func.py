@@ -93,10 +93,9 @@ def upload_user(ctx, user):
     """
     Upload all compiled functions for a user
     """
-    host, port = get_faasm_upload_host_port()
     funcs = _get_all_user_funcs(user)
     for f in funcs:
-        upload(ctx, user, f, host=host, port=port)
+        upload(ctx, user, f)
 
 
 @task
