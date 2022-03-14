@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 
     int count = faasm::getCounter(KEY);
 
-    if(count != N_WORKERS) {
+    if (count != N_WORKERS) {
         printf("Count not as expected: %i != %i\n", count, N_WORKERS);
         return 1;
     }
