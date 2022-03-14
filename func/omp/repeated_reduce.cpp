@@ -55,7 +55,7 @@ bool doReduce()
         if (counts[t] != chunkSize) {
             printf(
               "Loop count for thread %i: %i != %i\n", t, counts[t], chunkSize);
-            return false;
+            success = false;
         }
     }
 
@@ -64,15 +64,15 @@ bool doReduce()
 
     if (reducedA != expectedFinalReducedA) {
         printf("reducedA %i != %i\n", reducedA, expectedFinalReducedA);
-        return false;
+        success = false;
     }
 
     if (reducedB != expectedFinalReducedB) {
         printf("reducedB %i != %i\n", reducedB, expectedFinalReducedB);
-        return false;
+        success = false;
     }
 
-    return true;
+    return success;
 }
 
 int main(int argc, char* argv[])

@@ -46,6 +46,8 @@ extern "C"
     }                                                                          \
     __faasm_sm_critical_local_end();
 
+// It appears OpenMP just ignores the atomic pragma, so we have to replace with
+// our own custom stuff
 #define FAASM_ATOMIC_INCR(var)                                                 \
     __faasm_sm_reduce((void*)&(var), FAASM_TYPE_INT, FAASM_OP_SUM, 1);         \
     FAASM_CRITICAL_LOCAL(var++)

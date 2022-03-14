@@ -10,9 +10,6 @@ int main()
 
 #pragma omp parallel num_threads(nThreads) default(none) shared(counter)
     {
-        // NOTE - it appears OpenMP doesn't actually support compiling the
-        // atomic pragma to anything useful in wasm, so we have to replace with
-        // our own custom stuff
         FAASM_ATOMIC_INCR_BY(counter, omp_get_thread_num());
     }
 
