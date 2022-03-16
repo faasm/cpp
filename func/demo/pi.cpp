@@ -60,5 +60,6 @@ int main(int argc, char* argv[])
     printf("%s", output.c_str());
     faasm::setStringOutput(output.c_str());
 
+    delete[] buffer;
     return 0;
 }
