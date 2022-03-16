@@ -1,4 +1,3 @@
-#include <faasm/counter.h>
 #include <faasm/faasm.h>
 #include <faasm/input.h>
 #include <faasm/random.h>
@@ -12,8 +11,6 @@
 
 int piStep()
 {
-    auto sum = faasm::AtomicInt("pi");
-
     int count = 0;
     for (int i = 0; i < CHUNK_SIZE; i++) {
         // Two random points
@@ -26,8 +23,8 @@ int piStep()
         }
     }
 
-    sum += count;
-
+    // Append count for this worker
+    faasmAppendState("pi", BYTES(&count), sizeof(int));
     return 0;
 }
 
@@ -40,15 +37,19 @@ int main(int argc, char* argv[])
     int nWorkers = std::stoi(inputData);
     int nTotal = CHUNK_SIZE * nWorkers;
 
-    // Initialise the sum
-    auto sum = faasm::AtomicInt("pi");
-    sum.reset();
-
     // Dispatch chained calls
     faasmChainBatch(piStep, "", nWorkers);
 
-    // Get the final result
-    int finalCount = sum.get();
+    // Read in the counts
+    size_t buffSize = nWorkers * sizeof(int);
+    auto buffer = new int[nWorkers];
+    faasmReadAppendedState("pi", (uint8_t*)buffer, buffSize, nWorkers);
+
+    // Sum the counts
+    int finalCount = 0;
+    for (int w = 0; w < nWorkers; w++) {
+        finalCount += buffer[w];
+    }
 
     // Estimate pi
     float pi = 4 * ((float)finalCount / (nTotal));

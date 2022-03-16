@@ -10,7 +10,6 @@ set(PUBLIC_HEADERS
         faasm/host_interface.h
         faasm/array.h
         faasm/compare.h
-        faasm/counter.h
         faasm/faasm.h
         faasm/files.h
         faasm/input.h
@@ -27,7 +26,6 @@ set(PUBLIC_HEADERS
 set(LIB_FILES
         compare.cpp
         core.cpp
-        counter.cpp
         files.cpp
         input.cpp
         matrix.cpp

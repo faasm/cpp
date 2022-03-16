@@ -121,16 +121,6 @@ extern "C"
     void faasmPullState(const char* key, long stateLen);
 
     /**
-     * Acquires a global lock for the given state
-     */
-    void faasmLockStateGlobal(const char* key);
-
-    /**
-     * Releases the global lock for the given state
-     */
-    void faasmUnlockStateGlobal(const char* key);
-
-    /**
      * Acquires a read lock for the given state
      */
     void faasmLockStateRead(const char* key);
