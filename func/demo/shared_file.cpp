@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 
     // Open the file for writing
     FILE* wp = ::fopen(FILE_PATH, "w");
-    if(wp == nullptr) {
+    if (wp == nullptr) {
         printf("Could not open shared file for writing at %s\n", FILE_PATH);
         return 1;
     }
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 
     // Read in the data and check
     const char* actual = faasm::readFileToString(FILE_PATH);
-    if(::strcmp(actual, contents) != 0) {
+    if (::strcmp(actual, contents) != 0) {
         printf("File contents not as expected: %s != %s\n", actual, contents);
         return 1;
     }
