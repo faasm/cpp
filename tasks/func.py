@@ -132,6 +132,9 @@ def invoke(ctx, user, func, input_data=None, mpi=None, graph=False):
 
 @task
 def flush(ctx):
+    """
+    Flush the Faasm cluster
+    """
     headers = get_knative_headers()
     host, port = get_faasm_invoke_host_port()
 
