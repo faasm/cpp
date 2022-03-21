@@ -131,6 +131,16 @@ def invoke(ctx, user, func, input_data=None, mpi=None, graph=False):
 
 
 @task
+def update(ctx, user, func, clean=False, debug=False, native=False):
+    """
+    Combined compile and upload
+    """
+    compile(ctx, user, func, clean=clean)
+
+    upload(ctx, user, func)
+
+
+@task
 def flush(ctx):
     """
     Flush the Faasm cluster
