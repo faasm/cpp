@@ -133,11 +133,13 @@ def invoke(ctx, user, func, input_data=None, mpi=None, graph=False):
 @task
 def update(ctx, user, func, clean=False, debug=False, native=False):
     """
-    Combined compile and upload
+    Combined compile, upload, flush
     """
     compile(ctx, user, func, clean=clean)
 
     upload(ctx, user, func)
+
+    flush(ctx)
 
 
 @task
@@ -152,7 +154,7 @@ def flush(ctx):
     data = {"type": FAABRIC_MSG_TYPE_FLUSH}
     response = requests.post(url, json=data, headers=headers)
 
-    print("Response {}: {}".format(response.status_code, response.text))
+    print("Flush response {}: {}".format(response.status_code, response.text))
 
 
 @task
