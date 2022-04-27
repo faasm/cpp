@@ -95,7 +95,3 @@ was not found in Clang, so we put our own copy into our wasi-libc fork
 
 Support for SIMD in Faasm relies on the underlying WASM runtimes.
 
-We have a hacked fork of Eigen to support WebAssembly SIMD
-[here](https://github.com/faasm/eigen-git-mirror), although this is
-experimental.
-
