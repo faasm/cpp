@@ -1,14 +1,20 @@
 FROM ubuntu:20.04
 
 RUN apt update
-RUN apt install -y software-properties-common
-RUN apt update 
-RUN apt upgrade -y
 
+RUN apt-get install -y software-properties-common gpg wget curl
+
+RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|apt-key add -
+RUN add-apt-repository -y -n "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main"
+RUN add-apt-repository -y -n ppa:ubuntu-toolchain-r/test
+
+RUN apt update
+
+# Clang is needed here to build bits of LLVM, but we need to have 13
 RUN apt install -y \
    autoconf \
-   clang-10 \
    build-essential \
+   clang-13 \
    git \
    ninja-build \
    pkg-config \
@@ -26,7 +32,10 @@ RUN apt-get autoremove
 
 # Copy the code in
 WORKDIR /code
-COPY . .
+RUN git clone --depth 1 -b simd https://github.com/faasm/cpp
+WORKDIR /code/cpp
+RUN git submodule update --init third-party/llvm-project
+RUN git submodule update --init third-party/wasi-libc
 
 # Run the main make
 RUN make

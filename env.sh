@@ -17,9 +17,7 @@ export WASM_BUILD=wasm32
 export WASM_HOST=wasm32-unknown-wasi
 export WASM_HOST_UNKNOWN=wasm32-unknown-unknown
 
-# 23/09/2020 - Remove SIMD
-# export WASM_CFLAGS="-O3 --sysroot=${WASM_SYSROOT} -msimd128 -mno-atomics -D__faasm"
-export WASM_CFLAGS="-O3 --sysroot=${WASM_SYSROOT} -mno-atomics -D__faasm"
+export WASM_CFLAGS="-O3 --sysroot=${WASM_SYSROOT} -msimd128 -mno-atomics -D__faasm"
 export WASM_CXXFLAGS=${WASM_CFLAGS}
 
 # Flags for shared libraries

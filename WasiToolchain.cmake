@@ -64,14 +64,13 @@ add_definitions(-D__faasm)
 # issues. Without it the stack will overflow into the global data.
 # stack-size is also crucial to bigger functions not messing up
 
-# 23/09/2020 - Remove SIMD
-# set(FAASM_COMPILER_FLAGS "-O3 -msimd128 -mno-atomics --sysroot=${FAASM_SYSROOT}")
 set(FAASM_COMPILER_FLAGS " \
     -O3 -mno-atomics \
     --sysroot=${FAASM_SYSROOT} \
     -m32 \
     -DANSI \
     -Xlinker --stack-first \
+    -msimd128 -mno-atomics \
     ")
 
 if(FAASM_BUILD_SHARED)
@@ -94,7 +93,6 @@ SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} \
     -Xlinker --export-all \
     -Xlinker --no-gc-sections \
     " CACHE STRING "faasm build")
-
 
 # This needs to be included to support libcxx with atomics
 # -Xlinker --shared-memory

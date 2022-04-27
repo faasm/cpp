@@ -10,7 +10,7 @@ FAASM_LOCAL_DIR=/usr/local/faasm
 PREFIX=$(FAASM_LOCAL_DIR)/toolchain
 FAASM_SYSROOT=/usr/local/faasm/llvm-sysroot
 
-CLANG_VERSION=10.0.1
+CLANG_VERSION=13.0.1
 
 BUILD_DIR=$(LLVM_PROJ_DIR)/build
 LLVM_CONFIG=$(BUILD_DIR)/llvm/bin/llvm-config
@@ -42,8 +42,8 @@ clean-all:
 $(BUILD_DIR)/llvm.BUILT:
 	mkdir -p $(BUILD_DIR)/llvm
 	cd $(BUILD_DIR)/llvm; cmake -G Ninja \
-		-DCMAKE_C_COMPILER=/usr/bin/clang-10 \
-		-DCMAKE_CXX_COMPILER=/usr/bin/clang++-10 \
+		-DCMAKE_C_COMPILER=/usr/bin/clang-13 \
+		-DCMAKE_CXX_COMPILER=/usr/bin/clang++-13 \
 		-DCMAKE_BUILD_TYPE=MinSizeRel \
 		-DCMAKE_INSTALL_PREFIX=$(PREFIX) \
 		-DLLVM_TARGETS_TO_BUILD=WebAssembly \
@@ -69,11 +69,12 @@ $(BUILD_DIR)/llvm.BUILT:
 
 # WASI libc
 $(BUILD_DIR)/libc.BUILT: $(BUILD_DIR)/llvm.BUILT
+	mkdir -p $(WASI_LIBC_DIR)/build
 	cd $(WASI_LIBC_DIR); $(MAKE) \
 		THREAD_MODEL=faasm \
-		WASM_CC=$(PREFIX)/bin/clang \
-		WASM_AR=$(PREFIX)/bin/llvm-ar \
-		WASM_NM=$(PREFIX)/bin/llvm-nm \
+		CC=$(PREFIX)/bin/clang \
+		AR=$(PREFIX)/bin/llvm-ar \
+		NM=$(PREFIX)/bin/llvm-nm \
 		SYSROOT=$(FAASM_SYSROOT)
 	touch $(BUILD_DIR)/libc.BUILT
 

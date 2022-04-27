@@ -66,6 +66,7 @@ demo_func(ptr_ptr ptr_ptr.cpp)
 demo_func(random random.cpp)
 demo_func(random_float random_float.cpp)
 demo_func(shared_file shared_file.cpp)
+demo_func(simd_check simd_check.cpp)
 demo_func(simple simple.cpp)
 demo_func(sizes sizes.cpp)
 demo_func(sleep_long sleep_long.cpp)
@@ -98,7 +99,6 @@ demo_func(waitpid waitpid.cpp)
 demo_func(x2 x2.cpp)
 demo_func(zygote_check zygote_check.cpp)
 
-# 23/09/2020 - removing simd
 # WASM-only functions
 if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     # demo_func(eigen_vec eigen_vec.cpp)

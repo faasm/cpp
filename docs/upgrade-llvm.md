@@ -3,19 +3,24 @@
 To upgrade the underlying LLVM version you need to:
 
 - Update the _submodule_ in this project (see below)
-- Update the version in `docker/sysroot.dockerfile`
-- Update the version in `faasmtools`
+- Update the version in `docker/cpp-sysroot.dockerfile`
+- Update the version in `faasmtools/env.py`
 - Update `Makefile`
-- Grep the project for any other mentions of the LLVM version
-- Run the `inv container.toolchain` task
+- Grep the project for any other mentions of the LLVM version (e.g. `13.0.1`)
+
+Check push these changes to a new branch, then:
+
+- Run `inv container.llvm --push`
+- Start an instance of the new LLVM container, check you can run `clang` to
+  compile a simple hello world to WASM
+- Run `inv container.sysroot --push`
 - Test it out
-- Run the `inv container.push-toolchain` task
 
 ## Updating the LLVM submodule
 
 Find the commit related to tag name for the desired release in
 [the LLVM repo](https://github.com/llvm/llvm-project/releases) (e.g.
-`llvmorg-10.0.1`), then:
+`llvmorg-13.0.1`), then:
 
 ```bash
 cd third-party/llvm-project
@@ -23,6 +28,10 @@ git checkout main
 git fetch origin
 git checkout <tag-name>
 ```
+
+Be careful here, there may be changes made on the `faasm` branch that need to be
+ported over. The safest way to do this is to recreate the `faasm` branch from
+the target tag.
 
 # Rebuilding LLVM
 
