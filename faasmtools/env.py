@@ -11,7 +11,7 @@ USABLE_CPUS = int(cpu_count()) - 1
 
 # Versioning
 VERSION_FILE = join(PROJ_ROOT, "VERSION")
-LLVM_VERSION = "10.0.1"
+LLVM_VERSION = "13.0.1"
 
 
 def get_version():

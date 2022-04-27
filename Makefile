@@ -10,7 +10,7 @@ FAASM_LOCAL_DIR=/usr/local/faasm
 PREFIX=$(FAASM_LOCAL_DIR)/toolchain
 FAASM_SYSROOT=/usr/local/faasm/llvm-sysroot
 
-CLANG_VERSION=10.0.1
+CLANG_VERSION=13.0.1
 
 BUILD_DIR=$(LLVM_PROJ_DIR)/build
 LLVM_CONFIG=$(BUILD_DIR)/llvm/bin/llvm-config
@@ -42,8 +42,8 @@ clean-all:
 $(BUILD_DIR)/llvm.BUILT:
 	mkdir -p $(BUILD_DIR)/llvm
 	cd $(BUILD_DIR)/llvm; cmake -G Ninja \
-		-DCMAKE_C_COMPILER=/usr/bin/clang-10 \
-		-DCMAKE_CXX_COMPILER=/usr/bin/clang++-10 \
+		-DCMAKE_C_COMPILER=/usr/bin/clang-13 \
+		-DCMAKE_CXX_COMPILER=/usr/bin/clang++-13 \
 		-DCMAKE_BUILD_TYPE=MinSizeRel \
 		-DCMAKE_INSTALL_PREFIX=$(PREFIX) \
 		-DLLVM_TARGETS_TO_BUILD=WebAssembly \

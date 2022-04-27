@@ -85,8 +85,7 @@ conventions](https://github.com/WebAssembly/tool-conventions/blob/main/DynamicLi
 
 ## SIMD
 
-SIMD support is switched on using the standard Clang flags, `-msimd128` and
-`-munimplemented-simd128`.
+SIMD support is switched on using the standard Clang flags, `-msimd128`.
 
 At time of writing the [Clang WASM SIMD
 header](https://github.com/llvm/llvm-project/blob/main/clang/lib/Headers/wasm_simd128.h)

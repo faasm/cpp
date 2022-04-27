@@ -1,4 +1,4 @@
-FROM faasm/llvm:10.0.1 as llvm
+FROM faasm/llvm:13.0.1 as llvm
 
 # faabric-base image is not re-built often, so tag may be behind
 FROM faasm/faabric-base:0.1.0

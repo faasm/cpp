@@ -2,12 +2,12 @@ FROM ubuntu:20.04
 
 RUN apt update
 RUN apt install -y software-properties-common
-RUN apt update 
+RUN apt update
 RUN apt upgrade -y
 
 RUN apt install -y \
    autoconf \
-   clang-10 \
+   clang-13 \
    build-essential \
    git \
    ninja-build \

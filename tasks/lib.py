@@ -35,8 +35,8 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
 
     if native:
         extras = [
-            "-DCMAKE_C_COMPILER=/usr/bin/clang-10",
-            "-DCMAKE_CXX_COMPILER=/usr/bin/clang++-10",
+            "-DCMAKE_C_COMPILER=/usr/bin/clang-13",
+            "-DCMAKE_CXX_COMPILER=/usr/bin/clang++-13",
         ]
     else:
         extras = [

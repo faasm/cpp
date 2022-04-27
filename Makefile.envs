@@ -21,11 +21,8 @@ export WASM_BUILD=wasm32
 export WASM_HOST=wasm32-unknown-wasi
 export WASM_HOST_UNKNOWN=wasm32-unknown-unknown
 
-# Note potential performance gains from unimplemented-simd128 here.
 # May not be necessary in future.
-# 23/09/2020 - Remove SIMD
-# export WASM_CFLAGS_NO_QUOTES=-O3 --sysroot=$(WASM_SYSROOT) -msimd128 -munimplemented-simd128 -mno-atomics -D__faasm
-export WASM_CFLAGS_NO_QUOTES=-O3 --sysroot=$(WASM_SYSROOT) -mno-atomics -D__faasm
+export WASM_CFLAGS_NO_QUOTES=-O3 --sysroot=$(WASM_SYSROOT) -msimd128 -mno-atomics -D__faasm
 export WASM_CXXFLAGS_NO_QUOTES=$(WASM_CFLAGS_NO_QUOTES)
 export WASM_CFLAGS="$(WASM_CFLAGS_NO_QUOTES)"
 export WASM_CXXFLAGS="$(WASM_CXXFLAGS_NO_QUOTES)"
@@ -33,5 +30,5 @@ export WASM_CXXFLAGS="$(WASM_CXXFLAGS_NO_QUOTES)"
 export WASM_SHARED_FLAGS_NO_QUOTES=-D__wasi__ -nostdlib -nostlib++ -fPIC --target=wasm32-unknown-emscripten -Xlinker --no-entry -Xlinker --shared -Xlinker --export-all -Xlinker --no-gc-sections
 export WASM_SHARED_FLAGS="$(WASM_SHARED_FLAGS_NO_QUOTES)"
 
-# Note - order very important here 
+# Note - order very important here
 export WASM_BLAS_LIBS="lapack blas f2c"
