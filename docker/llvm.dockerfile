@@ -5,9 +5,11 @@ RUN apt install -y software-properties-common
 RUN apt update
 RUN apt upgrade -y
 
+# Clang is needed here to compile bits of LLVM, it is not the final version
+# we'll use to compile wasm
 RUN apt install -y \
    autoconf \
-   clang-13 \
+   clang-10 \
    build-essential \
    git \
    ninja-build \

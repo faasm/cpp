@@ -10,9 +10,11 @@ To upgrade the underlying LLVM version you need to:
 
 Check push these changes to a new branch, then:
 
-- Run the `inv container.toolchain` task
+- Run `inv container.llvm --push`
+- Start an instance of the new LLVM container, check you can run `clang` to
+  compile a simple hello world to WASM
+- Run `inv container.sysroot --push`
 - Test it out
-- Run the `inv container.push-toolchain` task
 
 ## Updating the LLVM submodule
 
