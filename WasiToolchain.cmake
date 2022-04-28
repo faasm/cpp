@@ -68,9 +68,9 @@ set(FAASM_COMPILER_FLAGS " \
     -O3 -mno-atomics \
     --sysroot=${FAASM_SYSROOT} \
     -m32 \
+    -msimd128 -mno-atomics \
     -DANSI \
     -Xlinker --stack-first \
-    -msimd128 -mno-atomics \
     ")
 
 if(FAASM_BUILD_SHARED)

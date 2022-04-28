@@ -89,9 +89,11 @@ else ()
 
 endif ()
 
+# 28/04/22 - ffmpeg broken by switch to LLVM 13
+# add_subdirectory(ffmpeg)
+
 add_subdirectory(errors)
 add_subdirectory(demo)
 add_subdirectory(dynlink)
-add_subdirectory(ffmpeg)
 add_subdirectory(mpi)
 add_subdirectory(omp)

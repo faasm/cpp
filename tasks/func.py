@@ -176,8 +176,11 @@ def local(ctx, clean=False, debug=False):
     """
     Compile all functions used in the tests
     """
+
+    # 28/04/22 - ffmpeg broken by switch to LLVM 13
+    # user(ctx, "ffmpeg", clean, debug)
+
     user(ctx, "demo", clean, debug)
     user(ctx, "errors", clean, debug)
-    user(ctx, "ffmpeg", clean, debug)
     user(ctx, "mpi", clean, debug)
     user(ctx, "omp", clean, debug)
