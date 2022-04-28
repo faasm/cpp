@@ -1,7 +1,7 @@
 FROM faasm/llvm:13.0.1 as llvm
 
 # faabric-base image is not re-built often, so tag may be behind
-FROM faasm/faabric-base:0.1.0
+FROM faasm/faabric-base:0.3.2
 ARG SYSROOT_VERSION
 
 # Copy the toolchain in from the LLVM container
@@ -50,7 +50,9 @@ RUN inv install
 # Libraries
 RUN inv libc
 RUN inv libffi
-RUN inv ffmpeg
+
+# 28/04/22 - broken by move to clang-13 and/or SIMD
+# RUN inv ffmpeg
 
 # Both static and shared clapack
 RUN inv clapack
