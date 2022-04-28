@@ -101,8 +101,6 @@ demo_func(zygote_check zygote_check.cpp)
 
 # WASM-only functions
 if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
-    # demo_func(eigen_vec eigen_vec.cpp)
-
     demo_func(emscripten_check emscripten_check.cpp)
     target_link_libraries(emscripten_check emscripten)
 
