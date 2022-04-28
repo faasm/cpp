@@ -16,7 +16,6 @@ RUN git clone -b v${SYSROOT_VERSION} https://github.com/faasm/cpp
 WORKDIR /code/cpp
 
 # Update submodules (not LLVM)
-RUN git submodule update --init -f third-party/eigen
 RUN git submodule update --init -f third-party/faabric
 RUN git submodule update --init -f third-party/faasm-clapack
 RUN git submodule update --init -f third-party/libffi
@@ -30,9 +29,6 @@ RUN pip3 install .
 # ---------------------------------
 # NATIVE
 # ---------------------------------
-
-# Install eigen
-RUN inv eigen --native
 
 # Native static libraries
 RUN inv libfaasm --native
@@ -54,7 +50,6 @@ RUN inv install
 # Libraries
 RUN inv libc
 RUN inv libffi
-RUN inv eigen
 RUN inv ffmpeg
 
 # Both static and shared clapack
