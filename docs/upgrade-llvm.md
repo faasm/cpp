@@ -8,9 +8,10 @@ To upgrade the underlying LLVM version you need to:
 - Update `Makefile`
 - Grep the project for any other mentions of the LLVM version (e.g. `13.0.1`)
 
-Check push these changes to a new branch, then:
+Push these changes to a new branch, then:
 
-- Run `inv container.llvm --push`
+- Run `make` locally to check the LLVM build still works
+- Build the container with `inv container.llvm --push`
 - Start an instance of the new LLVM container, check you can run `clang` to
   compile a simple hello world to WASM
 - Run `inv container.sysroot --push`
