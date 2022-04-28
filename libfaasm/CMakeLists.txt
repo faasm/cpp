@@ -13,11 +13,9 @@ set(PUBLIC_HEADERS
         faasm/faasm.h
         faasm/files.h
         faasm/input.h
-        faasm/matrix.h
         faasm/migrate.h
         faasm/print.h
         faasm/random.h
-        faasm/sgd.h
         faasm/shared_mem.h
         faasm/state.h
         faasm/time.h
@@ -28,10 +26,8 @@ set(LIB_FILES
         core.cpp
         files.cpp
         input.cpp
-        matrix.cpp
         print.cpp
         random.cpp
-        sgd.cpp
         state.cpp
         time.cpp
         zygote.cpp

@@ -93,9 +93,3 @@ header](https://github.com/llvm/llvm-project/blob/main/clang/lib/Headers/wasm_si
 was not found in Clang, so we put our own copy into our wasi-libc fork
 [here](https://github.com/faasm/wasi-libc/blob/main/libc-bottom-half/headers/public/wasm_simd128.h).
 
-Support for SIMD in Faasm relies on the underlying WASM runtimes.
-
-We have a hacked fork of Eigen to support WebAssembly SIMD
-[here](https://github.com/faasm/eigen-git-mirror), although this is
-experimental.
-
