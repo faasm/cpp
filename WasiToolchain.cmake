@@ -70,7 +70,6 @@ set(FAASM_COMPILER_FLAGS " \
     -m32 \
     -msimd128 -mno-atomics \
     -DANSI \
-    -Xlinker --stack-first \
     ")
 
 if(FAASM_BUILD_SHARED)
@@ -98,8 +97,9 @@ SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} \
 # -Xlinker --shared-memory
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
     -Xlinker --stack-first \
+    -Xlinker --export=__stack_pointer \
+    -Xlinker --features=mutable-globals,simd \
     -Xlinker --no-check-features \
-    -Xlinker --threads \
     -Xlinker --max-memory=4294901760 \
     " CACHE STRING "faasm build")
 

@@ -40,7 +40,9 @@ def _copy_built_function(user, func):
 
 
 @task(default=True, name="compile")
-def compile(ctx, user, func, clean=False, debug=False, native=False):
+def compile(
+    ctx, user, func, clean=False, debug=False, native=False, verbose=False
+):
     """
     Compile a function
     """
@@ -62,7 +64,7 @@ def compile(ctx, user, func, clean=False, debug=False, native=False):
         )
 
         run(
-            "ninja {}".format(func),
+            "ninja {} {}".format("-v" if verbose else "", func),
             shell=True,
             check=True,
             cwd=NATIVE_FUNC_BUILD_DIR,

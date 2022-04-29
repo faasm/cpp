@@ -21,7 +21,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     #
     # This max memory limit can stop benchmarks working so make sure it's big
     # and consider restricting in a more specific manner for certain functions.
-    SET(CMAKE_EXE_LINKER_FLAGS "${FAASM_EXE_LINKER_FLAGS} \
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
         -Xlinker --export=_faasm_zygote \
         -Xlinker --export=__heap_base \
         -Xlinker --export=__data_end \
