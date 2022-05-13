@@ -9,8 +9,10 @@ int main()
     int b[ARRAY_SIZE];
     int c[ARRAY_SIZE];
 
-    ::memset(a, 10, ARRAY_SIZE);
-    ::memset(b, 20, ARRAY_SIZE);
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+        a[i] = 10;
+        b[i] = 20;
+    }
 
     for (int i = 0; i < ARRAY_SIZE; i++) {
         c[i] = a[i] * b[i];
@@ -21,8 +23,10 @@ int main()
         int actual = c[i];
 
         if (actual != expected) {
-            printf(
-              "Unexpected multiplication result: %i != %i\n", actual, expected);
+            printf("Unexpected multiplication result at %i: %i != %i\n",
+                   i,
+                   actual,
+                   expected);
             return 1;
         }
     }
