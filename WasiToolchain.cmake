@@ -65,10 +65,11 @@ add_definitions(-D__faasm)
 # stack-size is also crucial to bigger functions not messing up
 
 set(FAASM_COMPILER_FLAGS " \
-    -O3 -mno-atomics \
+    -O3 \
+    -mno-atomics \
     --sysroot=${FAASM_SYSROOT} \
     -m32 \
-    -msimd128 -mno-atomics \
+    -msimd128 \
     -DANSI \
     ")
 
