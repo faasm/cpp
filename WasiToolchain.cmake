@@ -99,8 +99,7 @@ SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} \
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
     -Xlinker --stack-first \
     -Xlinker --export=__stack_pointer \
-    -Xlinker --features=mutable-globals,simd \
-    -Xlinker --no-check-features \
+    -Xlinker --features=mutable-globals,simd128 \
     -Xlinker --max-memory=4294901760 \
     " CACHE STRING "faasm build")
 
