@@ -1,7 +1,7 @@
+#include "faasm/time.h"
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "faasm/time.h"
 
 #include <faasm/compare.h>
 #include <faasm/faasm.h>
@@ -120,7 +120,8 @@ void doBenchmark(int nLoops)
 int main(int argc, char* argv[])
 {
     if (argc != 3) {
-        printf("Must provide two input arguments: <check_period> <num_loops>\n");
+        printf(
+          "Must provide two input arguments: <check_period> <num_loops>\n");
         return 1;
     }
 
@@ -130,7 +131,7 @@ int main(int argc, char* argv[])
     // support migrating a function twice.
     int checkEveryIn = atoi(argv[1]);
     int numLoopsIn = atoi(argv[2]);
-    int *numLoopsPtr = &numLoops;
+    int* numLoopsPtr = &numLoops;
     *numLoopsPtr = numLoopsIn;
     int* checkEveryPtr = &checkEvery;
     *checkEveryPtr = (int)(numLoops * ((float)checkEveryIn / 10.0));
