@@ -1,4 +1,3 @@
-#include "faasm/time.h"
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,6 +5,7 @@
 #include <faasm/compare.h>
 #include <faasm/faasm.h>
 #include <faasm/migrate.h>
+#include <faasm/time.h>
 
 int checkEvery = 1;
 int numLoops = 0;
@@ -64,7 +64,6 @@ void doBenchmark(int nLoops)
     MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
 
     // Measure time spent migrating
-    // timespec timeStart{}, timeEnd{};
     double timeStartSec = 0;
     double timeEndSec = 0;
 
