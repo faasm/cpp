@@ -5,9 +5,10 @@
 #include <faasm/compare.h>
 #include <faasm/faasm.h>
 #include <faasm/migrate.h>
+#include <faasm/time.h>
 
-#define NUM_LOOPS 50000
 int checkEvery = 1;
+int numLoops = 0;
 
 int doAlltoAll(int rank, int worldSize, int i, int nLoops, int checkEvery)
 {
@@ -48,7 +49,7 @@ int doAlltoAll(int rank, int worldSize, int i, int nLoops, int checkEvery)
 // Outer wrapper, and re-entry point after migration
 void doBenchmark(int nLoops)
 {
-    bool mustCheck = nLoops == NUM_LOOPS;
+    bool mustCheck = nLoops == numLoops;
 
     // Initialisation
     int res = MPI_Init(NULL, NULL);
@@ -62,6 +63,13 @@ void doBenchmark(int nLoops)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
 
+    // Measure time spent migrating
+    double timeStartSec = 0;
+    double timeEndSec = 0;
+
+    // Time point for the migrated ranks
+    printf("Rank %i - time now: %f\n", rank, faasm::getSecondsSinceEpoch());
+
     for (int i = 0; i < nLoops; i++) {
         if (rank == 0 && i % (nLoops / 10) == 0) {
             printf("Starting iteration %i/%i\n", i, nLoops);
@@ -70,6 +78,15 @@ void doBenchmark(int nLoops)
         // Make sure everyone is in sync (including those ranks that have been
         // migrated)
         MPI_Barrier(MPI_COMM_WORLD);
+
+        // Time after migration
+        if (!mustCheck && i % checkEvery == 1 && i / checkEvery > 0) {
+            printf("Time start ms: %f\n", timeStartSec);
+            timeEndSec = faasm::getSecondsSinceEpoch();
+            printf("Rank %i spent %f sec migrating\n",
+                   rank,
+                   timeEndSec - timeStartSec);
+        }
 
         doAlltoAll(rank, worldSize, i, nLoops, checkEvery);
 
@@ -83,6 +100,11 @@ void doBenchmark(int nLoops)
             // benchmark on another host for the remaining iterations.
             // This would eventually be MPI_Barrier
             MPI_Barrier(MPI_COMM_WORLD);
+
+            // Timing
+            timeStartSec = faasm::getSecondsSinceEpoch();
+            printf("Time start ms: %f\n", timeStartSec);
+
             __faasm_migrate_point(&doBenchmark, (nLoops - i - 1));
         }
     }
@@ -96,8 +118,9 @@ void doBenchmark(int nLoops)
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2) {
-        printf("Must provide one input argument: <check_period>\n");
+    if (argc != 3) {
+        printf(
+          "Must provide two input arguments: <check_period> <num_loops>\n");
         return 1;
     }
 
@@ -106,13 +129,16 @@ int main(int argc, char* argv[])
     // value as we don't migrate global variables, but that's OK as we don't
     // support migrating a function twice.
     int checkEveryIn = atoi(argv[1]);
+    int numLoopsIn = atoi(argv[2]);
+    int* numLoopsPtr = &numLoops;
+    *numLoopsPtr = numLoopsIn;
     int* checkEveryPtr = &checkEvery;
-    *checkEveryPtr = (int)(NUM_LOOPS * ((float)checkEveryIn / 10.0));
+    *checkEveryPtr = (int)(numLoops * ((float)checkEveryIn / 10.0));
 
     printf(
-      "Starting MPI migration checking at iter %i/%i\n", checkEvery, NUM_LOOPS);
+      "Starting MPI migration checking at iter %i/%i\n", checkEvery, numLoops);
 
-    doBenchmark(NUM_LOOPS);
+    doBenchmark(numLoops);
 
     printf("MPI migration benchmark finished succesfully\n");
 }
