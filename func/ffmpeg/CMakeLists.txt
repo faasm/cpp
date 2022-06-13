@@ -8,6 +8,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     )
     set(FFMPEG_LIBS
         ${CMAKE_SYSROOT}/lib/wasm32-wasi/libavcodec.a
+        ${CMAKE_SYSROOT}/lib/wasm32-wasi/libavfilter.a
         ${CMAKE_SYSROOT}/lib/wasm32-wasi/libavformat.a
         ${CMAKE_SYSROOT}/lib/wasm32-wasi/libavutil.a
         ${CMAKE_SYSROOT}/lib/wasm32-wasi/libswscale.a
@@ -15,9 +16,13 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     )
 
     faasm_func(check check.cpp)
+    faasm_func(transcode transcode.cpp)
 
+    # TODO - do this in a cleaner way
     target_include_directories(check PUBLIC ${FFMPEG_INCLUDE_DIRS})
     target_link_libraries(check ${FFMPEG_LIBS})
+    target_include_directories(transcode PUBLIC ${FFMPEG_INCLUDE_DIRS})
+    target_link_libraries(transcode ${FFMPEG_LIBS})
 
     add_custom_target(ffmpeg_all_funcs DEPENDS check)
 else ()
