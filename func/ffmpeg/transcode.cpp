@@ -8,7 +8,7 @@ extern "C"
 }
 
 // TODO - make this eventually an input parameter
-#define INPUT_FILE_PATH "file:faasm://ffmpeg/sample_video.mp4"
+#define INPUT_FILE_PATH "file:faasm://ffmpeg/sample_video.mpeg"
 #define FILTER_DESC "scale=78:24,transpose=cclock"
 
 /**
@@ -18,9 +18,14 @@ extern "C"
  */
 int main()
 {
+    // Set logging level for debugging purposes
+    av_log_set_level(AV_LOG_INFO);
+
     // TODO - eventually split in different functions but without all the
     // static variables in the example.
-    // ---------- Initialise input file ----------
+    // --------------------------------------------------------
+    // Initialise input file
+    // --------------------------------------------------------
 
     // Open the media file
     AVFormatContext* pFormatContext = avformat_alloc_context();
@@ -92,11 +97,29 @@ int main()
         return -1;
     }
 
+    // Populate arguments
+    snprintf(args,
+             sizeof(args),
+             "video_size=%dx%d:pix_fmt=%d:time_base=%d/%d:pixel_aspect=%d/%d",
+             codecCtx->width,
+             codecCtx->height,
+             codecCtx->pix_fmt,
+             timeBase.num,
+             timeBase.den,
+             codecCtx->sample_aspect_ratio.num,
+             codecCtx->sample_aspect_ratio.den);
+
     // Create video source buffer: the decoded frames are inserted here
-    ret = avfilter_graph_create_filter(&bufferSrcCtx, bufferSrc, "in",
-                                       args, NULL, filterGraph);
+    ret = avfilter_graph_create_filter(&bufferSrcCtx,
+                                       bufferSrc,
+                                       "in",
+                                       args,
+                                       NULL,
+                                       filterGraph);
     if (ret < 0) {
-        printf("Error creating buffer source: %i\n", ret);
+        printf("Error creating buffer source: %i (%s)\n",
+               ret,
+               av_err2str(ret));
         avfilter_inout_free(&inputs);
         avfilter_inout_free(&outputs);
         return -1;
@@ -170,6 +193,79 @@ int main()
 
     avfilter_inout_free(&inputs);
     avfilter_inout_free(&outputs);
+
+    // --------------------------------------------------------
+    // Read all packets
+    // --------------------------------------------------------
+
+    // TODO - when making this a method, we will have to process a subset of
+    // the frames, not all of them
+    AVPacket *packet;
+    AVFrame *frame;
+    AVFrame *filteredFrame;
+    while (true) {
+        ret = av_read_frame(pFormatContext, packet);
+        if (ret != 0) {
+            break;
+        }
+
+        if (packet->stream_index == videoStreamIdx) {
+            // Decode packet
+            ret = avcodec_send_packet(codecCtx, packet);
+            if (ret < 0) {
+                printf("Error while sending a packet to the decoder: %i\n",
+                       ret);
+                break;
+            }
+
+            while (ret >= 0) {
+                int ret2;
+                ret = avcodec_receive_frame(codecCtx, frame);
+                if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+                    break;
+                } else if (ret < 0) {
+                    printf("Error while receiving a frame from the decoder: %i\n",
+                           ret);
+                    // TODO - cleanup
+                    return -1;
+                }
+
+                frame->pts = frame->best_effort_timestamp;
+
+                // Push decoded frame into the filter graph
+                ret2 = av_buffersrc_add_frame_flags(bufferSrcCtx,
+                                                    frame,
+                                                    AV_BUFFERSRC_FLAG_KEEP_REF);
+                if (ret2 < 0) {
+                    printf("Error while feeding the filtergraph: %i\n",
+                           ret);
+                    // TODO - cleanup
+                    break;
+                }
+
+                // Pull filtered frames from filter graph
+                while (true) {
+                    ret = av_buffersink_get_frame(bufferSinkCtx, filteredFrame);
+                    if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+                        break;
+                    if (ret < 0) {
+                        printf("Error pulling filtered frame from filter graph: %i\n",
+                              ret);
+                        // TODO - cleanup
+                        return -1;
+                    }
+                    // TODO - store frames here
+                    av_frame_unref(filteredFrame);
+                }
+                av_frame_unref(frame);
+            }
+        }
+        av_packet_unref(packet);
+    }
+    av_frame_free(&frame);
+    av_frame_free(&filteredFrame);
+    av_packet_free(&packet);
+
 
     printf("Finished succesfully\n");
 

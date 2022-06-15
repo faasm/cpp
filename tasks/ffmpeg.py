@@ -59,6 +59,7 @@ def ffmpeg(ctx, clean=False):
     ]
 
     configure_cmd = " ".join(configure_cmd)
+    print(configure_cmd)
     run(configure_cmd, shell=True, cwd=ffmpeg_dir, check=True)
 
     run("make -j", shell=True, cwd=ffmpeg_dir, check=True)
