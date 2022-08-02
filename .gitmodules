@@ -20,3 +20,6 @@
     path = third-party/FFmpeg
     url = https://github.com/faasm/FFmpeg.git
     branch = faasm
+[submodule "tensorflow"]
+	path = tensorflow
+	url = https://github.com/faasm/tensorflow.git
