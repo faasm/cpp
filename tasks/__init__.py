@@ -13,6 +13,7 @@ from . import libfaasmp
 from . import libfaasmpi
 from . import libfake
 from . import libffi
+from . import tensorflow
 
 ns = Collection(
     clapack,
@@ -28,4 +29,5 @@ ns = Collection(
     libfaasmpi,
     libfake,
     libffi,
+    tensorflow,
 )
