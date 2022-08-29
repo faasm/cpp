@@ -73,7 +73,8 @@ namespace tflite {
     }
 }
 
-int FAASM_MAIN_FUNC() {
+int main(int argc, char* argv[])
+{
 
 #ifdef __wasm__
     std::string dataDir = "faasm://tfdata/";
