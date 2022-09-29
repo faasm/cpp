@@ -39,6 +39,7 @@ def llvm(ctx, nocache=False, push=False):
         PROJ_ROOT,
         nocache=nocache,
         push=push,
+        build_args={"SYSROOT_VERSION": get_version()},
     )
 
 
