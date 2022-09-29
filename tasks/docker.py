@@ -28,47 +28,45 @@ def get_llvm_tag():
     return "{}:{}".format(LLVM_IMAGE_NAME, LLVM_VERSION)
 
 
-@task
-def llvm(ctx, nocache=False, push=False):
+@task(iterable=["c"])
+def build(ctx, c, nocache=False, push=False):
     """
-    Build current version of the llvm container
+    Build container images. Possible images are: `llvm`, and `cpp-sysroot`.
     """
-    build_container(
-        get_llvm_tag(),
-        LLVM_DOCKERFILE,
-        PROJ_ROOT,
-        nocache=nocache,
-        push=push,
-        build_args={"SYSROOT_VERSION": get_version()},
-    )
+    build_args = {"SYSROOT_VERSION": get_version()}
+    for ctr in c:
+        if ctr == "llvm":
+            dockerfile = LLVM_DOCKERFILE
+            tag = get_llvm_tag()
+        elif ctr == "cpp-sysroot":
+            dockerfile = SYSROOT_DOCKERFILE
+            tag = get_sysroot_tag()
+        else:
+            print("Unrecognised container image: {}".format(ctr))
+            raise RuntimeError("Unrecognised container image")
+
+        build_container(
+            tag,
+            dockerfile,
+            PROJ_ROOT,
+            nocache=nocache,
+            push=push,
+            build_args=build_args
+        )
 
 
-@task
-def push_llvm(ctx):
+@task(iterable=["c"])
+def push(ctx, c):
     """
-    Push the current version of the llvm container
+    Push container images. Possible images are: `llvm`, and `cpp-sysroot`.
     """
-    push_container(get_llvm_tag())
+    for ctr in c:
+        if ctr == "llvm":
+            tag = get_llvm_tag()
+        elif ctr == "cpp-sysroot":
+            tag = get_sysroot_tag()
+        else:
+            print("Unrecognised container image: {}".format(ctr))
+            raise RuntimeError("Unrecognised container image")
 
-
-@task
-def sysroot(ctx, nocache=False, push=False):
-    """
-    Build current version of the sysroot container
-    """
-    build_container(
-        get_sysroot_tag(),
-        SYSROOT_DOCKERFILE,
-        PROJ_ROOT,
-        nocache=nocache,
-        push=push,
-        build_args={"SYSROOT_VERSION": get_version()},
-    )
-
-
-@task
-def push_sysroot(ctx):
-    """
-    Push the current version of the sysroot container
-    """
-    push_container(get_sysroot_tag())
+        push_container(tag)
