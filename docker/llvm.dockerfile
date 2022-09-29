@@ -1,42 +1,54 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
-RUN apt update
-RUN apt install -y software-properties-common
-RUN apt update 
-RUN apt upgrade -y
+# Clang-10 is not listed in ubuntu 22.04's base APT repositories, so we need
+# to fetch it from 22.04's. Once we upgrade to a newer clang for WASM we can
+# get rid of this step.
+RUN apt update \
+    && apt upgrade -y \
+    && apt install -y \
+        curl \
+        gpg \
+        software-properties-common \
+        wget \
+    && wget -O /tmp/llvm-snapshot.gpg.key \
+        https://apt.llvm.org/llvm-snapshot.gpg.key \
+    && gpg --no-default-keyring \
+        --keyring /tmp/tmp-key.gpg \
+        --import /tmp/llvm-snapshot.gpg.key \
+    && gpg --no-default-keyring \
+        --keyring /tmp/tmp-key.gpg \
+        --export --output /etc/apt/keyrings/llvm-snapshot.gpg \
+    && rm /tmp/tmp-key.gpg \
+    && echo \
+        "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/focal/ llvm-toolchain-focal-10 main" \
+        >> /etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_focal_-jammy.list \
 
-RUN apt install -y \
-   autoconf \
-   clang-10 \
-   build-essential \
-   git \
-   ninja-build \
-   pkg-config \
-   wget
+# Install APT dependencies
+RUN apt update \
+    && apt install -y \
+       autoconf \
+       clang-10 \
+       build-essential \
+       git \
+       ninja-build \
+       pkg-config
 
-# Up-to-date CMake
-RUN apt remove --purge --auto-remove cmake
-WORKDIR /setup
-RUN wget -q -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.18.2/cmake-3.18.2-Linux-x86_64.sh
-RUN sh cmake-linux.sh -- --skip-license --prefix=/usr/local
+# Install up-to-date CMake
+RUN apt remove --purge --auto-remove cmake \
+    && mkdir -p /setup \
+    && cd /setup \
+    && wget -q -O cmake-linux.sh \
+        https://github.com/Kitware/CMake/releases/download/v3.24.2/cmake-3.24.2-linux-x86_64.sh \
+    && sh cmake-linux.sh -- --skip-license --prefix=/usr/local \
+    && apt clean autoclean -y \
+    && apt autoremove -y
 
-# Tidy up
-RUN apt-get clean autoclean
-RUN apt-get autoremove
-
-# Copy the code in
-WORKDIR /code
-COPY . .
-
-# Run the main make
-RUN make
-
-# Print the clang version
-RUN /usr/local/faasm/toolchain/bin/clang --version
-
-# Remove the code
-WORKDIR /
-RUN rm -r /code
-
-CMD /bin/bash
-
+# Get the code, build the main targets, and remove the code
+RUN mkdir -p /code \
+    && git clone -b v${SYSROOT_VERSION} \
+        https://github.com/faasm/cpp \
+        /code/cpp \
+    && cd /code/cpp \
+    && make \
+    && /usr/local/faasm/toolcahin/bin/clang --version \
+    && rm -rf /code
