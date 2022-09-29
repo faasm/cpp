@@ -21,7 +21,7 @@ RUN apt update \
     && rm /tmp/tmp-key.gpg \
     && echo \
         "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/focal/ llvm-toolchain-focal-10 main" \
-        >> /etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_focal_-jammy.list \
+        >> /etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_focal_-jammy.list
 
 # Install APT dependencies
 RUN apt update \
@@ -44,11 +44,14 @@ RUN apt remove --purge --auto-remove cmake \
     && apt autoremove -y
 
 # Get the code, build the main targets, and remove the code
+ARG SYSROOT_VERSION
 RUN mkdir -p /code \
     && git clone -b v${SYSROOT_VERSION} \
         https://github.com/faasm/cpp \
         /code/cpp \
     && cd /code/cpp \
+    && git submodule update --init -f third-party/llvm-project \
+    && git submodule update --init -f third-party/wasi-libc \
     && make \
-    && /usr/local/faasm/toolcahin/bin/clang --version \
+    && /usr/local/faasm/toolchain/bin/clang --version \
     && rm -rf /code
