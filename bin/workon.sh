@@ -7,17 +7,16 @@
 MODE="undetected"
 if [[ -z "$CPP_DOCKER" ]]; then
 
-    THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-    if [ "$(ps -o comm= -p $$)" = "zsh" ]; then
-        THIS_DIR="$( cd "$( dirname "${ZSH_ARGZERO}" )" >/dev/null 2>&1 && pwd )"
-    fi
+    THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]:-${(%):-%x}}" )" >/dev/null 2>&1 && pwd )"
     PROJ_ROOT="${THIS_DIR}/.."
+    VENV_PATH="${PROJ_ROOT}/venv-bm"
 
     # Normal terminal
     MODE="terminal"
 else
     # Running inside the container, we know the project root
     PROJ_ROOT="/code/cpp"
+    VENV_PATH="/code/cpp/venv"
 
     # Use containerised redis
     alias redis-cli="redis-cli -h redis"
@@ -31,12 +30,12 @@ pushd ${PROJ_ROOT}>>/dev/null
 # Virtualenv
 # ----------------------------
 
-if [ ! -d "venv" ]; then
-    python3 -m venv venv
+if [ ! -d ${VENV_PATH} ]; then
+    ./bin/create_venv.sh
 fi
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
-source venv/bin/activate
+source ${VENV_PATH}/bin/activate
 
 # ----------------------------
 # Invoke tab-completion
