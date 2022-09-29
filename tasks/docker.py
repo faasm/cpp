@@ -51,7 +51,7 @@ def build(ctx, c, nocache=False, push=False):
             PROJ_ROOT,
             nocache=nocache,
             push=push,
-            build_args=build_args
+            build_args=build_args,
         )
 
 
