@@ -59,7 +59,8 @@ jobs:
         run: ./bin/inv_wrapper.sh libfaasmpi --native --clean
       # --- Formatting ---
       - name: "Check python"
-        run: ./bin/check_python.sh
+        run: source venv/bin/activate && ./bin/check_python.sh
+        shell: bash
       - name: "Run C/C++ formatting"
         run: ./bin/run_clang_format.sh
       - name: "Check no formatting changes"
