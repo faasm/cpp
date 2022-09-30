@@ -1,37 +1,19 @@
-FROM ubuntu:22.04
-
-# Clang-10 is not listed in ubuntu 22.04's base APT repositories, so we need
-# to fetch it from 22.04's. Once we upgrade to a newer clang for WASM we can
-# get rid of this step.
-RUN apt update \
-    && apt upgrade -y \
-    && apt install -y \
-        curl \
-        gpg \
-        software-properties-common \
-        wget \
-    && wget -O /tmp/llvm-snapshot.gpg.key \
-        https://apt.llvm.org/llvm-snapshot.gpg.key \
-    && gpg --no-default-keyring \
-        --keyring /tmp/tmp-key.gpg \
-        --import /tmp/llvm-snapshot.gpg.key \
-    && gpg --no-default-keyring \
-        --keyring /tmp/tmp-key.gpg \
-        --export --output /etc/apt/keyrings/llvm-snapshot.gpg \
-    && rm /tmp/tmp-key.gpg \
-    && echo \
-        "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/focal/ llvm-toolchain-focal-10 main" \
-        >> /etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_focal_-jammy.list
+FROM ubuntu:20.04
 
 # Install APT dependencies
 RUN apt update \
+    && apt upgrade -y \
     && apt install -y \
-       autoconf \
-       clang-10 \
-       build-essential \
-       git \
-       ninja-build \
-       pkg-config
+        autoconf \
+        clang-10 \
+        curl \
+        build-essential \
+        git \
+        gpg \
+        ninja-build \
+        pkg-config \
+        software-properties-common \
+        wget
 
 # Install up-to-date CMake
 RUN apt remove --purge --auto-remove cmake \
