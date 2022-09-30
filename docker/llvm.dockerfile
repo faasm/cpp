@@ -1,6 +1,7 @@
 FROM ubuntu:20.04
 
 # Install APT dependencies
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update \
     && apt upgrade -y \
     && apt install -y \
