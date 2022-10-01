@@ -49,9 +49,13 @@ jobs:
         run: inv libemscripten
       - name: "Build FFmpeg"
         run: inv ffmpeg
+      - name: "Build TFlib"
+        run: inv inv tensorflow.lib
       # --- Build functions to wasm ---
       - name: "Build the functions"
         run: inv func.local --clean
+      - name: "Build tf func"
+        run: inv tensorflow.func
       # --- Build libraries natively ---
       - name: "Build libfaasm native"
         run: inv libfaasm --native --clean
