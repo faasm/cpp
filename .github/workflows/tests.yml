@@ -50,7 +50,7 @@ jobs:
       - name: "Build FFmpeg"
         run: inv ffmpeg
       - name: "Build TFlib"
-        run: inv inv tensorflow.lib
+        run: inv tensorflow.lib
       # --- Build functions to wasm ---
       - name: "Build the functions"
         run: inv func.local --clean
