@@ -35,7 +35,8 @@ jobs:
       - name: "Install packages"
         run: |
          apt update
-         xargs -a packages.txt apt-get install
+         apt-get install curl -y
+         apt-get install unzip -y
       # --- Build libraries to wasm ---
       - name: "Build libc"
         run: inv libc
