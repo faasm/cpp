@@ -1,4 +1,4 @@
-from os.path import join, basename
+from os.path import basename
 
 
 # from faasmcli.util.upload_util import upload_file_to_s3, curl_file
@@ -37,7 +37,8 @@ def upload_binary_state(user, key, binary_file, host=None, s3_bucket=None):
     if s3_bucket:
         #        s3_key = "{}/{}".format(user, key)
         #        print(
-        #            "Uploading matrix binary to S3 {} -> {}/{}".format(key, s3_bucket, s3_key)
+        #            "Uploading matrix binary
+        #             to S3 {} -> {}/{}".format(key, s3_bucket, s3_key)
         #        )
         #        upload_file_to_s3(binary_file, s3_bucket, s3_key)
         print("Uploading to S3 bucket currently not supported")
