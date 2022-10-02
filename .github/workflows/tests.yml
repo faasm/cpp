@@ -13,15 +13,17 @@ jobs:
     runs-on: ubuntu-20.04
     container:
       image: faasm/cpp-sysroot:0.1.6
+      options: --user root
     defaults:
       run:
         working-directory: /code/cpp
     steps:
-      # --- Update code ---
-      - name: "Fetch ref"
-        run: git fetch origin ${GITHUB_REF}:ci-branch
-      - name: "Check out branch"
-        run: git checkout --force ci-branch
+      # --- Update code --
+      - name: "Pull forked repo into container"
+        run: |
+          git remote set-url origin https://github.com/FlowDrucka64/cpp.git
+          git fetch origin
+          git pull origin main
       - name: "Update Faabric submodule"
         run: git submodule update --init -f third-party/faabric
       - name: "Update FFI submodule"
@@ -30,8 +32,11 @@ jobs:
         run: git submodule update --init -f third-party/FFmpeg
       - name: "Update wasi-libc submodule"
         run: git submodule update --init -f third-party/wasi-libc
+      - name: "Pull/Update Tensorflow submodule"
+        run: git submodule update --init -f third-party/tensorflow
       - name: "Install requirements"
         run: pip3 install -r requirements.txt
+      # ---Installing packages required for TF in this hacky way
       - name: "Install packages"
         run: |
          apt update
