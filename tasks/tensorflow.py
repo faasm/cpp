@@ -32,17 +32,17 @@ FUNC_DIR = join(PROJ_ROOT, "func")
 FUNC_BUILD_DIR = join(PROJ_ROOT, "build", "func")
 FAASM_SHARED_STORAGE_ROOT = join(FAASM_LOCAL_DIR, "shared")
 
+
 @task
 def func(ctx, clean=False):
     """
     cmake tf func
     """
-    wasm_cmake(
-        FUNC_DIR, FUNC_BUILD_DIR, "image", clean=clean
-    )
+    wasm_cmake(FUNC_DIR, FUNC_BUILD_DIR, "image", clean=clean)
 
     wasm_file = join(FUNC_BUILD_DIR, "tf", "image.wasm")
     wasm_copy_upload("tf", "image", wasm_file)
+
 
 @task
 def lib(ctx, clean=False):
@@ -68,9 +68,9 @@ def lib(ctx, clean=False):
         [
             'CFLAGS="{} -ftls-model=local-exec"'.format(" ".join(WASM_CFLAGS)),
             'CXXFLAGS="{}"'.format(" ".join(WASM_CXXFLAGS)),
-            'LDFLAGS="{} -Xlinker --max-memory=4294967296"'.format(" ".join(
-                WASM_LDFLAGS
-            )),
+            'LDFLAGS="{} -Xlinker --max-memory=4294967296"'.format(
+                " ".join(WASM_LDFLAGS)
+            ),
             "MINIMAL_SRCS=",
             "TARGET={}".format(WASM_HOST),
             "BUILD_WITH_MMAP=false",
@@ -89,6 +89,7 @@ def lib(ctx, clean=False):
     res = call(" ".join(make_cmd), shell=True, cwd=tf_lite_dir)
     if res != 0:
         raise RuntimeError("Failed to compile Tensorflow lite")
+
 
 @task
 def state(ctx, host=None):

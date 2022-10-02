@@ -1,8 +1,8 @@
 from os.path import join, basename
 
 
-#from faasmcli.util.upload_util import upload_file_to_s3, curl_file
-#from faasmcli.util.upload_util import curl_file
+# from faasmcli.util.upload_util import upload_file_to_s3, curl_file
+# from faasmcli.util.upload_util import curl_file
 
 import subprocess
 
@@ -28,18 +28,19 @@ def curl_file(url, file_path, headers=None, quiet=False):
             "Failed PUTting file {} to {}".format(file_path, url)
         )
 
+
 def upload_binary_state(user, key, binary_file, host=None, s3_bucket=None):
     assert host or s3_bucket, "Must provide either host or S3 bucket"
 
     print("Uploading binary file at {} for user {}".format(binary_file, user))
 
     if s3_bucket:
-#        s3_key = "{}/{}".format(user, key)
-#        print(
-#            "Uploading matrix binary to S3 {} -> {}/{}".format(key, s3_bucket, s3_key)
-#        )
-#        upload_file_to_s3(binary_file, s3_bucket, s3_key)
-         print("Uploading to S3 bucket currently not supported")
+        #        s3_key = "{}/{}".format(user, key)
+        #        print(
+        #            "Uploading matrix binary to S3 {} -> {}/{}".format(key, s3_bucket, s3_key)
+        #        )
+        #        upload_file_to_s3(binary_file, s3_bucket, s3_key)
+        print("Uploading to S3 bucket currently not supported")
 
     else:
         url = "http://{}:8002/s/{}/{}".format(host, user, key)
