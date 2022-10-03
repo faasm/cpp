@@ -20,3 +20,7 @@
     path = third-party/FFmpeg
     url = https://github.com/faasm/FFmpeg.git
     branch = faasm
+[submodule "third-party/ImageMagick"]
+	path = third-party/ImageMagick
+	url = https://github.com/faasm/ImageMagick.git
+	branch = faasm
