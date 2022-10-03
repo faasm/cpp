@@ -5,6 +5,7 @@ from . import docker
 from . import ffmpeg
 from . import func
 from . import git
+from . import imagemagick
 from . import install
 from . import libc
 from . import libemscripten
@@ -20,6 +21,7 @@ ns = Collection(
     ffmpeg,
     func,
     git,
+    imagemagick,
     install,
     libc,
     libemscripten,
