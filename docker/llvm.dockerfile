@@ -1,42 +1,40 @@
 FROM ubuntu:20.04
 
-RUN apt update
-RUN apt install -y software-properties-common
-RUN apt update 
-RUN apt upgrade -y
+# Install APT dependencies
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt update \
+    && apt upgrade -y \
+    && apt install -y \
+        autoconf \
+        clang-10 \
+        curl \
+        build-essential \
+        git \
+        gpg \
+        ninja-build \
+        pkg-config \
+        software-properties-common \
+        wget
 
-RUN apt install -y \
-   autoconf \
-   clang-10 \
-   build-essential \
-   git \
-   ninja-build \
-   pkg-config \
-   wget
+# Install up-to-date CMake
+RUN apt remove --purge --auto-remove cmake \
+    && mkdir -p /setup \
+    && cd /setup \
+    && wget -q -O cmake-linux.sh \
+        https://github.com/Kitware/CMake/releases/download/v3.24.2/cmake-3.24.2-linux-x86_64.sh \
+    && sh cmake-linux.sh -- --skip-license --prefix=/usr/local \
+    && apt clean autoclean -y \
+    && apt autoremove -y
 
-# Up-to-date CMake
-RUN apt remove --purge --auto-remove cmake
-WORKDIR /setup
-RUN wget -q -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.18.2/cmake-3.18.2-Linux-x86_64.sh
-RUN sh cmake-linux.sh -- --skip-license --prefix=/usr/local
-
-# Tidy up
-RUN apt-get clean autoclean
-RUN apt-get autoremove
-
-# Copy the code in
-WORKDIR /code
-COPY . .
-
-# Run the main make
-RUN make
-
-# Print the clang version
-RUN /usr/local/faasm/toolchain/bin/clang --version
-
-# Remove the code
-WORKDIR /
-RUN rm -r /code
-
-CMD /bin/bash
-
+# Get the code, build the main targets, and remove the code
+ARG SYSROOT_VERSION
+RUN mkdir -p /code \
+    && git clone -b v${SYSROOT_VERSION} \
+        https://github.com/faasm/cpp \
+        /code/cpp \
+    && cd /code/cpp \
+    && git submodule update --init -f third-party/llvm-project \
+    && git submodule update --init -f third-party/wasi-libc \
+    && make \
+    && /usr/local/faasm/toolchain/bin/clang --version \
+    && rm -rf /code
