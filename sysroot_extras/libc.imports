@@ -143,6 +143,7 @@ mkdtemp
 tmpfile
 memfd_create
 msync
+sendfile
 tempnam
 
 # Non-WASI timing

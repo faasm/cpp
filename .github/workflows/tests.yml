@@ -49,7 +49,6 @@ jobs:
         run: ./bin/inv_wrapper.sh libemscripten
       - name: "Build FFmpeg"
         run: ./bin/inv_wrapper.sh ffmpeg
-        run: inv ffmpeg
       - name: "Build ImageMagick"
         run: ./bin/inv_wrapper.sh imagemagick
       # --- Build functions to wasm ---
