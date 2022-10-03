@@ -28,6 +28,8 @@ jobs:
         run: git submodule update --init -f third-party/libffi
       - name: "Update FFmpeg submodule"
         run: git submodule update --init -f third-party/FFmpeg
+      - name: "Update ImageMagick submodule"
+        run: git submodule update --init -f third-party/ImageMagick
       - name: "Update wasi-libc submodule"
         run: git submodule update --init -f third-party/wasi-libc
       # --- Build libraries to wasm ---
@@ -47,6 +49,9 @@ jobs:
         run: ./bin/inv_wrapper.sh libemscripten
       - name: "Build FFmpeg"
         run: ./bin/inv_wrapper.sh ffmpeg
+        run: inv ffmpeg
+      - name: "Build ImageMagick"
+        run: ./bin/inv_wrapper.sh imagemagick
       # --- Build functions to wasm ---
       - name: "Build the functions"
         run: ./bin/inv_wrapper.sh func.local --clean
