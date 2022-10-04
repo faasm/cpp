@@ -1,24 +1,22 @@
-from subprocess import run
-
-from os.path import join
-
-from invoke import task
-
 from faasmtools.env import (
     THIRD_PARTY_DIR,
 )
-
 from faasmtools.build import (
-    WASM_SYSROOT,
-    WASM_LIB_INSTALL,
-    WASM_CC,
-    WASM_CXX,
     WASM_AR,
+    WASM_CC,
+    WASM_CFLAGS,
+    WASM_CXX,
+    WASM_LD,
+    WASM_LDFLAGS,
+    WASM_EXE_LDFLAGS,
     WASM_NM,
     WASM_RANLIB,
-    WASM_CFLAGS,
-    WASM_LDFLAGS,
+    WASM_SYSROOT,
 )
+from faasmtools.compile_util import wasm_copy_upload
+from invoke import task
+from os.path import join
+from subprocess import run
 
 
 @task(default=True)
@@ -29,43 +27,21 @@ def imagemagick(ctx, clean=False):
     imagemagick_dir = join(THIRD_PARTY_DIR, "ImageMagick")
 
     if clean:
-        run("make clean", shell=True, cwd=ffmpeg_dir, check=True)
+        run("make clean", shell=True, cwd=imagemagick_dir, check=True)
 
     # List of flags inspired from the github project:
     # https://github.com/KnicKnic/WASM-ImageMagick
     # For all the configure options, see:
     # https://github.com/ImageMagick/ImageMagick/blob/main/Install-unix.txt
-#     configure_cmd = [
-#         "./configure",
-#         "--prefix={}".format(WASM_SYSROOT),
-#         "--libdir={}".format(WASM_LIB_INSTALL),
-#         "--target-os=none",
-#         "--arch=x86_32",
-#         "--enable-cross-compile",
-#         "--disable-x86asm",
-#         "--disable-inline-asm",
-#         "--disable-network",
-#         "--disable-stripping",
-#         "--disable-programs",
-#         "--disable-doc",
-#         "--extra-cflags='{}'".format(" ".join(WASM_CFLAGS)),
-#         "--extra-cxxflags='{}'".format(" ".join(WASM_CFLAGS)),
-#         "--extra-ldflags='{}'".format(" ".join(WASM_LDFLAGS)),
-#         "--nm={}".format(WASM_NM),
-#         "--ar={}".format(WASM_AR),
-#         "--ranlib={}".format(WASM_RANLIB),
-#         "--cc={}".format(WASM_CC),
-#         "--cxx={}".format(WASM_CXX),
-#         "--objcc={}".format(WASM_CC),
-#         "--dep-cc={}".format(WASM_CC),
-#     ]
     configure_cmd = [
         "./configure",
         "CC={}".format(WASM_CC),
         "CXX={}".format(WASM_CXX),
         "CFLAGS='{}'".format(" ".join(WASM_CFLAGS)),
         "CXXFLAGS='{}'".format(" ".join(WASM_CFLAGS)),
-        "LDFLAGS='{}'".format(" ".join(WASM_LDFLAGS)),
+        "LD={}".format(WASM_LD),
+        "LDFLAGS='{}'".format(" ".join(WASM_EXE_LDFLAGS)),
+        "CXXLDFLAGS='{}'".format(" ".join(WASM_EXE_LDFLAGS)),
         "AR={}".format(WASM_AR),
         "RANLIB={}".format(WASM_RANLIB),
         "NM={}".format(WASM_NM),
@@ -73,7 +49,7 @@ def imagemagick(ctx, clean=False):
         "--disable-largefile",
         "--disable-openmp",
         "--disable-shared",
-        "--host=none",
+        "--host=wasm32",
         "--without-bzlib",
         "--without-dps",
         "--without-djvu",
@@ -103,11 +79,12 @@ def imagemagick(ctx, clean=False):
         "--without-xml",
         "--without-zlib",
     ]
-        # --disable-shared --without-threads --without-magick-plus-plus --without-perl --without-x --disable-largefile --disable-openmp --without-bzlib --without-dps --without-freetype --without-jbig --without-openjp2 --without-lcms --without-wmf --without-xml --without-fftw --without-flif --without-fpx --without-djvu --without-fontconfig --without-raqm --without-gslib --without-gvc --without-heic --without-lqr --without-openexr --without-pango --without-raw --without-rsvg --without-webp --without-xml PKG_CONFIG_PATH="/code/libpng:/code/zlib:/code/libjpeg:/code/libtiff:/code/libtiff/libtiff:"
 
     configure_cmd = " ".join(configure_cmd)
     run(configure_cmd, shell=True, cwd=imagemagick_dir, check=True)
 
     run("make -j", shell=True, cwd=imagemagick_dir, check=True)
 
-    # run("make install", shell=True, cwd=ffmpeg_dir, check=True)
+    # Instead of installing ImageMagick, we copy the self-contained binary
+    # (magick) to /usr/local/faasm/wasm/imagemagick/main/function.wasm
+    wasm_copy_upload("imagemagick", "main", join(imagemagick_dir, "utilities", "magick"))

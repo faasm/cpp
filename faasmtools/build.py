@@ -35,11 +35,10 @@ WASM_HOST_UNKNOWN = "wasm32-unknown-unknown"
 
 # CFLAGS
 WASM_CFLAGS = [
-    "-m32",
-    "-DCONFIG_32",
-    "-DANSI",
-    "-O3",
+    "-O3 -mno-atomics",
     "--sysroot={}".format(WASM_SYSROOT),
+    "-m32",
+    "-DANSI",
     "-D__faasm",
 ]
 
@@ -54,7 +53,11 @@ WASM_CFLAGS_SHARED = [
 ]
 WASM_CXXFLAGS_SHARED = WASM_CFLAGS_SHARED
 
+# ----------
 # LDFLAGS
+# ----------
+
+# Flags for static libraries
 WASM_LDFLAGS = [
     "-static",
     "-Xlinker --no-gc-sections",
@@ -62,6 +65,17 @@ WASM_LDFLAGS = [
     "-Xlinker --no-check-features",
 ]
 
+# Flags for executables
+WASM_EXE_LDFLAGS = [
+    "-Xlinker --stack-first",
+    "-Xlinker --export=__heap_base",
+    "-Xlinker --export=__data_end",
+    "-Xlinker --export=__wasm_call_ctors",
+    "-Xlinker --max-memory=4294901760",
+    "-Wl,-z,stack-size=4194304 -Wl",
+]
+
+# Flags for shared libraries
 WASM_LDFLAGS_SHARED = [
     "-nostdlib",
     "-nostdlib++",
