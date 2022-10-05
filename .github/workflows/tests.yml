@@ -54,11 +54,11 @@ jobs:
       - name: "Build FFmpeg"
         run: ./bin/inv_wrapper.sh ffmpeg
       - name: "Build zlib"
-        run: ./bin/inv_wrapper.sh zlib --clean
+        run: ./bin/inv_wrapper.sh zlib
       - name: "Build libpng"
-        run: ./bin/inv_wrapper.sh libpng --clean
+        run: ./bin/inv_wrapper.sh libpng
       - name: "Build ImageMagick"
-        run: ./bin/inv_wrapper.sh imagemagick --clean
+        run: ./bin/inv_wrapper.sh imagemagick
       # --- Build functions to wasm ---
       - name: "Build the functions"
         run: ./bin/inv_wrapper.sh func.local --clean
