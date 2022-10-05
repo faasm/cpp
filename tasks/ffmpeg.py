@@ -46,6 +46,7 @@ def ffmpeg(ctx, clean=False):
         "--disable-stripping",
         "--disable-programs",
         "--disable-doc",
+        "--disable-zlib",
         "--extra-cflags='{}'".format(" ".join(WASM_CFLAGS)),
         "--extra-cxxflags='{}'".format(" ".join(WASM_CFLAGS)),
         "--extra-ldflags='{}'".format(" ".join(WASM_LDFLAGS)),
