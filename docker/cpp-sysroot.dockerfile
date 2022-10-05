@@ -60,7 +60,7 @@ RUN cd /code/cpp \
         zlib \
         libpng \
         imagemagick \
-        # Build Faasm WASM libraries
+    # Build Faasm WASM libraries
     && inv \
         libemscripten \
         libfaasm \
