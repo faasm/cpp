@@ -51,7 +51,9 @@ def libpng(ctx, clean=False):
     libpng_header_install_dir = join(WASM_SYSROOT, "include", "libpng16")
     if not exists(libpng_header_install_dir):
         makedirs(libpng_header_install_dir)
-    header_files = [hf for hf in listdir(libpng_dir) if hf.endswith(".h")]
+    header_files = [
+        join(libpng_dir, hf) for hf in listdir(libpng_dir) if hf.endswith(".h")
+    ]
     cp_cmd = "cp {} {}/".format(
         " ".join(header_files), libpng_header_install_dir
     )

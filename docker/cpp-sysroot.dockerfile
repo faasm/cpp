@@ -47,7 +47,10 @@ RUN cd /code/cpp \
         libfaasmp --native --shared \
         libfaasmpi --native --shared \
     # Install toolchain files
-    && inv install \
+    && inv install
+
+RUN cd /code/cpp \
+    && source venv/bin/activate \
     # Build ported third-pary WASM libraries (libc first as it is needed in the
     # others)
     && inv \
@@ -57,10 +60,10 @@ RUN cd /code/cpp \
         ffmpeg \
         libffi \
         # To build imagemagick, we need to build zlib and libpng
-        zlib --clean \
-        libpng --clean \
-        imagemagick --clean \
-    # Build Faasm WASM libraries
+        zlib \
+        libpng \
+        imagemagick \
+        # Build Faasm WASM libraries
     && inv \
         libemscripten \
         libfaasm \
