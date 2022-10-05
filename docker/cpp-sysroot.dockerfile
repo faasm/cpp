@@ -47,10 +47,7 @@ RUN cd /code/cpp \
         libfaasmp --native --shared \
         libfaasmpi --native --shared \
     # Install toolchain files
-    && inv install
-
-RUN cd /code/cpp \
-    && source venv/bin/activate \
+    && inv install \
     # Build ported third-pary WASM libraries (libc first as it is needed in the
     # others)
     && inv \
