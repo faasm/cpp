@@ -12,8 +12,7 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     container:
-      image: faasm/cpp-sysroot:0.1.6
-      options: --user root
+      image: faasm/cpp-sysroot:0.1.7
     defaults:
       run:
         working-directory: /code/cpp
@@ -32,50 +31,37 @@ jobs:
         run: git submodule update --init -f third-party/FFmpeg
       - name: "Update wasi-libc submodule"
         run: git submodule update --init -f third-party/wasi-libc
-      - name: "Pull/Update Tensorflow submodule"
-        run: git submodule update --init -f third-party/tensorflow
-      - name: "Install requirements"
-        run: pip3 install -r requirements.txt
-      # ---Installing packages required for TF in this hacky way
-      - name: "Install packages"
-        run: |
-         apt update
-         apt-get install curl -y
-         apt-get install unzip -y
       # --- Build libraries to wasm ---
       - name: "Build libc"
-        run: inv libc
+        run: ./bin/inv_wrapper.sh libc
       - name: "Build libfaasm"
-        run: inv libfaasm
+        run: ./bin/inv_wrapper.sh libfaasm
       - name: "Build libfaasmp"
-        run: inv libfaasmp
+        run: ./bin/inv_wrapper.sh libfaasmp
       - name: "Build libfaasmpi"
-        run: inv libfaasmpi
+        run: ./bin/inv_wrapper.sh libfaasmpi
       - name: "Build libffi"
-        run: inv libffi
+        run: ./bin/inv_wrapper.sh libffi
       - name: "Build libfake"
-        run: inv libfake
+        run: ./bin/inv_wrapper.sh libfake
       - name: "Build libemscripten"
-        run: inv libemscripten
+        run: ./bin/inv_wrapper.sh libemscripten
       - name: "Build FFmpeg"
-        run: inv ffmpeg
-      - name: "Build TFlib"
-        run: inv tensorflow.lib
+        run: ./bin/inv_wrapper.sh ffmpeg
       # --- Build functions to wasm ---
       - name: "Build the functions"
-        run: inv func.local --clean
-      - name: "Build tf func"
-        run: inv tensorflow.func
+        run: ./bin/inv_wrapper.sh func.local --clean
       # --- Build libraries natively ---
       - name: "Build libfaasm native"
-        run: inv libfaasm --native --clean
+        run: ./bin/inv_wrapper.sh libfaasm --native --clean
       - name: "Build libfaasmp native"
-        run: inv libfaasmp --native --clean
+        run: ./bin/inv_wrapper.sh libfaasmp --native --clean
       - name: "Build libfaasmpi native"
-        run: inv libfaasmpi --native --clean
+        run: ./bin/inv_wrapper.sh libfaasmpi --native --clean
       # --- Formatting ---
       - name: "Check python"
-        run: ./bin/check_python.sh
+        run: source venv/bin/activate && ./bin/check_python.sh
+        shell: bash
       - name: "Run C/C++ formatting"
         run: ./bin/run_clang_format.sh
       - name: "Check no formatting changes"

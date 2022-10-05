@@ -1,7 +1,7 @@
 from invoke import Collection
 
 from . import clapack
-from . import container
+from . import docker
 from . import ffmpeg
 from . import func
 from . import git
@@ -17,7 +17,7 @@ from . import tensorflow
 
 ns = Collection(
     clapack,
-    container,
+    docker,
     ffmpeg,
     func,
     git,
