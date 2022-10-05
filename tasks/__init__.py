@@ -14,6 +14,8 @@ from . import libfaasmp
 from . import libfaasmpi
 from . import libfake
 from . import libffi
+from . import libpng
+from . import zlib
 
 ns = Collection(
     clapack,
@@ -30,4 +32,6 @@ ns = Collection(
     libfaasmpi,
     libfake,
     libffi,
+    libpng,
+    zlib,
 )

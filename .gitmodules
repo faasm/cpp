@@ -24,3 +24,11 @@
 	path = third-party/ImageMagick
 	url = https://github.com/faasm/ImageMagick.git
 	branch = faasm
+[submodule "third-party/libpng"]
+	path = third-party/libpng
+	url = https://github.com/faasm/libpng.git
+	branch = faasm
+[submodule "third-party/zlib"]
+	path = third-party/zlib
+	url = https://github.com/faasm/zlib.git
+	branch = faasm
