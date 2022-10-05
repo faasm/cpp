@@ -76,4 +76,4 @@ jobs:
       - name: "Run C/C++ formatting"
         run: ./bin/run_clang_format.sh
       - name: "Check no formatting changes"
-        run: git diff --exit-code
+        run: git diff --exit-code -- :^third-party
