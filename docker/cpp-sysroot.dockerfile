@@ -23,7 +23,10 @@ RUN mkdir -p /code \
     && git submodule update --init -f third-party/faasm-clapack \
     && git submodule update --init -f third-party/libffi \
     && git submodule update --init -f third-party/wasi-libc \
-    && git submodule update --init -f third-party/FFmpeg
+    && git submodule update --init -f third-party/FFmpeg \
+    && git submodule update --init -f third-party/zlib \
+    && git submodule update --init -f third-party/libpng \
+    && git submodule update --init -f third-party/ImageMagick
 
 # Install the faasmtools Python lib
 RUN cd /code/cpp \
@@ -45,13 +48,18 @@ RUN cd /code/cpp \
         libfaasmpi --native --shared \
     # Install toolchain files
     && inv install \
-    # Build ported third-pary WASM libraries
+    # Build ported third-pary WASM libraries (libc first as it is needed in the
+    # others)
     && inv \
+        libc \
         clapack \
         clapack --clean --shared \
         ffmpeg \
-        libc \
         libffi \
+        # To build imagemagick, we need to build zlib and libpng
+        zlib --clean \
+        libpng --clean \
+        imagemagick --clean \
     # Build Faasm WASM libraries
     && inv \
         libemscripten \

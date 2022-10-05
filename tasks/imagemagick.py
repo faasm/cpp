@@ -6,9 +6,9 @@ from faasmtools.build import (
     WASM_CC,
     WASM_CFLAGS,
     WASM_CXX,
-    WASM_LD,
-    WASM_LDFLAGS,
     WASM_EXE_LDFLAGS,
+    WASM_HOST,
+    WASM_LD,
     WASM_NM,
     WASM_RANLIB,
     WASM_SYSROOT,
@@ -45,11 +45,14 @@ def imagemagick(ctx, clean=False):
         "AR={}".format(WASM_AR),
         "RANLIB={}".format(WASM_RANLIB),
         "NM={}".format(WASM_NM),
+        "PKG_CONFIG_PATH={}".format(join(THIRD_PARTY_DIR, "libpng")),
         "--prefix={}".format(WASM_SYSROOT),
         "--disable-largefile",
         "--disable-openmp",
         "--disable-shared",
-        "--host=wasm32",
+        "--host={}".format(WASM_HOST),
+        "--with-png=yes",
+        "--enable-delegate-build",
         "--without-bzlib",
         "--without-dps",
         "--without-djvu",
@@ -77,7 +80,6 @@ def imagemagick(ctx, clean=False):
         "--without-wmf",
         "--without-x",
         "--without-xml",
-        "--without-zlib",
     ]
 
     configure_cmd = " ".join(configure_cmd)
@@ -87,4 +89,6 @@ def imagemagick(ctx, clean=False):
 
     # Instead of installing ImageMagick, we copy the self-contained binary
     # (magick) to /usr/local/faasm/wasm/imagemagick/main/function.wasm
-    wasm_copy_upload("imagemagick", "main", join(imagemagick_dir, "utilities", "magick"))
+    wasm_copy_upload(
+        "imagemagick", "main", join(imagemagick_dir, "utilities", "magick")
+    )
