@@ -12,7 +12,7 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     container:
-      image: faasm/cpp-sysroot:0.1.7
+      image: faasm/cpp-sysroot:0.1.8
     defaults:
       run:
         working-directory: /code/cpp
@@ -28,6 +28,12 @@ jobs:
         run: git submodule update --init -f third-party/libffi
       - name: "Update FFmpeg submodule"
         run: git submodule update --init -f third-party/FFmpeg
+      - name: "Update ImageMagick submodule"
+        run: git submodule update --init -f third-party/ImageMagick
+      - name: "Update libpng submodule"
+        run: git submodule update --init -f third-party/libpng
+      - name: "Update zlib submodule"
+        run: git submodule update --init -f third-party/zlib
       - name: "Update wasi-libc submodule"
         run: git submodule update --init -f third-party/wasi-libc
       # --- Build libraries to wasm ---
@@ -47,6 +53,12 @@ jobs:
         run: ./bin/inv_wrapper.sh libemscripten
       - name: "Build FFmpeg"
         run: ./bin/inv_wrapper.sh ffmpeg
+      - name: "Build zlib"
+        run: ./bin/inv_wrapper.sh zlib
+      - name: "Build libpng"
+        run: ./bin/inv_wrapper.sh libpng
+      - name: "Build ImageMagick"
+        run: ./bin/inv_wrapper.sh imagemagick
       # --- Build functions to wasm ---
       - name: "Build the functions"
         run: ./bin/inv_wrapper.sh func.local --clean
@@ -64,4 +76,4 @@ jobs:
       - name: "Run C/C++ formatting"
         run: ./bin/run_clang_format.sh
       - name: "Check no formatting changes"
-        run: git diff --exit-code
+        run: git diff --exit-code -- :^third-party
