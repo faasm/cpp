@@ -1,6 +1,4 @@
-# set(TF_DIR /usr/local/code/faasm-experiments/third-party/tensorflow/
 
-#set(TF_DIR /usr/local/code/faasm/clients/cpp/third-party/tensorflow/)
 set(TF_DIR /code/cpp/third-party/tensorflow/)
 set(TF_LITE_DIR ${TF_DIR}/tensorflow/lite)
 set(TF_LITE_DOWNLOAD_DIR ${TF_LITE_DIR}/tools/make/downloads)
@@ -26,17 +24,6 @@ else()
     set(TF_LIB ${TF_BUILD_DIR}/linux_x86_64/lib/libtensorflow-lite.a)
 endif()
 
-# Build shared library to use with function
-add_library(tf_img_lib
-        bitmap_helpers.cc
-        get_top_n.h
-        get_top_n_impl.h
-        image.h
-        )
-
-target_link_libraries(tf_img_lib ${TF_LIB})
-
-# Add the actual function
-add_executable(image image.cc)
-target_link_libraries(image faasm tf_img_lib)
+add_executable(minimal minimal.cpp)
+target_link_libraries(minimal faasm ${TF_LIB})
 
