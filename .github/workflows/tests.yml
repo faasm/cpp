@@ -60,8 +60,8 @@ jobs:
         run: ./bin/inv_wrapper.sh zlib
       - name: "Build libpng"
         run: ./bin/inv_wrapper.sh libpng
-#      - name: "Build ImageMagick"
-#        run: ./bin/inv_wrapper.sh imagemagick
+      - name: "Build ImageMagick"
+        run: ./bin/inv_wrapper.sh imagemagick
       - name: "Build Tensorflow lite"
         run: ./bin/inv_wrapper.sh tensorflow.lite
       # --- Build functions to wasm ---
