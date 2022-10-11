@@ -37,6 +37,8 @@ jobs:
         run: git submodule update --init -f third-party/zlib
       - name: "Update wasi-libc submodule"
         run: git submodule update --init -f third-party/wasi-libc
+      - name: "Update tensorflow submodule"
+        run: git submodule update --init -f third-party/tensorflow
       # --- Build libraries to wasm ---
       - name: "Build libc"
         run: ./bin/inv_wrapper.sh libc
@@ -58,8 +60,8 @@ jobs:
         run: ./bin/inv_wrapper.sh zlib
       - name: "Build libpng"
         run: ./bin/inv_wrapper.sh libpng
-      - name: "Build ImageMagick"
-        run: ./bin/inv_wrapper.sh imagemagick
+#      - name: "Build ImageMagick"
+#        run: ./bin/inv_wrapper.sh imagemagick
       - name: "Build Tensorflow lite"
         run: ./bin/inv_wrapper.sh tensorflow.lite
       # --- Build functions to wasm ---
