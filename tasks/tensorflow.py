@@ -20,6 +20,7 @@ from faasmtools.build import (
     WASM_LDFLAGS,
 )
 
+
 @task
 def lite(ctx, clean=False):
     """
@@ -55,7 +56,7 @@ def lite(ctx, clean=False):
             "-f tensorflow/lite/tools/make/Makefile",
         ]
     )
-    
+
     make_cmd.append(make_target)
 
     clean_dir = join(tf_make_dir, "gen", "wasm32-unknown-wasi_x86_64")
