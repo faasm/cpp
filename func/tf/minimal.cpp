@@ -1,5 +1,6 @@
-#include <faasm/input.h>
 #include <faasm/faasm.h>
+#include <faasm/input.h>
+
 
 #include "tensorflow/lite/interpreter.h"
 #include "tensorflow/lite/kernels/register.h"
@@ -7,7 +8,6 @@
 #include "tensorflow/lite/optional_debug_tools.h"
 
 #define INPUT_FILE_PATH "faasm://tflite/sample_model.tflite"
-
 #define TFLITE_MINIMAL_CHECK(x)                              \
   if (!(x)) {                                                \
     fprintf(stderr, "Error at %s:%d\n", __FILE__, __LINE__); \
