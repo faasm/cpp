@@ -33,6 +33,22 @@ WASM_HOST = "wasm32-unknown-wasi"
 WASM_HOST_SHARED = "wasm32-unknown-emscripten"
 WASM_HOST_UNKNOWN = "wasm32-unknown-unknown"
 
+# WASM Constants
+# NOTE: we have to set the max memory here but want it to be as close to the
+# max (4GB) as possible. If we set it to the max though, this input is
+# ignored and the function is set with no maximum memory size.  Therefore we
+# set it to 4GB - 1 page, i.e.  max-memory = (4*1024*1024*1024) - (64*1024)
+# = 4294901760.
+#
+# WARNING: the code may also set limits on the max memory size, so must be
+# changed there too (IRModuleCache.h)
+#
+# This max memory limit can stop benchmarks working so make sure it's big
+# and consider restricting in a more specific manner for certain functions.
+FAASM_WASM_MAX_MEMORY = 4 * 1024 * 1024 * 1024 - 64 * 1024
+FAASM_WASM_STACK_SIZE = 4 * 1024 * 1024
+FAASM_WASM_BYTES_PER_PAGE = 65536
+
 # CFLAGS
 WASM_CFLAGS = [
     "-O3 -mno-atomics",
@@ -71,8 +87,9 @@ WASM_EXE_LDFLAGS = [
     "-Xlinker --export=__heap_base",
     "-Xlinker --export=__data_end",
     "-Xlinker --export=__wasm_call_ctors",
-    "-Xlinker --max-memory=4294901760",
-    "-Wl,-z,stack-size=4194304 -Wl",
+    "-Xlinker --max-memory={}".format(FAASM_WASM_MAX_MEMORY),
+    "-Wl,-z,stack-size={} -Wl".format(FAASM_WASM_STACK_SIZE),
+    # "-Wl,--initial-memory={}".format(FAASM_WASM_INITIAL_MEMORY_SIZE),
 ]
 
 # Flags for shared libraries
@@ -90,6 +107,18 @@ WASM_CXXSHARED = " ".join([WASM_CXX] + WASM_CFLAGS_SHARED)
 WASM_LDSHARED = " ".join([WASM_CC] + WASM_LDFLAGS_SHARED)
 WASM_LDXXSHARED = " ".join([WASM_CXX] + WASM_LDFLAGS_SHARED)
 
+# ----------
+# Variables for different build systems
+# ----------
+
+# CMake variables as a dictionary: prefix with FAASM_WASM or FAASM_NATIVE
+# depending on the build type variables target
+CMAKE_ENV_DICT = {
+    "FAASM_NATIVE_INSTALL_DIR": FAASM_NATIVE_DIR,
+    "FAASM_WASM_EXE_LINKER_FLAGS": " ".join(WASM_EXE_LDFLAGS),
+}
+
+# Variables for 'configure' scripts
 _BASE_CONFIG_CMD = [
     "CC={}".format(WASM_CC),
     "CXX={}".format(WASM_CXX),
