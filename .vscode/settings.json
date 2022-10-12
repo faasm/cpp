@@ -1,0 +1,9 @@
+{
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        "*.inc": "cpp",
+        "string": "cpp",
+        "filesystem": "cpp",
+        "stdexcept": "cpp"
+    }
+}
