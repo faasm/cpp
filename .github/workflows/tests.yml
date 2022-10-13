@@ -20,8 +20,6 @@ jobs:
       # --- Update code --
       - name: "Checkout code"
         uses: actions/checkout@v3
-      - name: "Fetch changes"
-        run: git fetch
       - name: "Update Faabric submodule"
         run: git submodule update --init -f third-party/faabric
       - name: "Update FFI submodule"
@@ -36,6 +34,10 @@ jobs:
         run: git submodule update --init -f third-party/zlib
       - name: "Update wasi-libc submodule"
         run: git submodule update --init -f third-party/wasi-libc
+      - name: "Logging #1"
+        run: cat .gitmodules
+      - name: "Logging #2"
+        run: ls -lart && ls -l ./third-party
       - name: "Update tensorflow submodule"
         run: git submodule update --init -f third-party/tensorflow
       # --- Build libraries to wasm ---
