@@ -32,7 +32,3 @@
 	path = third-party/zlib
 	url = https://github.com/faasm/zlib.git
 	branch = faasm
-[submodule "third-party/tensorflow"]
-	path = third-party/tensorflow
-	url = https://github.com/faasm/tensorflow.git
-	branch = faasm
