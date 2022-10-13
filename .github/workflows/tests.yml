@@ -18,6 +18,10 @@ jobs:
         working-directory: /code/cpp
     steps:
       # --- Update code --
+      - name: "Fetch ref"
+        run: git fetch origin ${GITHUB_REF}:ci-branch
+      - name: "Check out branch"
+        run: git checkout --force ci-branch
       - name: "Update Faabric submodule"
         run: git submodule update --init -f third-party/faabric
       - name: "Update FFI submodule"
