@@ -20,6 +20,8 @@ jobs:
       # --- Update code --
       - name: "Checkout code"
         uses: actions/checkout@v3
+        with:
+          submodules: true
       - name: "Update Faabric submodule"
         run: git submodule update --init -f third-party/faabric
       - name: "Update FFI submodule"
