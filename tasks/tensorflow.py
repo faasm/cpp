@@ -1,25 +1,19 @@
 from os import cpu_count
-
 from os.path import exists, join
-
 from shutil import rmtree
-
 from subprocess import call, check_output
-
 from invoke import task
-
 from faasmtools.env import (
     THIRD_PARTY_DIR,
 )
-
 from faasmtools.build import (
     BASE_CONFIG_CMD,
     WASM_CFLAGS,
     WASM_CXXFLAGS,
     WASM_HOST,
     WASM_LDFLAGS,
+    WASM_LIB_INSTALL,
 )
-
 
 @task
 def lite(ctx, clean=False):
@@ -64,5 +58,13 @@ def lite(ctx, clean=False):
         rmtree(clean_dir)
 
     res = call(" ".join(make_cmd), shell=True, cwd=tf_lite_dir)
-    if res != 0:
+    if res == 0:
+        # Install static library
+        tf_lib_dir = join(clean_dir,"lib")
+        cp_cmd = "cp {}/libtensorflow-lite.a {}/libtensorflow-lite.a".format(
+            tf_lib_dir, WASM_LIB_INSTALL
+        )
+        call(cp_cmd, shell=True)
+        print(cp_cmd)
+    else:
         raise RuntimeError("Failed to compile Tensorflow lite")

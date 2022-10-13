@@ -18,11 +18,6 @@ jobs:
         working-directory: /code/cpp
     steps:
       # --- Update code --
-      - name: "Pull forked repo into container"
-        run: |
-          git remote set-url origin https://github.com/FlowDrucka64/cpp.git
-          git fetch origin
-          git pull origin main
       - name: "Update Faabric submodule"
         run: git submodule update --init -f third-party/faabric
       - name: "Update FFI submodule"

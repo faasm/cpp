@@ -1,4 +1,3 @@
-
 set(TF_DIR /code/cpp/third-party/tensorflow/)
 set(TF_LITE_DIR ${TF_DIR}/tensorflow/lite)
 set(TF_LITE_DOWNLOAD_DIR ${TF_LITE_DIR}/tools/make/downloads)
