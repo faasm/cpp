@@ -15,7 +15,7 @@ from faasmtools.build import (
     WASM_LIB_INSTALL,
 )
 
-@task
+@task(default=True)
 def lite(ctx, clean=False):
     """
     Compile and install Tensorflow Lite lib
