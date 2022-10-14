@@ -65,5 +65,15 @@ jobs:
       - name: "Build libfaasmpi native"
         run: ./bin/inv_wrapper.sh libfaasmpi --native --clean
       # --- Formatting ---
+<<<<<<< HEAD
       - name: "Format code"
         run: ./bin/inv_wrapper.sh format-code --check
+=======
+      - name: "Check python"
+        run: source bin/workon.sh && ./bin/check_python.sh
+        shell: bash
+      - name: "Run C/C++ formatting"
+        run: ./bin/run_clang_format.sh
+      - name: "Check no formatting changes"
+        run: git diff --exit-code -- :^third-party
+>>>>>>> 61f83bb (gha: fix workflow file)
