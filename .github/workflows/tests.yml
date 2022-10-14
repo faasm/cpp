@@ -66,6 +66,7 @@ jobs:
         run: ./bin/inv_wrapper.sh libfaasmpi --native --clean
       # --- Formatting ---
 <<<<<<< HEAD
+<<<<<<< HEAD
       - name: "Format code"
         run: ./bin/inv_wrapper.sh format-code --check
 =======
@@ -77,3 +78,7 @@ jobs:
       - name: "Check no formatting changes"
         run: git diff --exit-code -- :^third-party
 >>>>>>> 61f83bb (gha: fix workflow file)
+=======
+      - name: "Format code"
+        run: ./bin/inv_wrapper.sh format-code --check
+>>>>>>> 6ba6cdc (gha: use new formatting task and actions checkout)
