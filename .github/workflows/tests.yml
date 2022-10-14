@@ -19,26 +19,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: true
-            #       - name: "Update Faabric submodule"
-            #         run: git submodule update --init -f third-party/faabric
-            #       - name: "Update FFI submodule"
-            #         run: git submodule update --init -f third-party/libffi
-            #       - name: "Update FFmpeg submodule"
-            #         run: git submodule update --init -f third-party/FFmpeg
-            #       - name: "Update ImageMagick submodule"
-            #         run: git submodule update --init -f third-party/ImageMagick
-            #       - name: "Update libpng submodule"
-            #         run: git submodule update --init -f third-party/libpng
-            #       - name: "Update zlib submodule"
-            #         run: git submodule update --init -f third-party/zlib
-            #       - name: "Update wasi-libc submodule"
-            #         run: git submodule update --init -f third-party/wasi-libc
-            #       - name: "test"
-            #         run: git log --oneline && git status && git branch --list
-            #       - name: "test 2"
-            #         run: cat .gitmodules && ls -l tasks && ls -l third-party && ls -l third-party/tensorflow
-            #       - name: "Update tensorflow submodule"
-            #         run: git submodule update --init -f third-party/tensorflow
       # --- Build libraries to wasm ---
       - name: "Build libc"
         run: ./bin/inv_wrapper.sh libc
