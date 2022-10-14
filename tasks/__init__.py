@@ -3,6 +3,7 @@ from invoke import Collection
 from . import clapack
 from . import docker
 from . import ffmpeg
+from . import format_code
 from . import func
 from . import git
 from . import imagemagick
@@ -20,6 +21,7 @@ from . import zlib
 ns = Collection(
     clapack,
     docker,
+    format_code,
     ffmpeg,
     func,
     git,
