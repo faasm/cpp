@@ -1,7 +1,7 @@
 from os import cpu_count
-from os.path import exists, join
-from shutil import rmtree
-from subprocess import call, check_output
+from os.path import exists, isfile, join
+from shutil import copytree, rmtree
+from subprocess import check_output, run
 from invoke import task
 from faasmtools.env import (
     THIRD_PARTY_DIR,
@@ -12,8 +12,10 @@ from faasmtools.build import (
     WASM_CXXFLAGS,
     WASM_HOST,
     WASM_LDFLAGS,
+    WASM_HEADER_INSTALL,
     WASM_LIB_INSTALL,
 )
+
 
 @task(default=True)
 def lite(ctx, clean=False):
@@ -57,14 +59,23 @@ def lite(ctx, clean=False):
     if clean and exists(clean_dir):
         rmtree(clean_dir)
 
-    res = call(" ".join(make_cmd), shell=True, cwd=tf_lite_dir)
-    if res == 0:
-        # Install static library
-        tf_lib_dir = join(clean_dir,"lib")
-        cp_cmd = "cp {}/libtensorflow-lite.a {}/libtensorflow-lite.a".format(
-            tf_lib_dir, WASM_LIB_INSTALL
-        )
-        call(cp_cmd, shell=True)
-        print(cp_cmd)
-    else:
-        raise RuntimeError("Failed to compile Tensorflow lite")
+    make_cmd = " ".join(make_cmd)
+    run(make_cmd, shell=True, check=True, cwd=tf_lite_dir)
+
+    # Install static library
+    tf_lib_dir = join(clean_dir, "lib")
+    cp_cmd = "cp {}/libtensorflow-lite.a {}/libtensorflow-lite.a".format(
+        tf_lib_dir, WASM_LIB_INSTALL
+    )
+    print(cp_cmd)
+    run(cp_cmd, shell=True, check=True)
+
+    # Install header files
+    header_install_dir = join(WASM_HEADER_INSTALL, "tensorflow")
+    if exists(header_install_dir):
+        rmtree(header_install_dir)
+
+    def ignore_func(d, files):
+        return [f for f in files if isfile(join(d, f)) and f[-2:] != ".h"]
+
+    copytree(tf_dir, header_install_dir, ignore=ignore_func)
