@@ -48,6 +48,7 @@ WASM_HOST_UNKNOWN = "wasm32-unknown-unknown"
 FAASM_WASM_MAX_MEMORY = 4 * 1024 * 1024 * 1024 - 64 * 1024
 FAASM_WASM_STACK_SIZE = 4 * 1024 * 1024
 FAASM_WASM_BYTES_PER_PAGE = 65536
+FAASM_WASM_INITIAL_MEMORY_SIZE = 4 * FAASM_WASM_STACK_SIZE
 
 # CFLAGS
 WASM_CFLAGS = [
@@ -89,7 +90,7 @@ WASM_EXE_LDFLAGS = [
     "-Xlinker --export=__wasm_call_ctors",
     "-Xlinker --max-memory={}".format(FAASM_WASM_MAX_MEMORY),
     "-Wl,-z,stack-size={} -Wl".format(FAASM_WASM_STACK_SIZE),
-    # "-Wl,--initial-memory={}".format(FAASM_WASM_INITIAL_MEMORY_SIZE),
+    "-Wl,--initial-memory={}".format(FAASM_WASM_INITIAL_MEMORY_SIZE),
 ]
 
 # Flags for shared libraries

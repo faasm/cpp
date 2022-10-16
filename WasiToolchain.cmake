@@ -103,6 +103,8 @@ SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
     -Xlinker --no-check-features \
     -Xlinker --threads \
     -Xlinker --max-memory=4294901760 \
+    -Wl,-z,stack-size=4194304 -Wl, \
+    -Wl,--initial-memory=16777216 -Wl, \
     " CACHE STRING "faasm build")
 
 # This is important to ensure the right search path

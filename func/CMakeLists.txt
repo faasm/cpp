@@ -18,6 +18,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
         -Xlinker --max-memory=4294901760 \
         -Wl,--stack-first \
         -Wl,-z,stack-size=4194304 -Wl, \
+        -Wl,--initial-memory=16777216 -Wl, \
     ")
 
     SET(CMAKE_EXECUTABLE_SUFFIX ".wasm")
