@@ -71,7 +71,7 @@ set(FAASM_COMPILER_FLAGS " \
     --sysroot=${FAASM_SYSROOT} \
     -m32 \
     -DANSI \
-    -Xlinker --stack-first \
+    -D__faasm \
     ")
 
 if(FAASM_BUILD_SHARED)
