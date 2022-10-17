@@ -71,23 +71,24 @@ namespace tflite {
 
 int main(int argc, char* argv[])
 {
+    if (argc != 2) {
+        printf("Error: did not receive enough arguments\n");
+        printf(" - usage: <inference> <img_path>\n");
+    }
     std::string dataDir = "faasm://tless/";
+    // std::string imagePath(argv[1], strlen(argv[1]));
+    std::string labelsPath = dataDir + "labels.txt";
+    std::string modelPath = "faasm://tless/mobilenet_v1.tflite";
+    std::string imagePath = dataDir + "grace_hopper.bmp";
 
+    // Inference parameters
     int loopCount = 1;
     int warmupLoops = 0;
     int nResults = 5;
 
-    std::string imagePath = dataDir + "grace_hopper.bmp";
-    std::string labelsPath = dataDir + "labels.txt";
-
-    std::string modelPath = "faasm://tless/mobilenet_v1.tflite";
-
+    // Load the model from the filesystem
     std::unique_ptr<tflite::FlatBufferModel> model;
     std::unique_ptr<tflite::Interpreter> interpreter;
-
-    // const size_t modelSize = 16900760;
-
-    // Load the model from the filesystem
     std::ifstream stream(modelPath);
     std::vector<char> modelBytes(
          (std::istreambuf_iterator<char>(stream)),
@@ -228,6 +229,11 @@ int main(int argc, char* argv[])
     }
 
     faasm::setStringOutput(outputStr.c_str());
+
+    // Lastly, chain to the post-processing function
+    unsigned int callId = faasmChainNamed("post_tf",
+                                          reinterpret_cast<const uint8_t*>(outputStr.c_str()),
+                                          outputStr.size());
 
     return 0;
 }
