@@ -17,10 +17,14 @@ bool doChainedCall(const std::string& name, std::string& cmdLine)
 
 int main(int argc, char* argv[])
 {
-    int imgId = 1;
+    int numInferenceRounds = 10;
 
     if (argc == 2) {
-        imgId = atoi(argv[1]);
+        numInferenceRounds = atoi(argv[1]);
+    } else {
+        printf("Error: need to provide the scale of the problem\n");
+        printf("usage: pre <scale>\n");
+        return 1;
     }
 
     printf("\n---------------------------------------------------------------\n");
@@ -29,8 +33,7 @@ int main(int argc, char* argv[])
 
     char cmdBuf[512];
     size_t bufSize = 512;
-    // Bump this parameter to make the pipeline last longer
-    int numInferenceRounds = 50;
+    int imgId = 1;
 
     // Prepare ImageMagick command
     std::string imageMagickFunc("imagemagick");
