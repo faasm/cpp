@@ -71,9 +71,9 @@ namespace tflite {
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2) {
+    if (argc != 3) {
         printf("Error: did not receive enough arguments\n");
-        printf(" - usage: <inference> <img_path>\n");
+        printf(" - usage: inference <img_path> <num_inference_rounds>\n");
     }
     std::string dataDir = "faasm://tless/";
     // std::string imagePath(argv[1], strlen(argv[1]));
@@ -82,8 +82,8 @@ int main(int argc, char* argv[])
     std::string imagePath = dataDir + "grace_hopper.bmp";
 
     // Inference parameters
-    int loopCount = 1;
-    int warmupLoops = 0;
+    int loopCount = atoi(argv[2]);
+    int warmupLoops = 10;
     int nResults = 5;
 
     // Load the model from the filesystem
@@ -165,9 +165,9 @@ int main(int argc, char* argv[])
         }
     }
 
-    printf("Invoking interpreter in a loop\n");
+    printf("Invoking interpreter in a loop with %i iterations\n", loopCount);
     for (int i = 0; i < loopCount; i++) {
-        printf("Interpreter invoke %i\n", i);
+        printf("Interpreter invoke %i/%i\n", i+1, loopCount);
 
         if (interpreter->Invoke() != kTfLiteOk) {
             printf("Failed to invoke tflite!\n");
@@ -224,9 +224,9 @@ int main(int argc, char* argv[])
     for (const auto &result : top_results) {
         const float confidence = result.first;
         const int index = result.second;
-        printf("%f: %i %s\n", confidence, index, labels[index].c_str());
         outputStr += std::to_string(confidence) + ": " + std::to_string(index) + " " + labels[index] + "\n";
     }
+    printf("Inference finished succesfully\n");
 
     faasm::setStringOutput(outputStr.c_str());
 

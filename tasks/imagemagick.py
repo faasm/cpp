@@ -92,3 +92,8 @@ def imagemagick(ctx, clean=False):
     wasm_copy_upload(
         "imagemagick", "main", join(imagemagick_dir, "utilities", "magick")
     )
+
+    # Also copy it to `tless/main` for TLess' image pipeline
+    wasm_copy_upload(
+        "tless", "imagemagick", join(imagemagick_dir, "utilities", "magick")
+    )

@@ -29,6 +29,8 @@ int main(int argc, char* argv[])
 
     char cmdBuf[512];
     size_t bufSize = 512;
+    // Bump this parameter to make the pipeline last longer
+    int numInferenceRounds = 50;
 
     // Prepare ImageMagick command
     std::string imageMagickFunc("imagemagick");
@@ -51,7 +53,7 @@ int main(int argc, char* argv[])
     // the convert command beforehand, something is failing)
     memset(cmdBuf, '\0', bufSize);
     std::string inferenceFunc("inference");
-    sprintf(cmdBuf, "faasm://tless/sample_image_%i.bmp", imgId);
+    sprintf(cmdBuf, "faasm://tless/sample_image_%i.bmp %i", imgId, numInferenceRounds);
     std::string tfCmd = std::string(cmdBuf, strlen(cmdBuf));
 
     // Run commands
