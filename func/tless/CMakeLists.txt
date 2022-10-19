@@ -11,3 +11,10 @@ add_subdirectory(inference)
 
 # Func 4: post-process inference results
 faasm_func(post_tf post_tf.cpp)
+
+# --------------------
+# Micro-Benchmark Functions
+# --------------------
+
+# Memory-intensive video transcoding using FFmpeg
+add_subdirectory(transcode)
