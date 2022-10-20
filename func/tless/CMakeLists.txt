@@ -18,3 +18,7 @@ faasm_func(post_tf post_tf.cpp)
 
 # Memory-intensive video transcoding using FFmpeg
 add_subdirectory(transcode)
+
+# No-Op function (w/ and w/out chaining)
+faasm_func(no-op noop.cpp)
+faasm_func(no-op-chain noop_chain.cpp)

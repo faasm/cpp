@@ -16,6 +16,9 @@ set(FFMPEG_LIBS
 )
 
 faasm_func(transcode transcode.cpp)
-
 target_include_directories(transcode PUBLIC ${FFMPEG_INCLUDE_DIRS})
 target_link_libraries(transcode ${FFMPEG_LIBS})
+
+faasm_func(transcode-chain transcode_chain.cpp)
+target_include_directories(transcode-chain PUBLIC ${FFMPEG_INCLUDE_DIRS})
+target_link_libraries(transcode-chain ${FFMPEG_LIBS})
