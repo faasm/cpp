@@ -36,6 +36,8 @@ def _get_all_user_funcs(user):
 
 def _copy_built_function(user, func):
     src_file = join(FUNC_BUILD_DIR, user, ".".join([func, "wasm"]))
+    if user == "tless" and (func == "inference" or func == "transcode"):
+        src_file = join(FUNC_BUILD_DIR, user, func, ".".join([func, "wasm"]))
     wasm_copy_upload(user, func, src_file)
 
 
@@ -181,3 +183,4 @@ def local(ctx, clean=False, debug=False):
     user(ctx, "ffmpeg", clean, debug)
     user(ctx, "mpi", clean, debug)
     user(ctx, "omp", clean, debug)
+    user(ctx, "tf", clean, debug)
