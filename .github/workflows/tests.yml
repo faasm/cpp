@@ -20,6 +20,8 @@ jobs:
         with:
           submodules: true
       # --- Build libraries to wasm ---
+      - name: "Test"
+        run: git ls-files -- "*.py"
       - name: "Build libc"
         run: ./bin/inv_wrapper.sh libc
       - name: "Build libfaasm"
