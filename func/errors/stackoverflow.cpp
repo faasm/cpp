@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
         stackA[i] = i;
     }
 
-    printf("Stack top: %i\n", &stackA[0]);
+    printf("Stack top: %p\n", &stackA[0]);
 
     // Shouldn't reach this point
     return 0;

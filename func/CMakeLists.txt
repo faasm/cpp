@@ -1,35 +1,18 @@
 cmake_minimum_required(VERSION 3.8.0)
 project(faasm-func)
 
+# -----------------------------------------
+# Most of the variables used transitively used here like compiler or linker
+# flags are set in the sysroot file (WasiToolchain.cmake) and are defined in
+# the build environment file (faasmtools/build.py)
+# -----------------------------------------
+
 set(CMAKE_CXX_STANDARD 17)
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-set(FAASM_NATIVE_INSTALL "/usr/local/faasm/native")
+set(FAASM_NATIVE_INSTALL $ENV{FAASM_NATIVE_INSTALL_DIR})
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
-    message(STATUS "Detected wasm build (sysroot=${CMAKE_SYSROOT})")
-
-    # NOTE: we have to set the max memory here but want it to be as close to the
-    # max (4GB) as possible. If we set it to the max though, this input is
-    # ignored and the function is set with no maximum memory size.  Therefore we
-    # set it to 4GB - 1 page, i.e.  max-memory = (4*1024*1024*1024) - (64*1024)
-    # = 4294901760.
-    #
-    # WARNING: the code may also set limits on the max memory size, so must be
-    # changed there too (IRModuleCache.h)
-    #
-    # This max memory limit can stop benchmarks working so make sure it's big
-    # and consider restricting in a more specific manner for certain functions.
-    SET(CMAKE_EXE_LINKER_FLAGS "${FAASM_EXE_LINKER_FLAGS} \
-        -Xlinker --export=_faasm_zygote \
-        -Xlinker --export=__heap_base \
-        -Xlinker --export=__data_end \
-        -Xlinker --export=__wasm_call_ctors \
-        -Xlinker --max-memory=4294901760 \
-        -Wl,-z,stack-size=4194304 -Wl, \
-    ")
-
+    message(STATUS "Detected wasm build (sysroot=$ENV{FAASM_WASM_SYSROOT})")
     SET(CMAKE_EXECUTABLE_SUFFIX ".wasm")
 endif ()
 
@@ -54,16 +37,15 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     function(faasm_dynamic_func func_name file_name)
         faasm_func(${func_name} ${file_name})
 
-        # These are the linker flags required for functions that will also do
-        # dynamic linking.
-        # We need to export all symbols to make them available to the
-        # dynamically loaded modules
+        # These are the compiler and linker flags required for functions that
+        # will also do dynamic linking.  We need to export all symbols to make
+        # them available to the dynamically loaded modules
         set_target_properties(${func_name} PROPERTIES
-                LINK_FLAGS "-Xlinker --export-all -Xlinker --no-gc-sections"
-                )
+            COMPILE_FLAGS $ENV{FAASM_WASM_CFLAGS_SHARED}
+            LINK_FLAGS $ENV{FAASM_WASM_SHARED_LINKER_FLAGS}
+        )
 
     endfunction(faasm_dynamic_func)
-
 else ()
     # ----------------------
     # Native build
@@ -86,7 +68,6 @@ else ()
         faasm_func(${func_name} ${file_name})
         target_link_libraries(${func_name} util)
     endfunction(faasm_dynamic_func)
-
 endif ()
 
 add_subdirectory(errors)

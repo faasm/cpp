@@ -16,7 +16,7 @@ int32_t *Xcg1, *Xcg2;
 
 double randFloatSimple(int tn)
 {
-    return (float)rand() / RAND_MAX;
+    return (float)rand() / (float) RAND_MAX;
 }
 
 double randFloatComplex(int tn)
