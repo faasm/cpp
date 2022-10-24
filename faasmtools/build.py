@@ -149,13 +149,26 @@ CMAKE_ENV_DICT = {
     "FAASM_WASM_HOST_SHARED": WASM_HOST_SHARED,
     "FAASM_WASM_HOST_STATIC": WASM_HOST_STATIC,
     "FAASM_WASM_INSTALL_DIR": WASM_TOOLCHAIN_BIN,
-    "FAASM_WASM_SYSROOT": WASM_TOOLCHAIN_ROOT,
+    "FAASM_WASM_SYSROOT": WASM_SYSROOT,
     "FAASM_WASM_CFLAGS": " ".join(WASM_CFLAGS),
     "FAASM_WASM_CFLAGS_SHARED": " ".join(WASM_CFLAGS_SHARED),
     "FAASM_WASM_EXE_LINKER_FLAGS": " ".join(WASM_EXE_LDFLAGS),
     "FAASM_WASM_SHARED_LINKER_FLAGS": " ".join(WASM_LDFLAGS_SHARED),
     "FAASM_WASM_STATIC_LINKER_FLAGS": " ".join(WASM_LDFLAGS),
 }
+
+
+def get_serialised_cmake_env_vars():
+    """
+    Get the CMake env. variables as a string to prepend to a command
+    """
+    return " ".join(
+        [
+            '{}="{}"'.format(env_var, CMAKE_ENV_DICT[env_var])
+            for env_var in CMAKE_ENV_DICT
+        ]
+    )
+
 
 # Variables for 'configure' scripts
 _BASE_CONFIG_CMD = [

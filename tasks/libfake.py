@@ -1,13 +1,14 @@
-from os import makedirs
-from os.path import exists
-from os.path import join
-from subprocess import run
-from shutil import rmtree
-
-from invoke import task
-
-from faasmtools.build import CMAKE_TOOLCHAIN_FILE, WASM_SYSROOT
+from faasmtools.build import (
+    CMAKE_TOOLCHAIN_FILE,
+    WASM_SYSROOT,
+    get_serialised_cmake_env_vars,
+)
 from faasmtools.env import PROJ_ROOT, FAASM_RUNTIME_ROOT
+from invoke import task
+from os import makedirs
+from os.path import exists, join
+from shutil import rmtree
+from subprocess import run
 
 
 @task(default=True)
@@ -24,10 +25,10 @@ def fake(ctx, clean=False):
     makedirs(build_dir, exist_ok=True)
 
     build_cmd = [
+        get_serialised_cmake_env_vars(),
         "cmake",
         "-GNinja",
         "-DFAASM_BUILD_SHARED=ON",
-        "-DFAASM_BUILD_TYPE=wasm",
         "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
         "-DCMAKE_BUILD_TYPE=Release",
         "-DCMAKE_INSTALL_PREFIX={}".format(WASM_SYSROOT),
