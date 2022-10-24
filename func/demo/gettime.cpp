@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 
     // Work out clock diff
     if (CLOCKS_PER_SEC != 1000000) {
-        printf("CLOCKS_PER_SEC not as expected (%lli)", CLOCKS_PER_SEC);
+        printf("CLOCKS_PER_SEC not as expected (%li)", CLOCKS_PER_SEC);
     }
     double clockDiff = (double)(clockEnd - clockStart) / CLOCKS_PER_SEC;
 

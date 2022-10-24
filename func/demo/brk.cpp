@@ -10,13 +10,13 @@ int main(int argc, char* argv[])
     void* brkInitial = sbrk(0);
 
 #ifdef __wasm__
-    printf("Initial = %i\n", (int) brkInitial);
+    printf("Initial = %i\n", brkInitial);
 #endif
 
     void* newRegion = sbrk(pageSize);
 
 #ifdef __wasm__
-    printf("New = %i\n", (int) newRegion);
+    printf("New = %i\n", newRegion);
 #endif
 
     if (brkInitial != newRegion) {
@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 
     void* newRegionB = sbrk(pageSize);
 #ifdef __wasm__
-    printf("New = %i\n", (int) newRegionB);
+    printf("New = %i\n", newRegionB);
 #endif
 
     int diff = ((int*)newRegionB - (int*)newRegion) * sizeof(int);
