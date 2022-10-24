@@ -8,6 +8,13 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
+  # Cancel previous running actions for the same PR
+  cancel_previous:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Workflow Action
+        uses: styfle/cancel-workflow-action@0.11.0
+
   checks:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
