@@ -1,6 +1,6 @@
 from subprocess import run
 
-from faasmtools.build import CMAKE_TOOLCHAIN_FILE
+from faasmtools.build import CMAKE_ENV_DICT, CMAKE_TOOLCHAIN_FILE
 from faasmtools.env import WASM_DIR
 
 from os import makedirs
@@ -9,7 +9,6 @@ from shutil import copy, rmtree
 
 
 def wasm_cmake(src_dir, build_dir, target, clean=False, debug=False):
-    build_type = "wasm"
     cmake_build_type = "Debug" if debug else "Release"
 
     if exists(build_dir) and clean:
@@ -18,14 +17,18 @@ def wasm_cmake(src_dir, build_dir, target, clean=False, debug=False):
     makedirs(build_dir, exist_ok=True)
 
     build_cmd = [
+        " ".join(
+            [
+                '{}="{}"'.format(env_var, CMAKE_ENV_DICT[env_var])
+                for env_var in CMAKE_ENV_DICT
+            ]
+        ),
         "cmake",
         "-GNinja",
-        "-DFAASM_BUILD_TYPE={}".format(build_type),
         "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
         "-DCMAKE_BUILD_TYPE={}".format(cmake_build_type),
         src_dir,
     ]
-
     build_cmd = " ".join(build_cmd)
     print(build_cmd)
 
