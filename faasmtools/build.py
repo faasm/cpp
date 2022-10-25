@@ -117,7 +117,9 @@ WASM_EXE_LDFLAGS = [
     "-Wl,--initial-memory={}".format(FAASM_WASM_INITIAL_MEMORY_SIZE),
 ]
 
-# Flags for executables that will do dynamic linking
+# These are the compiler and linker flags required for functions that will also
+# do dynamic linking.  We need to export all symbols to make them available to
+# the dynamically loaded modules
 WASM_EXE_LDFLAGS_SHARED = [
     "-Xlinker --export-all",
     "-Xlinker --no-gc-sections",

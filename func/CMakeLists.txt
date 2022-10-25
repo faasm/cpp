@@ -37,9 +37,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     function(faasm_dynamic_func func_name file_name)
         faasm_func(${func_name} ${file_name})
 
-        # These are the compiler and linker flags required for functions that
-        # will also do dynamic linking.  We need to export all symbols to make
-        # them available to the dynamically loaded modules
         set_target_properties(${func_name} PROPERTIES
             LINK_FLAGS $ENV{FAASM_WASM_EXE_LINKER_FLAGS_SHARED}
         )
