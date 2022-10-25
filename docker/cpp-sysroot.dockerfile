@@ -60,6 +60,7 @@ RUN cd /code/cpp \
         zlib \
         libpng \
         imagemagick \
+        tensorflow \
     # Build Faasm WASM libraries
     && inv \
         libemscripten \
