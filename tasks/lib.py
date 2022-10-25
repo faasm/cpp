@@ -2,7 +2,7 @@ from faasmtools.build import (
     CMAKE_TOOLCHAIN_FILE,
     WASM_SYSROOT,
     FAASM_NATIVE_DIR,
-    get_serialised_cmake_env_vars,
+    get_serialised_faasm_env_vars,
 )
 from faasmtools.env import PROJ_ROOT
 from os.path import join, exists
@@ -43,7 +43,7 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
         ]
 
     build_cmd = [
-        "{}".format(get_serialised_cmake_env_vars() if not native else ""),
+        "{}".format(get_serialised_faasm_env_vars() if not native else ""),
         "cmake",
         "-GNinja",
         "-DCMAKE_BUILD_TYPE=Release",

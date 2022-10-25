@@ -132,13 +132,21 @@ WASM_CXXSHARED = " ".join([WASM_CXX] + WASM_CFLAGS_SHARED)
 WASM_LDSHARED = " ".join([WASM_CC] + WASM_LDFLAGS_SHARED)
 WASM_LDXXSHARED = " ".join([WASM_CXX] + WASM_LDFLAGS_SHARED)
 
+# Lib order very important here
+# TODO: remove this when BLAS support is moved to a task
+WASM_BLAS_LIBS = [
+    "lapack",
+    "blas",
+    "f2c",
+]
+
 # ----------
 # Variables for different build systems
 # ----------
 
-# CMake variables as a dictionary: prefix with FAASM_WASM or FAASM_NATIVE
+# Env. variables as a dictionary: prefix with FAASM_WASM or FAASM_NATIVE
 # depending on the build type variables target
-CMAKE_ENV_DICT = {
+FAASM_ENV_DICT = {
     "CMAKE_ROOT": FAASM_CMAKE_ROOT,
     "FAASM_NATIVE_INSTALL_DIR": FAASM_NATIVE_DIR,
     "FAASM_WASM_CC": WASM_CC,
@@ -148,6 +156,7 @@ CMAKE_ENV_DICT = {
     "FAASM_WASM_RANLIB": WASM_RANLIB,
     "FAASM_WASM_HOST_SHARED": WASM_HOST_SHARED,
     "FAASM_WASM_HOST_STATIC": WASM_HOST_STATIC,
+    "FAASM_WASM_HOST_UNKNOWN": WASM_HOST_UNKNOWN,
     "FAASM_WASM_INSTALL_DIR": WASM_TOOLCHAIN_BIN,
     "FAASM_WASM_SYSROOT": WASM_SYSROOT,
     "FAASM_WASM_CFLAGS": " ".join(WASM_CFLAGS),
@@ -155,17 +164,18 @@ CMAKE_ENV_DICT = {
     "FAASM_WASM_EXE_LINKER_FLAGS": " ".join(WASM_EXE_LDFLAGS),
     "FAASM_WASM_SHARED_LINKER_FLAGS": " ".join(WASM_LDFLAGS_SHARED),
     "FAASM_WASM_STATIC_LINKER_FLAGS": " ".join(WASM_LDFLAGS),
+    "FAASM_WASM_BLAS_LIBS": " ".join(WASM_BLAS_LIBS),
 }
 
 
-def get_serialised_cmake_env_vars():
+def get_serialised_faasm_env_vars():
     """
     Get the CMake env. variables as a string to prepend to a command
     """
     return " ".join(
         [
-            '{}="{}"'.format(env_var, CMAKE_ENV_DICT[env_var])
-            for env_var in CMAKE_ENV_DICT
+            '{}="{}"'.format(env_var, FAASM_ENV_DICT[env_var])
+            for env_var in FAASM_ENV_DICT
         ]
     )
 

@@ -1,7 +1,7 @@
 from faasmtools.build import (
     CMAKE_TOOLCHAIN_FILE,
     WASM_SYSROOT,
-    get_serialised_cmake_env_vars,
+    get_serialised_faasm_env_vars,
 )
 from faasmtools.env import PROJ_ROOT, FAASM_RUNTIME_ROOT
 from invoke import task
@@ -25,7 +25,7 @@ def fake(ctx, clean=False):
     makedirs(build_dir, exist_ok=True)
 
     build_cmd = [
-        get_serialised_cmake_env_vars(),
+        get_serialised_faasm_env_vars(),
         "cmake",
         "-GNinja",
         "-DFAASM_BUILD_SHARED=ON",

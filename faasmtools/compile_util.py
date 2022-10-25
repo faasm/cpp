@@ -2,7 +2,7 @@ from subprocess import run
 
 from faasmtools.build import (
     CMAKE_TOOLCHAIN_FILE,
-    get_serialised_cmake_env_vars,
+    get_serialised_faasm_env_vars,
 )
 from faasmtools.env import WASM_DIR
 
@@ -20,7 +20,7 @@ def wasm_cmake(src_dir, build_dir, target, clean=False, debug=False):
     makedirs(build_dir, exist_ok=True)
 
     build_cmd = [
-        get_serialised_cmake_env_vars(),
+        get_serialised_faasm_env_vars(),
         "cmake",
         "-GNinja",
         "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
