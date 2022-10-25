@@ -19,7 +19,7 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     container:
-      image: faasm/cpp-sysroot:0.1.8
+      image: faasm/cpp-sysroot:0.1.9
     steps:
       # --- Update code ---
       - name: "Checkout code"
@@ -52,6 +52,8 @@ jobs:
         run: ./bin/inv_wrapper.sh libpng
       - name: "Build ImageMagick"
         run: ./bin/inv_wrapper.sh imagemagick
+      - name: "Build Tensorflow lite"
+        run: ./bin/inv_wrapper.sh tensorflow
       # --- Build functions to wasm ---
       - name: "Build the functions"
         run: ./bin/inv_wrapper.sh func.local --clean

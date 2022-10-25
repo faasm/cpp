@@ -7,6 +7,7 @@ from os import environ
 FAASM_LOCAL_DIR = environ.get("FAASM_LOCAL_DIR", "/usr/local/faasm")
 FAASM_NATIVE_DIR = join(FAASM_LOCAL_DIR, "native")
 WASM_SYSROOT = join(FAASM_LOCAL_DIR, "llvm-sysroot")
+WASM_HEADER_INSTALL = "{}/include".format(WASM_SYSROOT)
 WASM_LIB_INSTALL = "{}/lib/wasm32-wasi".format(WASM_SYSROOT)
 WASM_TOOLCHAIN_ROOT = "/usr/local/faasm/toolchain"
 WASM_TOOLCHAIN_TOOLS = join(WASM_TOOLCHAIN_ROOT, "tools")
