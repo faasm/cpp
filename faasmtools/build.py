@@ -108,12 +108,19 @@ WASM_LDFLAGS = [
 # Flags for executables
 WASM_EXE_LDFLAGS = [
     "-Xlinker --stack-first",
+    "-Xlinker --export=_faasm_zygote",
     "-Xlinker --export=__heap_base",
     "-Xlinker --export=__data_end",
     "-Xlinker --export=__wasm_call_ctors",
     "-Xlinker --max-memory={}".format(FAASM_WASM_MAX_MEMORY),
     "-Wl,-z,stack-size={} -Wl".format(FAASM_WASM_STACK_SIZE),
     "-Wl,--initial-memory={}".format(FAASM_WASM_INITIAL_MEMORY_SIZE),
+]
+
+# Flags for executables that will do dynamic linking
+WASM_EXE_LDFLAGS_SHARED = [
+    "-Xlinker --export-all",
+    "-Xlinker --no-gc-sections",
 ]
 
 # Flags for shared libraries
@@ -162,6 +169,7 @@ FAASM_ENV_DICT = {
     "FAASM_WASM_CFLAGS": " ".join(WASM_CFLAGS),
     "FAASM_WASM_CFLAGS_SHARED": " ".join(WASM_CFLAGS_SHARED),
     "FAASM_WASM_EXE_LINKER_FLAGS": " ".join(WASM_EXE_LDFLAGS),
+    "FAASM_WASM_EXE_LINKER_FLAGS_SHARED": " ".join(WASM_EXE_LDFLAGS_SHARED),
     "FAASM_WASM_SHARED_LINKER_FLAGS": " ".join(WASM_LDFLAGS_SHARED),
     "FAASM_WASM_STATIC_LINKER_FLAGS": " ".join(WASM_LDFLAGS),
     "FAASM_WASM_BLAS_LIBS": " ".join(WASM_BLAS_LIBS),
