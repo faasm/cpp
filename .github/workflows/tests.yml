@@ -8,34 +8,27 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
+  # Cancel previous running actions for the same PR
+  cancel_previous:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Workflow Action
+        uses: styfle/cancel-workflow-action@0.11.0
+
   checks:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     container:
       image: faasm/cpp-sysroot:0.1.8
-    defaults:
-      run:
-        working-directory: /code/cpp
     steps:
       # --- Update code ---
-      - name: "Fetch ref"
-        run: git fetch origin ${GITHUB_REF}:ci-branch
-      - name: "Check out branch"
-        run: git checkout --force ci-branch
-      - name: "Update Faabric submodule"
-        run: git submodule update --init -f third-party/faabric
-      - name: "Update FFI submodule"
-        run: git submodule update --init -f third-party/libffi
-      - name: "Update FFmpeg submodule"
-        run: git submodule update --init -f third-party/FFmpeg
-      - name: "Update ImageMagick submodule"
-        run: git submodule update --init -f third-party/ImageMagick
-      - name: "Update libpng submodule"
-        run: git submodule update --init -f third-party/libpng
-      - name: "Update zlib submodule"
-        run: git submodule update --init -f third-party/zlib
-      - name: "Update wasi-libc submodule"
-        run: git submodule update --init -f third-party/wasi-libc
+      - name: "Checkout code"
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      # See actions/checkout#766
+      - name: "Set the GH workspace as a safe git directory"
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       # --- Build libraries to wasm ---
       - name: "Build libc"
         run: ./bin/inv_wrapper.sh libc
@@ -70,10 +63,5 @@ jobs:
       - name: "Build libfaasmpi native"
         run: ./bin/inv_wrapper.sh libfaasmpi --native --clean
       # --- Formatting ---
-      - name: "Check python"
-        run: source venv/bin/activate && ./bin/check_python.sh
-        shell: bash
-      - name: "Run C/C++ formatting"
-        run: ./bin/run_clang_format.sh
-      - name: "Check no formatting changes"
-        run: git diff --exit-code -- :^third-party
+      - name: "Format code"
+        run: ./bin/inv_wrapper.sh format-code --check
