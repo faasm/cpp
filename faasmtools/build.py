@@ -108,7 +108,6 @@ WASM_LDFLAGS = [
 # Flags for executables
 WASM_EXE_LDFLAGS = [
     "-Xlinker --stack-first",
-    "-Xlinker --export=_faasm_zygote",
     "-Xlinker --export=__heap_base",
     "-Xlinker --export=__data_end",
     "-Xlinker --export=__wasm_call_ctors",
