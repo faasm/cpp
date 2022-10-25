@@ -1,16 +1,13 @@
-from os.path import join, exists
-from subprocess import run
-
 from faasmtools.build import (
     build_config_cmd,
     run_autotools,
     WASM_SYSROOT,
     WASM_LIB_INSTALL,
 )
-
-from invoke import task
-
 from faasmtools.env import THIRD_PARTY_DIR, USABLE_CPUS, PROJ_ROOT
+from invoke import task
+from os.path import join, exists
+from subprocess import run
 
 LIBFFI_DIR = join(THIRD_PARTY_DIR, "libffi")
 LIBFFI_LIBS_DIR = join(LIBFFI_DIR, "wasm32-unknown-wasi")
