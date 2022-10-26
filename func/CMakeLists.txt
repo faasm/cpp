@@ -12,8 +12,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(FAASM_NATIVE_INSTALL $ENV{FAASM_NATIVE_INSTALL_DIR})
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+    # For Faasm functions, we add `_faasm_zygote` as an exported symbol
+    set(CMAKE_EXE_LINKER_FLAGS
+        "${CMAKE_EXE_LINKER_FLAGS} -Xlinker --export=_faasm_zygote"
+    )
     message(STATUS "Detected wasm build (sysroot=$ENV{FAASM_WASM_SYSROOT})")
-    SET(CMAKE_EXECUTABLE_SUFFIX ".wasm")
+    set(CMAKE_EXECUTABLE_SUFFIX ".wasm")
 endif ()
 
 
