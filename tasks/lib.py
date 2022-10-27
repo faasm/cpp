@@ -1,12 +1,12 @@
 from faasmtools.build import (
     CMAKE_TOOLCHAIN_FILE,
-    WASM_SYSROOT,
+    FAASM_BUILD_ENV_DICT,
     FAASM_NATIVE_DIR,
-    get_serialised_faasm_env_vars,
+    WASM_SYSROOT,
 )
 from faasmtools.env import PROJ_ROOT
-from os.path import join, exists
-from os import makedirs
+from os.path import exists, join
+from os import environ, makedirs
 from shutil import rmtree
 from subprocess import run
 
@@ -43,9 +43,6 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
         ]
 
     build_cmd = [
-        "{}".format(
-            get_serialised_faasm_env_vars("build") if not native else ""
-        ),
         "cmake",
         "-GNinja",
         "-DCMAKE_BUILD_TYPE=Release",
@@ -59,7 +56,10 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
     build_cmd_str = " ".join(build_cmd)
     print(build_cmd_str)
 
-    run(build_cmd_str, shell=True, cwd=build_dir, check=True)
+    work_env = environ.copy()
+    if not native:
+        work_env.update(FAASM_BUILD_ENV_DICT)
+    run(build_cmd_str, shell=True, cwd=build_dir, check=True, env=work_env)
 
     run("ninja", shell=True, cwd=build_dir, check=True)
     run("ninja install", shell=True, cwd=build_dir, check=True)

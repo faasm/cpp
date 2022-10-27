@@ -1,11 +1,11 @@
 from faasmtools.build import (
     CMAKE_TOOLCHAIN_FILE,
+    FAASM_BUILD_ENV_DICT,
     WASM_SYSROOT,
-    get_serialised_faasm_env_vars,
 )
 from faasmtools.env import PROJ_ROOT, FAASM_RUNTIME_ROOT
 from invoke import task
-from os import makedirs
+from os import environ, makedirs
 from os.path import exists, join
 from shutil import rmtree
 from subprocess import run
@@ -25,7 +25,6 @@ def fake(ctx, clean=False):
     makedirs(build_dir, exist_ok=True)
 
     build_cmd = [
-        get_serialised_faasm_env_vars("build"),
         "cmake",
         "-GNinja",
         "-DFAASM_BUILD_SHARED=ON",
@@ -35,7 +34,15 @@ def fake(ctx, clean=False):
         work_dir,
     ]
 
-    run(" ".join(build_cmd), shell=True, cwd=build_dir, check=True)
+    work_env = environ.copy()
+    work_env.update(FAASM_BUILD_ENV_DICT)
+    run(
+        " ".join(build_cmd),
+        shell=True,
+        cwd=build_dir,
+        check=True,
+        env=work_env,
+    )
     run("ninja", shell=True, cwd=build_dir, check=True)
     run("ninja install", shell=True, cwd=build_dir, check=True)
 

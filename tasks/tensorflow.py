@@ -1,8 +1,3 @@
-from os import cpu_count
-from os.path import exists, isfile, join
-from shutil import copytree, rmtree
-from subprocess import check_output, run
-from invoke import task
 from faasmtools.env import (
     THIRD_PARTY_DIR,
 )
@@ -15,6 +10,11 @@ from faasmtools.build import (
     WASM_HEADER_INSTALL,
     WASM_LIB_INSTALL,
 )
+from invoke import task
+from os import cpu_count
+from os.path import exists, isfile, join
+from subprocess import check_output, run
+from shutil import copytree, rmtree
 
 
 @task(default=True)

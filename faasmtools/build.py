@@ -188,23 +188,9 @@ FAASM_RUNTIME_ENV_DICT = {
     "FAASM_WASM_ZYGOTE_FUNC_NAME": FAASM_WASM_ZYGOTE_FUNC_NAME,
 }
 
-
-def get_serialised_faasm_env_vars(env_type):
-    """
-    Get the CMake env. variables as a string to prepend to a command
-    """
-    if env_type == "runtime":
-        env_dict = FAASM_RUNTIME_ENV_DICT
-    elif env_type == "build":
-        env_dict = FAASM_BUILD_ENV_DICT
-    else:
-        raise RuntimeError(
-            "Unrecognised env. type to serialise: {}".format(env_type)
-        )
-    return " ".join(
-        ['{}="{}"'.format(env_var, env_dict[env_var]) for env_var in env_dict]
-    )
-
+# ----------
+# Scripts for configure, automake, and autotools
+# ----------
 
 # Variables for 'configure' scripts
 _BASE_CONFIG_CMD = [

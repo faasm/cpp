@@ -1,9 +1,9 @@
 from copy import copy
 from faasmtools.env import THIRD_PARTY_DIR, USABLE_CPUS
 from faasmtools.build import (
+    FAASM_BUILD_ENV_DICT,
     WASM_SYSROOT,
     WASM_LIB_INSTALL,
-    get_serialised_faasm_env_vars,
 )
 from invoke import task
 from os import environ, remove
@@ -37,12 +37,11 @@ def build(ctx, clean=False, shared=False):
     # Set up environment to specify whether we're building static or shared
     env = copy(environ)
     env.update({"LIBEXT": ".so" if shared else ".a"})
+    env.update(FAASM_BUILD_ENV_DICT)
 
     # Make libf2c first (needed by others)
     run(
-        "{} make f2clib -j {}".format(
-            get_serialised_faasm_env_vars("build"), USABLE_CPUS
-        ),
+        "make f2clib -j {}".format(USABLE_CPUS),
         shell=True,
         cwd=CLAPACK_DIR,
         check=True,
@@ -51,19 +50,18 @@ def build(ctx, clean=False, shared=False):
 
     # Make the rest of CLAPACK
     run(
-        "{} make -j {}".format(
-            get_serialised_faasm_env_vars("build"), USABLE_CPUS
-        ),
+        "make -j {}".format(USABLE_CPUS),
         shell=True,
         cwd=CLAPACK_DIR,
         check=True,
         env=env,
     )
     run(
-        "{} make install".format(get_serialised_faasm_env_vars("build")),
+        "make install",
         shell=True,
         cwd=CLAPACK_DIR,
         check=True,
+        env=env,
     )
 
 
