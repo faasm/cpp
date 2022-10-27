@@ -41,7 +41,7 @@ def build(ctx, clean=False, shared=False):
     # Make libf2c first (needed by others)
     run(
         "{} make f2clib -j {}".format(
-            get_serialised_faasm_env_vars(), USABLE_CPUS
+            get_serialised_faasm_env_vars("build"), USABLE_CPUS
         ),
         shell=True,
         cwd=CLAPACK_DIR,
@@ -51,14 +51,16 @@ def build(ctx, clean=False, shared=False):
 
     # Make the rest of CLAPACK
     run(
-        "{} make -j {}".format(get_serialised_faasm_env_vars(), USABLE_CPUS),
+        "{} make -j {}".format(
+            get_serialised_faasm_env_vars("build"), USABLE_CPUS
+        ),
         shell=True,
         cwd=CLAPACK_DIR,
         check=True,
         env=env,
     )
     run(
-        "{} make install".format(get_serialised_faasm_env_vars()),
+        "{} make install".format(get_serialised_faasm_env_vars("build")),
         shell=True,
         cwd=CLAPACK_DIR,
         check=True,

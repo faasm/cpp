@@ -43,7 +43,9 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
         ]
 
     build_cmd = [
-        "{}".format(get_serialised_faasm_env_vars() if not native else ""),
+        "{}".format(
+            get_serialised_faasm_env_vars("build") if not native else ""
+        ),
         "cmake",
         "-GNinja",
         "-DCMAKE_BUILD_TYPE=Release",

@@ -25,7 +25,7 @@ def fake(ctx, clean=False):
     makedirs(build_dir, exist_ok=True)
 
     build_cmd = [
-        get_serialised_faasm_env_vars(),
+        get_serialised_faasm_env_vars("build"),
         "cmake",
         "-GNinja",
         "-DFAASM_BUILD_SHARED=ON",
