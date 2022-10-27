@@ -94,6 +94,10 @@ WASM_CXXFLAGS_SHARED = WASM_CFLAGS_SHARED
 # LDFLAGS
 # ----------
 
+# Important symbol names
+FAASM_WASM_CTORS_FUNC_NAME = "__wasm_call_ctors"
+FAASM_WASM_ZYGOTE_FUNC_NAME = "_faasm_zygote"
+
 # Flags for static libraries
 # The stack-first here is really important to help detect stack overflow
 # issues. Without it the stack will overflow into the global data.
@@ -110,7 +114,7 @@ WASM_EXE_LDFLAGS = [
     "-Xlinker --stack-first",
     "-Xlinker --export=__heap_base",
     "-Xlinker --export=__data_end",
-    "-Xlinker --export=__wasm_call_ctors",
+    "-Xlinker --export={}".format(FAASM_WASM_CTORS_FUNC_NAME),
     "-Xlinker --max-memory={}".format(FAASM_WASM_MAX_MEMORY),
     "-Wl,-z,stack-size={} -Wl".format(FAASM_WASM_STACK_SIZE),
     "-Wl,--initial-memory={}".format(FAASM_WASM_INITIAL_MEMORY_SIZE),
@@ -149,12 +153,12 @@ WASM_BLAS_LIBS = [
 ]
 
 # ----------
-# Variables for different build systems
+# Env. variables for different environments
 # ----------
 
 # Env. variables as a dictionary: prefix with FAASM_WASM or FAASM_NATIVE
 # depending on the build type variables target
-FAASM_ENV_DICT = {
+FAASM_BUILD_ENV_DICT = {
     "CMAKE_ROOT": FAASM_CMAKE_ROOT,
     "FAASM_NATIVE_INSTALL_DIR": FAASM_NATIVE_DIR,
     "FAASM_WASM_CC": WASM_CC,
@@ -176,16 +180,29 @@ FAASM_ENV_DICT = {
     "FAASM_WASM_BLAS_LIBS": " ".join(WASM_BLAS_LIBS),
 }
 
+FAASM_RUNTIME_ENV_DICT = {
+    "FAASM_WASM_BYTES_PER_PAGE": FAASM_WASM_BYTES_PER_PAGE,
+    "FAASM_WASM_CTORS_FUNC_NAME": FAASM_WASM_CTORS_FUNC_NAME,
+    "FAASM_WASM_MAX_MEMORY": FAASM_WASM_MAX_MEMORY,
+    "FAASM_WASM_STACK_SIZE": FAASM_WASM_STACK_SIZE,
+    "FAASM_WASM_ZYGOTE_FUNC_NAME": FAASM_WASM_ZYGOTE_FUNC_NAME,
+}
 
-def get_serialised_faasm_env_vars():
+
+def get_serialised_faasm_env_vars(env_type):
     """
     Get the CMake env. variables as a string to prepend to a command
     """
+    if env_type == "runtime":
+        env_dict = FAASM_RUNTIME_ENV_DICT
+    elif env_type == "build":
+        env_dict = FAASM_BUILD_ENV_DICT
+    else:
+        raise RuntimeError(
+            "Unrecognised env. type to serialise: {}".format(env_type)
+        )
     return " ".join(
-        [
-            '{}="{}"'.format(env_var, FAASM_ENV_DICT[env_var])
-            for env_var in FAASM_ENV_DICT
-        ]
+        ['{}="{}"'.format(env_var, env_dict[env_var]) for env_var in env_dict]
     )
 
 
