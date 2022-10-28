@@ -27,7 +27,8 @@ RUN mkdir -p /code \
     && git submodule update --init -f third-party/zlib \
     && git submodule update --init -f third-party/libpng \
     && git submodule update --init -f third-party/ImageMagick \
-    && git submodule update --init -f third-party/tensorflow
+    && git submodule update --init -f third-party/tensorflow \
+    && git submodule update --init -f third-party/lammps
 
 # Install the faasmtools Python lib
 RUN cd /code/cpp \
@@ -62,6 +63,7 @@ RUN cd /code/cpp \
         libpng \
         imagemagick \
         tensorflow \
+        lammps \
     # Build Faasm WASM libraries
     && inv \
         libemscripten \

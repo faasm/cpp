@@ -8,6 +8,7 @@ from . import func
 from . import git
 from . import imagemagick
 from . import install
+from . import lammps
 from . import libc
 from . import libemscripten
 from . import libfaasm
@@ -28,6 +29,7 @@ ns = Collection(
     git,
     imagemagick,
     install,
+    lammps,
     libc,
     libemscripten,
     libfaasm,

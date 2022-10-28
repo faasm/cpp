@@ -36,3 +36,6 @@
 	path = third-party/tensorflow
 	url = https://github.com/faasm/tensorflow.git
 	branch = faasm
+[submodule "third-party/lammps"]
+	path = third-party/lammps
+	url = https://github.com/faasm/lammps.git
