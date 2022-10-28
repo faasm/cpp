@@ -190,6 +190,12 @@ FAASM_RUNTIME_ENV_DICT = {
     "FAASM_WASM_ZYGOTE_FUNC_NAME": FAASM_WASM_ZYGOTE_FUNC_NAME,
 }
 
+
+def get_dict_as_cmake_vars(env_dict):
+    return " ".join([
+        "-D{}={}".format(k, env_dict[k]) for k in env_dict
+    ])
+
 # ----------
 # Scripts for configure, automake, and autotools
 # ----------
