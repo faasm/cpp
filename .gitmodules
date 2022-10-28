@@ -39,3 +39,4 @@
 [submodule "third-party/lammps"]
 	path = third-party/lammps
 	url = https://github.com/faasm/lammps.git
+	branch = faasm
