@@ -25,7 +25,7 @@ def build(ctx, clean=False):
         rmtree(build_dir)
 
     if not exists(build_dir):
-        makedirs(build_dir, exist_ok=True)
+        makedirs(build_dir)
 
     cmake_cmd = [
         "cmake",

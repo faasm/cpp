@@ -10,7 +10,6 @@ COPY --from=llvm /usr/local/faasm /usr/local/faasm
 
 # Update APT dependencies
 RUN apt update && apt install -y autotools-dev
-
 # Get the code and submodules
 ARG SYSROOT_VERSION
 RUN mkdir -p /code \
@@ -28,7 +27,8 @@ RUN mkdir -p /code \
     && git submodule update --init -f third-party/libpng \
     && git submodule update --init -f third-party/ImageMagick \
     && git submodule update --init -f third-party/tensorflow \
-    && git submodule update --init -f third-party/lammps
+    && git submodule update --init -f third-party/lammps \
+    && git submodule update --init -f third-party/LULESH
 
 # Install the faasmtools Python lib
 RUN cd /code/cpp \
@@ -64,6 +64,7 @@ RUN cd /code/cpp \
         imagemagick \
         tensorflow \
         lammps \
+        lulesh \
     # Build Faasm WASM libraries
     && inv \
         libemscripten \

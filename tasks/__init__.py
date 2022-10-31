@@ -17,6 +17,7 @@ from . import libfaasmpi
 from . import libfake
 from . import libffi
 from . import libpng
+from . import lulesh
 from . import tensorflow
 from . import zlib
 
@@ -38,6 +39,7 @@ ns = Collection(
     libfake,
     libffi,
     libpng,
+    lulesh,
     tensorflow,
     zlib,
 )
