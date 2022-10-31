@@ -40,3 +40,7 @@
 	path = third-party/lammps
 	url = https://github.com/faasm/lammps.git
 	branch = faasm
+[submodule "third-party/LULESH"]
+	path = third-party/LULESH
+	url = https://github.com/faasm/LULESH.git
+	branch = faasm

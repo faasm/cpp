@@ -11,7 +11,7 @@ from subprocess import run
 @task(default=True)
 def build(ctx, clean=False):
     """
-    Build the LAMMPS dynamic molecule simulator.
+    Build the LAMMPS molecule dynamics simulator.
 
     Note that LAMMPS is a self-contained binary, and different workloads are
     executed by passing different command line arguments. As a consequence,
@@ -21,8 +21,8 @@ def build(ctx, clean=False):
     cmake_dir = join(lammps_dir, "cmake")
     build_dir = join(lammps_dir, "build")
 
-    if clean:
-        rmtree(build_dir, ignore_errors=True)
+    if clean and exists(build_dir):
+        rmtree(build_dir)
 
     if not exists(build_dir):
         makedirs(build_dir, exist_ok=True)
