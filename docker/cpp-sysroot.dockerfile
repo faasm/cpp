@@ -50,8 +50,14 @@ RUN cd /code/cpp \
         libfaasmpi --native --shared \
     # Install toolchain files
     && inv install \
-    # Build ported third-pary WASM libraries (libc first as it is needed in the
-    # others)
+    # Build Faasm WASM libraries
+    && inv \
+        libemscripten \
+        libfaasm \
+        libfaasmp \
+        libfaasmpi \
+    # Lastly, build the ported third-pary WASM libraries and programs (libc
+    # first as it is needed in the others)
     && inv \
         libc \
         clapack \
@@ -64,13 +70,7 @@ RUN cd /code/cpp \
         imagemagick \
         tensorflow \
         lammps \
-        lulesh \
-    # Build Faasm WASM libraries
-    && inv \
-        libemscripten \
-        libfaasm \
-        libfaasmp \
-        libfaasmpi
+        lulesh
 
 # CLI setup
 WORKDIR /code/cpp
