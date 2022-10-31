@@ -1,13 +1,6 @@
-from subprocess import run
-
-from os.path import join
-
-from invoke import task
-
 from faasmtools.env import (
     THIRD_PARTY_DIR,
 )
-
 from faasmtools.build import (
     WASM_SYSROOT,
     WASM_LIB_INSTALL,
@@ -19,6 +12,9 @@ from faasmtools.build import (
     WASM_CFLAGS,
     WASM_LDFLAGS,
 )
+from invoke import task
+from os.path import join
+from subprocess import run
 
 
 @task(default=True)

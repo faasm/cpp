@@ -1,15 +1,15 @@
-from subprocess import run
-
-from faasmtools.build import CMAKE_TOOLCHAIN_FILE
+from faasmtools.build import (
+    CMAKE_TOOLCHAIN_FILE,
+    FAASM_BUILD_ENV_DICT,
+)
 from faasmtools.env import WASM_DIR
-
-from os import makedirs
+from os import environ, makedirs
 from os.path import join, exists
 from shutil import copy, rmtree
+from subprocess import run
 
 
 def wasm_cmake(src_dir, build_dir, target, clean=False, debug=False):
-    build_type = "wasm"
     cmake_build_type = "Debug" if debug else "Release"
 
     if exists(build_dir) and clean:
@@ -20,16 +20,17 @@ def wasm_cmake(src_dir, build_dir, target, clean=False, debug=False):
     build_cmd = [
         "cmake",
         "-GNinja",
-        "-DFAASM_BUILD_TYPE={}".format(build_type),
         "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
         "-DCMAKE_BUILD_TYPE={}".format(cmake_build_type),
         src_dir,
     ]
-
     build_cmd = " ".join(build_cmd)
     print(build_cmd)
 
-    res = run(build_cmd, shell=True, cwd=build_dir)
+    work_env = environ.copy()
+    work_env.update(FAASM_BUILD_ENV_DICT)
+
+    res = run(build_cmd, shell=True, cwd=build_dir, env=work_env)
     if res.returncode != 0:
         raise RuntimeError("Failed on cmake for {}".format(target))
 

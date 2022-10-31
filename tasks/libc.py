@@ -1,16 +1,4 @@
-from subprocess import run
-
-from os.path import join, exists
-from shutil import rmtree
-
 from invoke import task
-
-from faasmtools.env import (
-    USABLE_CPUS,
-    THIRD_PARTY_DIR,
-    PROJ_ROOT,
-)
-
 from faasmtools.build import (
     WASM_CC,
     WASM_AR,
@@ -18,6 +6,14 @@ from faasmtools.build import (
     WASM_NM,
     WASM_SYSROOT,
 )
+from faasmtools.env import (
+    USABLE_CPUS,
+    THIRD_PARTY_DIR,
+    PROJ_ROOT,
+)
+from os.path import join, exists
+from shutil import rmtree
+from subprocess import run
 
 
 @task(default=True)

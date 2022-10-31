@@ -1,13 +1,14 @@
-from os import makedirs
-from os.path import exists
-from os.path import join
-from subprocess import run
-from shutil import rmtree
-
-from invoke import task
-
-from faasmtools.build import CMAKE_TOOLCHAIN_FILE, WASM_SYSROOT
+from faasmtools.build import (
+    CMAKE_TOOLCHAIN_FILE,
+    FAASM_BUILD_ENV_DICT,
+    WASM_SYSROOT,
+)
 from faasmtools.env import PROJ_ROOT, FAASM_RUNTIME_ROOT
+from invoke import task
+from os import environ, makedirs
+from os.path import exists, join
+from shutil import rmtree
+from subprocess import run
 
 
 @task(default=True)
@@ -27,14 +28,21 @@ def fake(ctx, clean=False):
         "cmake",
         "-GNinja",
         "-DFAASM_BUILD_SHARED=ON",
-        "-DFAASM_BUILD_TYPE=wasm",
         "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
         "-DCMAKE_BUILD_TYPE=Release",
         "-DCMAKE_INSTALL_PREFIX={}".format(WASM_SYSROOT),
         work_dir,
     ]
 
-    run(" ".join(build_cmd), shell=True, cwd=build_dir, check=True)
+    work_env = environ.copy()
+    work_env.update(FAASM_BUILD_ENV_DICT)
+    run(
+        " ".join(build_cmd),
+        shell=True,
+        cwd=build_dir,
+        check=True,
+        env=work_env,
+    )
     run("ninja", shell=True, cwd=build_dir, check=True)
     run("ninja install", shell=True, cwd=build_dir, check=True)
 
