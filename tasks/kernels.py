@@ -40,7 +40,11 @@ def build(ctx, clean=False, native=False):
         make_cmd = "make {}".format(make_target)
         make_dir = join(kernels_dir, subdir)
         run(make_cmd, shell=True, check=True, cwd=make_dir, env=work_env)
-        wasm_copy_upload("kernels-mpi", make_target, join(kernels_dir, "wasm", "{}.wasm".format(make_target)))
+        wasm_copy_upload(
+            "kernels-mpi",
+            make_target,
+            join(kernels_dir, "wasm", "{}.wasm".format(make_target)),
+        )
 
     # Clean MPI wasm files
     run("make clean", shell=True, check=True, cwd=kernels_dir)
@@ -58,10 +62,13 @@ def build(ctx, clean=False, native=False):
         # ("OPENMP/Random", "random"),
         # ("OPENMP/Transpose", "transpose"),
         # ("OPENMP/PIC", "pic"),
-
     ]
     for subdir, make_target in omp_kernel_targets:
         make_cmd = "make {}".format(make_target)
         make_dir = join(kernels_dir, subdir)
         run(make_cmd, shell=True, check=True, cwd=make_dir, env=work_env)
-        wasm_copy_upload("kernels-omp", make_target, join(kernels_dir, "wasm", "{}.wasm".format(make_target)))
+        wasm_copy_upload(
+            "kernels-omp",
+            make_target,
+            join(kernels_dir, "wasm", "{}.wasm".format(make_target)),
+        )
