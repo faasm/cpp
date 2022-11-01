@@ -1,4 +1,4 @@
-from faasmtools.build import CMAKE_TOOLCHAIN_FILE, FAASM_BUILD_ENV_DICT
+from faasmtools.build import FAASM_BUILD_ENV_DICT
 from faasmtools.compile_util import wasm_copy_upload
 from faasmtools.env import THIRD_PARTY_DIR
 from invoke import task
@@ -61,7 +61,6 @@ def build(ctx, clean=False, native=False):
         # ("OPENMP/Stencil", "stencil"),
         # ("OPENMP/Random", "random"),
         # ("OPENMP/Transpose", "transpose"),
-        # ("OPENMP/PIC", "pic"),
     ]
     for subdir, make_target in omp_kernel_targets:
         make_cmd = "make {}".format(make_target)
