@@ -8,6 +8,7 @@ from . import func
 from . import git
 from . import imagemagick
 from . import install
+from . import kernels
 from . import lammps
 from . import libc
 from . import libemscripten
@@ -30,6 +31,7 @@ ns = Collection(
     git,
     imagemagick,
     install,
+    kernels,
     lammps,
     libc,
     libemscripten,

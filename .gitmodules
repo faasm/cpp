@@ -44,3 +44,7 @@
 	path = third-party/LULESH
 	url = https://github.com/faasm/LULESH.git
 	branch = faasm
+[submodule "third-party/Kernels"]
+	path = third-party/Kernels
+	url = https://github.com/faasm/Kernels.git
+	branch = faasm

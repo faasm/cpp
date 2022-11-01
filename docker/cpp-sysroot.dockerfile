@@ -28,7 +28,8 @@ RUN mkdir -p /code \
     && git submodule update --init -f third-party/ImageMagick \
     && git submodule update --init -f third-party/tensorflow \
     && git submodule update --init -f third-party/lammps \
-    && git submodule update --init -f third-party/LULESH
+    && git submodule update --init -f third-party/LULESH \
+    && git submodule update --init -f third-party/Kernels
 
 # Install the faasmtools Python lib
 RUN cd /code/cpp \
@@ -70,7 +71,8 @@ RUN cd /code/cpp \
         imagemagick \
         tensorflow \
         lammps \
-        lulesh
+        lulesh \
+        kernels
 
 # CLI setup
 WORKDIR /code/cpp
