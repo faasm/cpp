@@ -13,6 +13,9 @@ RUN apt update \
         gpg \
         ninja-build \
         pkg-config \
+        python3-dev \
+        python3-pip \
+        python3-venv \
         software-properties-common \
         wget
 
