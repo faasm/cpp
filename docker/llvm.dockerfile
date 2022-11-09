@@ -35,6 +35,7 @@ RUN mkdir -p /code \
     && cd /code/cpp \
     && git submodule update --init -f third-party/llvm-project \
     && git submodule update --init -f third-party/wasi-libc \
-    && make \
+    && ./bin/create_venv.sh \
+    && inv llvm.build \
     && /usr/local/faasm/toolchain/bin/clang --version \
     && rm -rf /code

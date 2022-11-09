@@ -13,6 +13,7 @@ from . import libfaasmp
 from . import libfaasmpi
 from . import libfake
 from . import libffi
+from . import llvm
 from . import zlib
 
 ns = Collection(
@@ -29,5 +30,6 @@ ns = Collection(
     libfaasmpi,
     libfake,
     libffi,
+    llvm,
     zlib,
 )
