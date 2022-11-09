@@ -1,6 +1,7 @@
 FROM ubuntu:20.04
 
 SHELL ["/bin/bash", "-c"]
+ENV CPP_DOCKER="on"
 
 # Install APT dependencies
 ARG DEBIAN_FRONTEND=noninteractive
