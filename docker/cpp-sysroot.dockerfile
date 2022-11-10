@@ -52,7 +52,7 @@ RUN cd /code/cpp \
         libfaasmpi \
     # Lastly, build the libraries that populate the sysroot
     && inv \
-        libc \
+        llvm.libc \
         clapack \
         clapack --clean --shared \
         libffi \
