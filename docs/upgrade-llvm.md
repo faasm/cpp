@@ -3,25 +3,24 @@
 To upgrade the underlying LLVM version you need to:
 
 - Update the _submodule_ in this project (see below)
-- Update the version in `docker/sysroot.dockerfile`
-- Update the version in `faasmtools`
-- Update `Makefile`
-- Grep the project for any other mentions of the LLVM version
-- Run the `inv container.toolchain` task
-- Test it out
-- Run the `inv container.push-toolchain` task
+- Update the version in `docker/cpp-sysroot.dockerfile`
+- Update the version in `faasmtools/env.py`
+- Tag and push the code
+- Re-build the LLVM container (will take some time): `inv docker.build -c llvm`
+- Re-build the cpp-sysroot container: `inv docker.build -c cpp-sysroot`
 
 ## Updating the LLVM submodule
 
 Find the commit related to tag name for the desired release in
 [the LLVM repo](https://github.com/llvm/llvm-project/releases) (e.g.
-`llvmorg-10.0.1`), then:
+`llvmorg-13.0.1`), then:
 
 ```bash
 cd third-party/llvm-project
 git checkout main
 git fetch origin
-git checkout <tag-name>
+git checkout faasm
+git rebase <tag_name>
 ```
 
 # Rebuilding LLVM
@@ -29,24 +28,21 @@ git checkout <tag-name>
 To rebuild LLVM, there a couple of options. To rebuild just libc:
 
 ```bash
-make clean-libc
-make
+inv llvm.libc --clean
 ```
 
 To rebuilding all the libs, i.e. libc, libcxx, libcxxabi and
 compiler-rt:
 
 ```bash
-make clean-libs
-make
+inv llvm.libs --clean
 ```
 
 The final option is to rebuild _everything_, including Clang. This only
 necessary if you need to change the underlying LLVM or Clang configuration:
 
 ```bash
-make clean-all
-make
+inv llvm --clean
 ```
 
 ## Troubleshooting the build

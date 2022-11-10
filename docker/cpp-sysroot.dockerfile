@@ -18,6 +18,7 @@ RUN mkdir -p /code \
         /code/cpp \
     && cd /code/cpp \
     # Update submodules (not LLVM)
+    && git submodule update --init -f third-party/llvm-project \
     && git submodule update --init -f third-party/faabric \
     && git submodule update --init -f third-party/faasm-clapack \
     && git submodule update --init -f third-party/libffi \

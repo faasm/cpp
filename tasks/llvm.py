@@ -27,19 +27,15 @@ LLVM_BUILD_ENV_VARS = {
 }
 
 
-@task(default=True)
-def build(ctx, clean=False):
-    """
-    Build LLVM
-    """
+def do_llvm_build(target, clean_target=None):
     build_env = environ.copy()
     # These env. variables are required for LLVM's build configuration (and
     # cleaning)
     build_env.update(LLVM_BUILD_ENV_VARS)
 
-    if clean:
+    if clean_target:
         run(
-            "make -f {} clean-all".format(LLVM_MAKEFILE),
+            "make -f {} {}".format(LLVM_MAKEFILE, clean_target),
             shell=True,
             check=True,
             cwd=PROJ_ROOT,
@@ -52,9 +48,28 @@ def build(ctx, clean=False):
         "make",
         "-j {}".format(USABLE_CPUS),
         "-f {}".format(LLVM_MAKEFILE),
+        target,
     ]
     make_cmd = " ".join(make_cmd)
     run(make_cmd, shell=True, check=True, cwd=PROJ_ROOT, env=build_env)
+
+
+@task(default=True)
+def build(ctx, clean=False):
+    """
+    Build LLVM
+    """
+    do_llvm_build("", "clean-all" if clean else None)
+
+
+@task()
+def libs(ctx, clean=False):
+    """
+    Build the compiler-rt, libcxx, and libcxxabi for our LLVM fork
+    """
+    do_llvm_build(
+        "libcxx libcxxabi compiler-rt", "clean-libs" if clean else None
+    )
 
 
 @task()
@@ -62,27 +77,7 @@ def libc(ctx, clean=False):
     """
     Builds the wasi libc fork in this directory
     """
-    build_env = environ.copy()
-    build_env.update(LLVM_BUILD_ENV_VARS)
-
-    if clean:
-        run(
-            "make clean-libc",
-            shell=True,
-            check=True,
-            cwd=PROJ_ROOT,
-            env=build_env,
-        )
-
-    build_env.update(FAASM_BUILD_ENV_DICT)
-    make_cmd = [
-        "make",
-        "-j {}".format(USABLE_CPUS),
-        "-f {}".format(LLVM_MAKEFILE),
-        "libc",
-    ]
-    make_cmd = " ".join(make_cmd)
-    run(make_cmd, check=True, shell=True, cwd=PROJ_ROOT, env=build_env)
+    do_llvm_build("libc", "clean-libc" if clean else None)
 
     # Copy the import files into place
     copy_cmd = "cp -r sysroot_extras/* {}".format(WASM_LIB_INSTALL)
