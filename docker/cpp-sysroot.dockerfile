@@ -22,14 +22,7 @@ RUN mkdir -p /code \
     && git submodule update --init -f third-party/faasm-clapack \
     && git submodule update --init -f third-party/libffi \
     && git submodule update --init -f third-party/wasi-libc \
-    && git submodule update --init -f third-party/FFmpeg \
-    && git submodule update --init -f third-party/zlib \
-    && git submodule update --init -f third-party/libpng \
-    && git submodule update --init -f third-party/ImageMagick \
-    && git submodule update --init -f third-party/tensorflow \
-    && git submodule update --init -f third-party/lammps \
-    && git submodule update --init -f third-party/LULESH \
-    && git submodule update --init -f third-party/Kernels
+    && git submodule update --init -f third-party/zlib
 
 # Install the faasmtools Python lib
 RUN cd /code/cpp \
@@ -57,22 +50,13 @@ RUN cd /code/cpp \
         libfaasm \
         libfaasmp \
         libfaasmpi \
-    # Lastly, build the ported third-pary WASM libraries and programs (libc
-    # first as it is needed in the others)
+    # Lastly, build the libraries that populate the sysroot
     && inv \
         libc \
         clapack \
         clapack --clean --shared \
-        ffmpeg \
         libffi \
-        # To build imagemagick, we need to build zlib and libpng
-        zlib \
-        libpng \
-        imagemagick \
-        tensorflow \
-        lammps \
-        lulesh \
-        kernels
+        zlib
 
 # CLI setup
 WORKDIR /code/cpp

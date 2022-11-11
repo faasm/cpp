@@ -44,20 +44,8 @@ jobs:
         run: ./bin/inv_wrapper.sh libfake
       - name: "Build libemscripten"
         run: ./bin/inv_wrapper.sh libemscripten
-      - name: "Build FFmpeg"
-        run: ./bin/inv_wrapper.sh ffmpeg
       - name: "Build zlib"
         run: ./bin/inv_wrapper.sh zlib
-      - name: "Build libpng"
-        run: ./bin/inv_wrapper.sh libpng
-      - name: "Build ImageMagick"
-        run: ./bin/inv_wrapper.sh imagemagick
-      - name: "Build Tensorflow lite"
-        run: ./bin/inv_wrapper.sh tensorflow
-      - name: "Build LAMMPS"
-        run: ./bin/inv_wrapper.sh lammps
-      - name: "Build LULESH"
-        run: ./bin/inv_wrapper.sh lulesh
       # --- Build functions to wasm ---
       - name: "Build the functions"
         run: ./bin/inv_wrapper.sh func.local --clean

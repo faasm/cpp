@@ -16,35 +16,7 @@
 [submodule "third-party/faabric"]
     path = third-party/faabric
     url = https://github.com/faasm/faabric.git
-[submodule "third-party/FFmpeg"]
-    path = third-party/FFmpeg
-    url = https://github.com/faasm/FFmpeg.git
-    branch = faasm
-[submodule "third-party/ImageMagick"]
-	path = third-party/ImageMagick
-	url = https://github.com/faasm/ImageMagick.git
-	branch = faasm
-[submodule "third-party/libpng"]
-	path = third-party/libpng
-	url = https://github.com/faasm/libpng.git
-	branch = faasm
 [submodule "third-party/zlib"]
 	path = third-party/zlib
 	url = https://github.com/faasm/zlib.git
-	branch = faasm
-[submodule "third-party/tensorflow"]
-	path = third-party/tensorflow
-	url = https://github.com/faasm/tensorflow.git
-	branch = faasm
-[submodule "third-party/lammps"]
-	path = third-party/lammps
-	url = https://github.com/faasm/lammps.git
-	branch = faasm
-[submodule "third-party/LULESH"]
-	path = third-party/LULESH
-	url = https://github.com/faasm/LULESH.git
-	branch = faasm
-[submodule "third-party/Kernels"]
-	path = third-party/Kernels
-	url = https://github.com/faasm/Kernels.git
 	branch = faasm
