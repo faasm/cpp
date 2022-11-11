@@ -178,7 +178,5 @@ def local(ctx, clean=False, debug=False):
     """
     user(ctx, "demo", clean, debug)
     user(ctx, "errors", clean, debug)
-    user(ctx, "ffmpeg", clean, debug)
     user(ctx, "mpi", clean, debug)
     user(ctx, "omp", clean, debug)
-    user(ctx, "tf", clean, debug)
