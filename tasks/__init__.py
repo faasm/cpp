@@ -6,7 +6,6 @@ from . import format_code
 from . import func
 from . import git
 from . import install
-from . import lammps
 from . import libc
 from . import libemscripten
 from . import libfaasm
@@ -23,7 +22,6 @@ ns = Collection(
     func,
     git,
     install,
-    lammps,
     libc,
     libemscripten,
     libfaasm,
