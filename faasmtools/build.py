@@ -116,7 +116,9 @@ WASM_EXE_LDFLAGS = [
     "-Xlinker --export=__heap_base",
     "-Xlinker --export=__data_end",
     "-Xlinker --export={}".format(FAASM_WASM_CTORS_FUNC_NAME),
+    "-Xlinker --export=__stack_pointer",
     "-Xlinker --max-memory={}".format(FAASM_WASM_MAX_MEMORY),
+    "-Xlinker --features=mutable-globals",
     "-Wl,-z,stack-size={} -Wl".format(FAASM_WASM_STACK_SIZE),
     "-Wl,--initial-memory={}".format(FAASM_WASM_INITIAL_MEMORY_SIZE),
 ]
