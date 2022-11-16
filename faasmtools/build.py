@@ -72,7 +72,9 @@ FAASM_WASM_INITIAL_MEMORY_SIZE = 4 * FAASM_WASM_STACK_SIZE
 # introduced them upstream. Use of atomics means we can't link things together:
 # https://reviews.llvm.org/D59281
 WASM_CFLAGS = [
-    "-O3 -mno-atomics",
+    "-O3",
+    "-mno-atomics",
+    "-mno-simd128",
     "--sysroot={}".format(WASM_SYSROOT),
     "-m32",
     "-DANSI",

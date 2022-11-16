@@ -30,8 +30,8 @@ jobs:
       - name: "Set the GH workspace as a safe git directory"
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       # --- Build libraries to wasm ---
-      - name: "Build libc"
-        run: ./bin/inv_wrapper.sh llvm.libc
+      #       - name: "Build libc"
+      #         run: ./bin/inv_wrapper.sh llvm.libc
       - name: "Build libfaasm"
         run: ./bin/inv_wrapper.sh libfaasm
       - name: "Build libfaasmp"
