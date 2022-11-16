@@ -48,6 +48,7 @@ RUN mkdir -p /code \
     && git submodule update --init -f third-party/wasi-libc \
     && ./bin/create_venv.sh \
     && source venv/bin/activate \
+    && inv install \
     && inv llvm.build \
     && /usr/local/faasm/toolchain/bin/clang --version \
     && rm -rf /code
