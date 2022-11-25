@@ -20,7 +20,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     set(CMAKE_EXECUTABLE_SUFFIX ".wasm")
 endif ()
 
-
 if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     # ----------------------
     # Wasm build

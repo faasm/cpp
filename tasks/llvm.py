@@ -57,7 +57,7 @@ def do_llvm_build(target, clean_target=None):
 @task(default=True)
 def build(ctx, clean=False):
     """
-    Build LLVM
+    Build LLVM and all targets (including libc)
     """
     do_llvm_build("", "clean-all" if clean else None)
 
