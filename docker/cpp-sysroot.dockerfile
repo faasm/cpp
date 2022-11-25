@@ -10,7 +10,6 @@ COPY --from=llvm /usr/local/faasm /usr/local/faasm
 
 # Update APT dependencies
 RUN apt update && apt install -y autotools-dev
-
 # Get the code and submodules
 ARG SYSROOT_VERSION
 RUN mkdir -p /code \
@@ -23,11 +22,7 @@ RUN mkdir -p /code \
     && git submodule update --init -f third-party/faasm-clapack \
     && git submodule update --init -f third-party/libffi \
     && git submodule update --init -f third-party/wasi-libc \
-    && git submodule update --init -f third-party/FFmpeg \
-    && git submodule update --init -f third-party/zlib \
-    && git submodule update --init -f third-party/libpng \
-    && git submodule update --init -f third-party/ImageMagick \
-    && git submodule update --init -f third-party/tensorflow
+    && git submodule update --init -f third-party/zlib
 
 # Install the faasmtools Python lib
 RUN cd /code/cpp \
@@ -49,25 +44,19 @@ RUN cd /code/cpp \
         libfaasmpi --native --shared \
     # Install toolchain files
     && inv install \
-    # Build ported third-pary WASM libraries (libc first as it is needed in the
-    # others)
-    && inv \
-        libc \
-        clapack \
-        clapack --clean --shared \
-        ffmpeg \
-        libffi \
-        # To build imagemagick, we need to build zlib and libpng
-        zlib \
-        libpng \
-        imagemagick \
-        tensorflow \
     # Build Faasm WASM libraries
     && inv \
         libemscripten \
         libfaasm \
         libfaasmp \
-        libfaasmpi
+        libfaasmpi \
+    # Lastly, build the libraries that populate the sysroot
+    && inv \
+        libc \
+        clapack \
+        clapack --clean --shared \
+        libffi \
+        zlib
 
 # CLI setup
 WORKDIR /code/cpp
