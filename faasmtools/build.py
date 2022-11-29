@@ -74,8 +74,8 @@ FAASM_WASM_INITIAL_MEMORY_SIZE = 4 * FAASM_WASM_STACK_SIZE
 WASM_CFLAGS = [
     "-O3",
     "-mno-atomics",
-    # "-mno-simd128",
-    "-msimd128",
+    "-mno-simd128",
+    # "-msimd128",
     "--sysroot={}".format(WASM_SYSROOT),
     "-m32",
     "-DANSI",
