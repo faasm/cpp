@@ -74,8 +74,7 @@ FAASM_WASM_INITIAL_MEMORY_SIZE = 4 * FAASM_WASM_STACK_SIZE
 WASM_CFLAGS = [
     "-O3",
     "-mno-atomics",
-    "-mno-simd128",
-    # "-msimd128",
+    "-msimd128",
     "--sysroot={}".format(WASM_SYSROOT),
     "-m32",
     "-DANSI",
@@ -121,7 +120,7 @@ WASM_EXE_LDFLAGS = [
     "-Xlinker --export={}".format(FAASM_WASM_CTORS_FUNC_NAME),
     "-Xlinker --export=__stack_pointer",
     "-Xlinker --max-memory={}".format(FAASM_WASM_MAX_MEMORY),
-    "-Xlinker --features=mutable-globals",
+    "-Xlinker --features=mutable-globals,simd128",
     "-Wl,-z,stack-size={} -Wl".format(FAASM_WASM_STACK_SIZE),
     "-Wl,--initial-memory={}".format(FAASM_WASM_INITIAL_MEMORY_SIZE),
 ]
