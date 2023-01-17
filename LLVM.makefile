@@ -1,22 +1,22 @@
 # Project directories
-PROJ_ROOT=${CURDIR}
-LLVM_PROJ_DIR=$(PROJ_ROOT)/third-party/llvm-project
+LLVM_PROJ_DIR=${FAASM_LLVM_DIR}
 
-TOOLCHAIN_DIR=$(PROJ_ROOT)
+TOOLCHAIN_DIR=${FAASM_CPP_PROJ_ROOT}
 TOOLCHAIN_FILE=$(TOOLCHAIN_DIR)/WasiToolchain.cmake
 
 # Install dirs
-FAASM_LOCAL_DIR=/usr/local/faasm
+FAASM_LOCAL_DIR=${FAASM_LOCAL_DIR_ENV}
 PREFIX=$(FAASM_LOCAL_DIR)/toolchain
-FAASM_SYSROOT=/usr/local/faasm/llvm-sysroot
+FAASM_SYSROOT=$(FAASM_LOCAL_DIR)/llvm-sysroot
 
-CLANG_VERSION=10.0.1
+CLANG_VERSION=${FAASM_LLVM_VERSION}
+CLANG_VERSION_MAJOR := $(shell echo $(CLANG_VERSION) | cut -f1 -d.)
 
-BUILD_DIR=$(LLVM_PROJ_DIR)/build
+BUILD_DIR=${FAASM_LLVM_BUILD_DIR}
 LLVM_CONFIG=$(BUILD_DIR)/llvm/bin/llvm-config
 AR=$(BUILD_DIR)/llvm/bin/llvm-ar
 
-WASI_LIBC_DIR=$(PROJ_ROOT)/third-party/wasi-libc
+WASI_LIBC_DIR=${FAASM_WASI_LIBC_DIR}
 
 # -------------------------------------------
 # This is adapted from the wasi-sdk Makefile found here:
@@ -42,8 +42,8 @@ clean-all:
 $(BUILD_DIR)/llvm.BUILT:
 	mkdir -p $(BUILD_DIR)/llvm
 	cd $(BUILD_DIR)/llvm; cmake -G Ninja \
-		-DCMAKE_C_COMPILER=/usr/bin/clang-10 \
-		-DCMAKE_CXX_COMPILER=/usr/bin/clang++-10 \
+		-DCMAKE_C_COMPILER=/usr/bin/clang-$(CLANG_VERSION_MAJOR) \
+		-DCMAKE_CXX_COMPILER=/usr/bin/clang++-$(CLANG_VERSION_MAJOR) \
 		-DCMAKE_BUILD_TYPE=MinSizeRel \
 		-DCMAKE_INSTALL_PREFIX=$(PREFIX) \
 		-DLLVM_TARGETS_TO_BUILD=WebAssembly \
@@ -69,6 +69,7 @@ $(BUILD_DIR)/llvm.BUILT:
 
 # WASI libc
 $(BUILD_DIR)/libc.BUILT: $(BUILD_DIR)/llvm.BUILT
+	mkdir -p $(WASI_LIBC_DIR)/build
 	cd $(WASI_LIBC_DIR); $(MAKE) \
 		THREAD_MODEL=faasm \
 		WASM_CC=$(PREFIX)/bin/clang \
@@ -86,6 +87,7 @@ $(BUILD_DIR)/compiler-rt.BUILT: $(BUILD_DIR)/libc.BUILT
 		-DCOMPILER_RT_BUILD_XRAY=OFF \
 		-DCOMPILER_RT_INCLUDE_TESTS=OFF \
 		-DCOMPILER_RT_HAS_FPIC_FLAG=OFF \
+		-DCOMPILER_RT_ENABLE_IOS=OFF \
 		-DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
 		-DLLVM_CONFIG_PATH=$(LLVM_CONFIG) \
 		-DCMAKE_INSTALL_PREFIX=$(PREFIX)/lib/clang/$(CLANG_VERSION)/ \
@@ -102,7 +104,7 @@ $(BUILD_DIR)/libcxx.BUILT: $(BUILD_DIR)/compiler-rt.BUILT
 		-DCMAKE_TOOLCHAIN_FILE=$(TOOLCHAIN_FILE) \
 		-DCMAKE_BUILD_TYPE=RelWithDebugInfo \
 		-DCMAKE_CXX_COMPILER_WORKS=ON \
-                -DCMAKE_C_COMPILER_WORKS=ON \
+    	-DCMAKE_C_COMPILER_WORKS=ON \
 		-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
 		-DCMAKE_INSTALL_PREFIX=$(FAASM_SYSROOT) \
 		-DLLVM_COMPILER_CHECKED=ON \

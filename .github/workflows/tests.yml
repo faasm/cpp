@@ -19,7 +19,7 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     container:
-      image: faasm/cpp-sysroot:0.1.12
+      image: faasm/cpp-sysroot:0.2.0
     steps:
       # --- Update code ---
       - name: "Checkout code"
@@ -30,8 +30,6 @@ jobs:
       - name: "Set the GH workspace as a safe git directory"
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       # --- Build libraries to wasm ---
-      - name: "Build libc"
-        run: ./bin/inv_wrapper.sh libc
       - name: "Build libfaasm"
         run: ./bin/inv_wrapper.sh libfaasm
       - name: "Build libfaasmp"

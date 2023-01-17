@@ -31,7 +31,6 @@ def format(ctx, check=False):
 
     flake8_cmd = [
         "python3 -m flake8",
-        "{}".format("--format" if not check else ""),
         " ".join(files_to_check),
     ]
     flake8_cmd = " ".join(flake8_cmd)
@@ -52,7 +51,7 @@ def format(ctx, check=False):
     )
 
     clang_cmd = [
-        "clang-format-10",
+        "clang-format-13",
         "--dry-run --Werror" if check else "-i",
         " ".join(files_to_check),
     ]

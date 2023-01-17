@@ -6,13 +6,13 @@ from . import format_code
 from . import func
 from . import git
 from . import install
-from . import libc
 from . import libemscripten
 from . import libfaasm
 from . import libfaasmp
 from . import libfaasmpi
 from . import libfake
 from . import libffi
+from . import llvm
 from . import zlib
 
 ns = Collection(
@@ -22,12 +22,12 @@ ns = Collection(
     func,
     git,
     install,
-    libc,
     libemscripten,
     libfaasm,
     libfaasmp,
     libfaasmpi,
     libfake,
     libffi,
+    llvm,
     zlib,
 )

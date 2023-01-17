@@ -1,7 +1,7 @@
-FROM faasm/llvm:10.0.1 as llvm
+FROM faasm/llvm:13.0.1 as llvm
 
 # faabric-base image is not re-built often, so tag may be behind
-FROM faasm/faabric-base:0.3.5
+FROM faasm/faabric-base:0.4.0
 SHELL ["/bin/bash", "-c"]
 ENV CPP_DOCKER="on"
 
@@ -17,7 +17,7 @@ RUN mkdir -p /code \
         https://github.com/faasm/cpp \
         /code/cpp \
     && cd /code/cpp \
-    # Update submodules (not LLVM)
+    && git submodule update --init -f third-party/llvm-project \
     && git submodule update --init -f third-party/faabric \
     && git submodule update --init -f third-party/faasm-clapack \
     && git submodule update --init -f third-party/libffi \
@@ -44,6 +44,8 @@ RUN cd /code/cpp \
         libfaasmpi --native --shared \
     # Install toolchain files
     && inv install \
+    # First build libc
+    && inv llvm.libc \
     # Build Faasm WASM libraries
     && inv \
         libemscripten \
@@ -52,7 +54,6 @@ RUN cd /code/cpp \
         libfaasmpi \
     # Lastly, build the libraries that populate the sysroot
     && inv \
-        libc \
         clapack \
         clapack --clean --shared \
         libffi \

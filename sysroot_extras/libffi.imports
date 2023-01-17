@@ -1,1 +1,2 @@
 ffi_call
+ffi_prep_closure_loc

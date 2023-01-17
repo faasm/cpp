@@ -1,20 +1,31 @@
 FROM ubuntu:20.04
 
+SHELL ["/bin/bash", "-c"]
+ENV CPP_DOCKER="on"
+
 # Install APT dependencies
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update \
+    && apt install -y \
+        curl \
+        gpg \
+        software-properties-common \
+        wget \
+    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
+    && add-apt-repository -y -n "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main" \
+    && add-apt-repository -y -n ppa:ubuntu-toolchain-r/test \
+    && apt update \
     && apt upgrade -y \
     && apt install -y \
         autoconf \
-        clang-10 \
-        curl \
+        clang-13 \
         build-essential \
         git \
-        gpg \
         ninja-build \
         pkg-config \
-        software-properties-common \
-        wget
+        python3-dev \
+        python3-pip \
+        python3-venv
 
 # Install up-to-date CMake
 RUN apt remove --purge --auto-remove cmake \
@@ -35,6 +46,9 @@ RUN mkdir -p /code \
     && cd /code/cpp \
     && git submodule update --init -f third-party/llvm-project \
     && git submodule update --init -f third-party/wasi-libc \
-    && make \
+    && ./bin/create_venv.sh \
+    && source venv/bin/activate \
+    && inv install \
+    && inv llvm.build \
     && /usr/local/faasm/toolchain/bin/clang --version \
     && rm -rf /code

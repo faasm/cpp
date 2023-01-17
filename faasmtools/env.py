@@ -11,7 +11,12 @@ USABLE_CPUS = int(cpu_count()) - 1
 
 # Versioning
 VERSION_FILE = join(PROJ_ROOT, "VERSION")
-LLVM_VERSION = "10.0.1"
+
+# LLVM variables
+LLVM_VERSION = "13.0.1"
+LLVM_DIR = join(THIRD_PARTY_DIR, "llvm-project")
+LLVM_MAKEFILE = join(PROJ_ROOT, "LLVM.makefile")
+WASI_LIBC_DIR = join(THIRD_PARTY_DIR, "wasi-libc")
 
 
 def get_version():
