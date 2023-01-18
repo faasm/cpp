@@ -1,7 +1,7 @@
 FROM faasm/llvm:13.0.1 as llvm
 
 # faabric-base image is not re-built often, so tag may be behind
-FROM faasm/faabric-base:0.4.0
+FROM faasm/faabric-base:0.4.1
 SHELL ["/bin/bash", "-c"]
 ENV CPP_DOCKER="on"
 
