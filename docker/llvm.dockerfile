@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 SHELL ["/bin/bash", "-c"]
 ENV CPP_DOCKER="on"
@@ -7,25 +7,19 @@ ENV CPP_DOCKER="on"
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update \
     && apt install -y \
-        curl \
-        gpg \
-        software-properties-common \
-        wget \
-    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
-    && add-apt-repository -y -n "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main" \
-    && add-apt-repository -y -n ppa:ubuntu-toolchain-r/test \
-    && apt update \
-    && apt upgrade -y \
-    && apt install -y \
         autoconf \
-        clang-13 \
         build-essential \
+        clang-13 \
+        curl \
         git \
+        gpg \
         ninja-build \
         pkg-config \
         python3-dev \
         python3-pip \
-        python3-venv
+        python3-venv \
+        software-properties-common \
+        wget
 
 # Install up-to-date CMake
 RUN apt remove --purge --auto-remove cmake \
