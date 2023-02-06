@@ -25,7 +25,11 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     # Wasm build
     # ----------------------
 
-    set(FAASM_FUNC_LIBS faasm c-printscan-long-double)
+    set(FAASM_FUNC_LIBS
+        faasm
+        c-printscan-long-double
+        wasi-emulated-process-clocks
+    )
 
     function(faasm_func_c func_name file_name)
         add_executable(${func_name} ${file_name})
