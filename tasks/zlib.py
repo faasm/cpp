@@ -46,7 +46,8 @@ def zlib(ctx, clean=False):
     configure_cmd = " ".join(configure_cmd)
     run(configure_cmd, shell=True, cwd=zlib_dir, check=True)
 
-    run("make -j", shell=True, cwd=zlib_dir, check=True)
+    # Only build the static library, not the examples nor tests
+    run("make -j libz.a", shell=True, cwd=zlib_dir, check=True)
     run("make install", shell=True, cwd=zlib_dir, check=True)
 
     # Move the library from /usr/local/faasm/llvm-sysroot/lib into wasm32-wasi
