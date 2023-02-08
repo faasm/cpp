@@ -10,7 +10,6 @@ from faasmtools.docker import (
 from faasmtools.env import (
     get_version,
     PROJ_ROOT,
-    LLVM_VERSION,
 )
 
 LLVM_IMAGE_NAME = "faasm/llvm"
@@ -25,7 +24,8 @@ def get_sysroot_tag():
 
 
 def get_llvm_tag():
-    return "{}:{}".format(LLVM_IMAGE_NAME, LLVM_VERSION)
+    version = get_version()
+    return "{}:{}".format(LLVM_IMAGE_NAME, version)
 
 
 @task(iterable=["c"])
