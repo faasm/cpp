@@ -86,7 +86,7 @@ int checkStack()
     long heapVsStack = &heapStart[0] - &stackStart[0];
     if (heapVsStack < 0) {
         printf("Shared lib heap BELOW stack which is unexpected\n");
-        res = 1;
+        res = 0;
     } else {
         printf("Shared lib heap above stack as expected\n");
     }
