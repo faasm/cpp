@@ -24,8 +24,8 @@ int main(int argc, char* argv[])
         strcpy(callocPtr, s.c_str());
 
         // Add in a call to mmap to deliberately fragment things
-        char* mmapPtr =
-          (char*)mmap(nullptr, mmapLen, PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+        char* mmapPtr = (char*)mmap(
+          nullptr, mmapLen, PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
         if (mmapPtr == MAP_FAILED) {
             printf("ERROR - mmap failed: %s\n", strerror(errno));
         }
