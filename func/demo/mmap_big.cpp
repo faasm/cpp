@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
     for (int i = 0; i < nChunks; i++) {
         void* p = mmap(nullptr,
                        chunkLen,
-                       PROT_READ | PROT_WRITE | PROT_EXEC,
+                       PROT_READ | PROT_WRITE,
                        MAP_ANON | MAP_PRIVATE,
                        -1,
                        0);

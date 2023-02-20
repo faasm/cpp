@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
         char* mmapPtr =
           (char*)mmap(nullptr, mmapLen, PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
         if (mmapPtr == MAP_FAILED) {
-            printf("mmap call failed with error: %s\n", strerror(errno));
+            printf("ERROR - mmap failed: %s\n", strerror(errno));
         }
         strcpy(mmapPtr, "mmapSpace");
 

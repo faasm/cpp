@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
         // Map some memory
         void* p = mmap(nullptr,
                        memLen,
-                       PROT_READ | PROT_WRITE | PROT_EXEC,
+                       PROT_READ | PROT_WRITE,
                        MAP_ANON | MAP_PRIVATE,
                        -1,
                        0);
