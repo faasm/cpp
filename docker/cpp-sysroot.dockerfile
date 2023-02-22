@@ -45,8 +45,10 @@ RUN cd /code/cpp \
         libfaasmpi --native --shared \
     # Install toolchain files
     && inv install \
-    # First build libc
-    && inv llvm.libc \
+    # Patch wasi-libc with the changes required for Faasm
+    && inv llvm.patch-wasi-libc \
+    # Build wasi-libc and reset the sysroot
+    && inv llvm.libc --purge \
     # Build Faasm WASM libraries
     && inv \
         libemscripten \

@@ -37,6 +37,9 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
         extras = [
             "-DCMAKE_C_COMPILER=/usr/bin/clang-{}".format(llvm_major),
             "-DCMAKE_CXX_COMPILER=/usr/bin/clang++-{}".format(llvm_major),
+            "-DCMAKE_AR=/usr/bin/llvm-ar-{}".format(llvm_major),
+            "-DCMAKE_NM=/usr/bin/llvm-nm-{}".format(llvm_major),
+            "-DCMAKE_RANLIB=/usr/bin/llvm-ranlib-{}".format(llvm_major),
         ]
     else:
         extras = [

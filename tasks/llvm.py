@@ -2,6 +2,7 @@ from faasmtools.build import (
     FAASM_BUILD_ENV_DICT,
     FAASM_LOCAL_DIR,
     WASM_LIB_INSTALL,
+    WASM_SYSROOT,
 )
 from faasmtools.env import (
     LLVM_DIR,
@@ -24,6 +25,7 @@ LLVM_BUILD_ENV_VARS = {
     "FAASM_LLVM_VERSION": LLVM_VERSION,
     "FAASM_LOCAL_DIR_ENV": FAASM_LOCAL_DIR,
     "FAASM_WASI_LIBC_DIR": WASI_LIBC_DIR,
+    "FAASM_SYSROOT": WASM_SYSROOT,
 }
 
 
@@ -73,11 +75,39 @@ def libs(ctx, clean=False):
 
 
 @task()
-def libc(ctx, clean=False):
+def patch_wasi_libc(ctx):
+    """
+    Patch wasi-libc with the changes required for Faasm
+    """
+    patch_dir = join(WASI_LIBC_DIR, "faasm-patches")
+    patches = [
+        "Faasm_switch_on_mman.patch",
+    ]
+
+    for patch in patches:
+        git_cmd = "git apply {}".format(join(patch_dir, patch))
+        run(git_cmd, shell=True, check=True, cwd=WASI_LIBC_DIR)
+
+
+@task()
+def libc(ctx, clean=False, purge=False):
     """
     Builds the wasi libc fork in this directory
+
+    Clean removes the built targets but does not wipe the sysroot. Purge wipes
+    the sysroot altogether.
     """
-    do_llvm_build("libc", "clean-libc" if clean else None)
+    clean_args = None
+    if purge:
+        if clean:
+            print(
+                "WARNING: set --clean and --purge flag. The latter takes preference"
+            )
+        clean_args = "very-clean-libc"
+    elif clean:
+        clean_args = "clean-libc"
+
+    do_llvm_build("libc", clean_args)
 
     # Copy the import files into place
     copy_cmd = "cp -r sysroot_extras/* {}".format(WASM_LIB_INSTALL)
