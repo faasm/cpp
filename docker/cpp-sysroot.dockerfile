@@ -47,8 +47,9 @@ RUN cd /code/cpp \
     && inv install \
     # Patch wasi-libc with the changes required for Faasm
     && inv llvm.patch-wasi-libc \
-    # Build wasi-libc and reset the sysroot
-    && inv llvm.libc --purge \
+    # Build wasi-libc and reset the sysroot. The second call to LLVM just
+    # installs some headers that are purged
+    && inv llvm.libc --purge llvm \
     # Build Faasm WASM libraries
     && inv \
         libemscripten \
