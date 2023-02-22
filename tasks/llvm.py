@@ -100,9 +100,7 @@ def libc(ctx, clean=False, purge=False):
     clean_args = None
     if purge:
         if clean:
-            print(
-                "WARNING: set --clean and --purge flag. The latter takes preference"
-            )
+            print("WARN: Set --clean and --purge flag. Purge preceeds.")
         clean_args = "very-clean-libc"
     elif clean:
         clean_args = "clean-libc"
