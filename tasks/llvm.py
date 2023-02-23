@@ -75,21 +75,6 @@ def libs(ctx, clean=False):
 
 
 @task()
-def patch_wasi_libc(ctx):
-    """
-    Patch wasi-libc with the changes required for Faasm
-    """
-    patch_dir = join(WASI_LIBC_DIR, "faasm-patches")
-    patches = [
-        "Faasm_switch_on_mman.patch",
-    ]
-
-    for patch in patches:
-        git_cmd = "git apply {}".format(join(patch_dir, patch))
-        run(git_cmd, shell=True, check=True, cwd=WASI_LIBC_DIR)
-
-
-@task()
 def libc(ctx, clean=False, purge=False):
     """
     Builds the wasi libc fork in this directory
