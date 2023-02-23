@@ -5,6 +5,11 @@
 #include <string>
 #include <sys/mman.h>
 
+/*
+ * Checks that calloc is working.
+ *
+ * Originally created to try to replicate an issue from CPython
+ */
 int main(int argc, char* argv[])
 {
     int callocSize = 100;
