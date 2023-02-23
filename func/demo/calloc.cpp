@@ -5,9 +5,6 @@
 #include <string>
 #include <sys/mman.h>
 
-// 09/02/2022 - wasi-libc implements mmap now, so we don't need to implement
-// it ourselves in Faasm. Thus, this test is now redundant as it is essentially
-// testing wasi-libc's functionality. We keep it for backwards-compatibility.
 int main(int argc, char* argv[])
 {
     int callocSize = 100;

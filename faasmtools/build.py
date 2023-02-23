@@ -84,7 +84,6 @@ WASM_CFLAGS = [
 # Wasi-libc specific flags that are needed to include certain emulation headers
 WASM_WASI_LIBC_CFLAGS = [
     "-D_WASI_EMULATED_GETPID",
-    # "-D_WASI_EMULATED_MMAN",
     "-D_WASI_EMULATED_PROCESS_CLOCKS",
     "-D_WASI_EMULATED_SIGNAL",
 ]
@@ -127,7 +126,6 @@ WASM_LDFLAGS = [
 WASM_WASI_LIBC_LDFLAGS = [
     "-lc-printscan-long-double",
     "-lwasi-emulated-getpid",
-    # "-lwasi-emulated-mman",
     "-lwasi-emulated-process-clocks",
     "-lwasi-emulated-signal",
 ]
