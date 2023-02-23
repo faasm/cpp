@@ -1,0 +1,67 @@
+diff --git a/dlmalloc/src/dlmalloc.c b/dlmalloc/src/dlmalloc.c
+index 331536b..d1b29ce 100644
+--- a/dlmalloc/src/dlmalloc.c
++++ b/dlmalloc/src/dlmalloc.c
+@@ -6,11 +6,25 @@
+
+ // Define configuration macros for dlmalloc.
+
++#ifdef __faasm
++// Faasm supports mmap/ munmap
++#define HAVE_MMAP 1
++
++// Faasm supports normal wasm memory growth, but we need to be able to reclaim
++// memory, so force everything through mmap/ munmap
++#define HAVE_MORECORE 1
++#define MORECORE_CONTIGUOUS 1
++
++// Faasm supports shrinking linear memory using offsets
++#define MORECORE_CANNOT_TRIM 0
++
++#else
+ // WebAssembly doesn't have mmap-style memory allocation.
+ #define HAVE_MMAP 0
+
+ // WebAssembly doesn't support shrinking linear memory.
+ #define MORECORE_CANNOT_TRIM 1
++#endif
+
+ // Disable sanity checks to reduce code size.
+ #define ABORT __builtin_unreachable()
+diff --git a/libc-bottom-half/sources/sbrk.c b/libc-bottom-half/sources/sbrk.c
+index a26b75e..ce0c1bb 100644
+--- a/libc-bottom-half/sources/sbrk.c
++++ b/libc-bottom-half/sources/sbrk.c
+@@ -3,8 +3,16 @@
+ #include <errno.h>
+ #include <__macro_PAGESIZE.h>
+
++#ifdef __faasm
++    extern void* __sbrk(intptr_t increment);
++#endif
++
+ // Bare-bones implementation of sbrk.
+ void *sbrk(intptr_t increment) {
++#ifdef __faasm
++    // In Faasm we defer to our custom sbrk implementation
++    return __sbrk(increment);
++#else
+     // sbrk(0) returns the current memory size.
+     if (increment == 0) {
+         // The wasm spec doesn't guarantee that memory.grow of 0 always succeeds.
+@@ -29,4 +37,5 @@ void *sbrk(intptr_t increment) {
+     }
+
+     return (void *)(old * PAGESIZE);
++#endif
+ }
+diff --git a/libc-top-half/musl/include/sys/mman.h b/libc-top-half/musl/include/sys/mman.h
+index 335ba2d..f2f24bb 100644
+--- a/libc-top-half/musl/include/sys/mman.h
++++ b/libc-top-half/musl/include/sys/mman.h
+@@ -1,4 +1,4 @@
+-#ifndef _WASI_EMULATED_MMAN
++#if !defined(__faasm) && !defined(_WASI_EMULATED_MMAN)
+ #error "WASI lacks a true mmap; to enable minimal mmap emulation, \
+ compile with -D_WASI_EMULATED_MMAN and link with -lwasi-emulated-mman"
+ #else
