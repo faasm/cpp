@@ -43,8 +43,8 @@ def fake(ctx, clean=False):
         check=True,
         env=work_env,
     )
-    run("ninja", shell=True, cwd=build_dir, check=True)
-    run("ninja install", shell=True, cwd=build_dir, check=True)
+    run("ninja", shell=True, cwd=build_dir, check=True, env=work_env)
+    run("ninja install", shell=True, cwd=build_dir, check=True, env=work_env)
 
     # Copy shared object into place
     sysroot_files = join(WASM_SYSROOT, "lib", "wasm32-wasi", "libfake*.so")

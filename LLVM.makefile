@@ -29,6 +29,11 @@ default: build
 clean-libc:
 	rm -rf $(BUILD_DIR)/libc.BUILT $(WASI_LIBC_DIR)/build
 
+.PHONY: very-clean-libc
+very-clean-libc:
+	# WARNING: this is going to remove _everything_ in FAASM_SYSROOT
+	cd $(WASI_LIBC_DIR) && SYSROOT=$(FAASM_SYSROOT) make clean
+
 .PHONY: clean-libs
 clean-libs: clean-libc
 	rm -rf $(BUILD_DIR)/compiler-rt $(BUILD_DIR)/compiler-rt.BUILT
@@ -72,9 +77,9 @@ $(BUILD_DIR)/libc.BUILT: $(BUILD_DIR)/llvm.BUILT
 	mkdir -p $(WASI_LIBC_DIR)/build
 	cd $(WASI_LIBC_DIR); $(MAKE) \
 		THREAD_MODEL=faasm \
-		WASM_CC=$(PREFIX)/bin/clang \
-		WASM_AR=$(PREFIX)/bin/llvm-ar \
-		WASM_NM=$(PREFIX)/bin/llvm-nm \
+		CC=$(PREFIX)/bin/clang \
+		AR=$(PREFIX)/bin/llvm-ar \
+		NM=$(PREFIX)/bin/llvm-nm \
 		SYSROOT=$(FAASM_SYSROOT)
 	touch $(BUILD_DIR)/libc.BUILT
 

@@ -81,6 +81,15 @@ WASM_CFLAGS = [
     "-D__faasm",
 ]
 
+# Wasi-libc specific flags that are needed to include certain emulation headers
+WASM_WASI_LIBC_CFLAGS = [
+    "-D_WASI_EMULATED_GETPID",
+    "-D_WASI_EMULATED_PROCESS_CLOCKS",
+    "-D_WASI_EMULATED_SIGNAL",
+]
+
+WASM_CFLAGS += WASM_WASI_LIBC_CFLAGS
+
 WASM_CXXFLAGS = WASM_CFLAGS
 
 # Flags for shared libraries
@@ -112,6 +121,17 @@ WASM_LDFLAGS = [
     "-Xlinker --no-check-features",
 ]
 
+# Wasi-libc specific libraries we need to link with to enable certain emulated
+# functionalities
+WASM_WASI_LIBC_LDFLAGS = [
+    "-lc-printscan-long-double",
+    "-lwasi-emulated-getpid",
+    "-lwasi-emulated-process-clocks",
+    "-lwasi-emulated-signal",
+]
+
+WASM_LDFLAGS += WASM_WASI_LIBC_LDFLAGS
+
 # Flags for executables
 WASM_EXE_LDFLAGS = [
     "-Xlinker --stack-first",
@@ -125,6 +145,8 @@ WASM_EXE_LDFLAGS = [
     "-Wl,--initial-memory={}".format(FAASM_WASM_INITIAL_MEMORY_SIZE),
 ]
 
+WASM_EXE_LDFLAGS += WASM_WASI_LIBC_LDFLAGS
+
 # These are the compiler and linker flags required for functions that will also
 # do dynamic linking.  We need to export all symbols to make them available to
 # the dynamically loaded modules
@@ -132,6 +154,8 @@ WASM_EXE_LDFLAGS_SHARED = [
     "-Xlinker --export-all",
     "-Xlinker --no-gc-sections",
 ]
+
+WASM_EXE_LDFLAGS_SHARED += WASM_WASI_LIBC_LDFLAGS
 
 # Flags for shared libraries
 # See notes in README about WebAssembly and shared libraries
