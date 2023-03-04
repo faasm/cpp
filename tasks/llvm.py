@@ -43,7 +43,7 @@ def do_llvm_clone():
         LLVM_DIR,
     ]
     git_cmd = " ".join(git_cmd)
-    run(git_cmd, shel=True, check=True)
+    run(git_cmd, shell=True, check=True)
 
     llvm_patches_dir = join(PATCHES_DIR, "llvm-project")
     for patch in listdir(llvm_patches_dir):
