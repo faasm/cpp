@@ -48,7 +48,7 @@ def do_llvm_clone():
     llvm_patches_dir = join(PATCHES_DIR, "llvm-project")
     for patch in listdir(llvm_patches_dir):
         git_cmd = "git apply {}".format(join(llvm_patches_dir, patch))
-        run(git_cmd, shell=True, check=True, cwd=PROJ_ROOT)
+        run(git_cmd, shell=True, check=True, cwd=LLVM_DIR)
 
 
 def do_llvm_build(target, clean_target=None):
