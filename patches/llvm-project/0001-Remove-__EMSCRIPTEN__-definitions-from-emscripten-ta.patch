@@ -1,0 +1,44 @@
+From 4d755c1f417a09cbe5156af4c04782a10cb047aa Mon Sep 17 00:00:00 2001
+From: Simon Shillaker <mail@simonshillaker.com>
+Date: Wed, 27 Apr 2022 16:55:11 +0000
+Subject: [PATCH] Remove __EMSCRIPTEN__ definitions from emscripten target
+
+---
+ clang/lib/Basic/Targets/OSTargets.h | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/clang/lib/Basic/Targets/OSTargets.h b/clang/lib/Basic/Targets/OSTargets.h
+index 12df95c19f35..5aaf0e7fc84c 100644
+--- a/clang/lib/Basic/Targets/OSTargets.h
++++ b/clang/lib/Basic/Targets/OSTargets.h
+@@ -291,7 +291,7 @@ protected:
+     Builder.defineMacro("__HAIKU__");
+     Builder.defineMacro("__ELF__");
+     DefineStd(Builder, "unix", Opts);
+-    if (this->HasFloat128) 
++    if (this->HasFloat128)
+       Builder.defineMacro("__FLOAT128__");
+   }
+ 
+@@ -946,9 +946,15 @@ class LLVM_LIBRARY_VISIBILITY EmscriptenTargetInfo
+   void getOSDefines(const LangOptions &Opts, const llvm::Triple &Triple,
+                     MacroBuilder &Builder) const final {
+     WebAssemblyOSTargetInfo<Target>::getOSDefines(Opts, Triple, Builder);
+-    Builder.defineMacro("__EMSCRIPTEN__");
+-    if (Opts.POSIXThreads)
+-      Builder.defineMacro("__EMSCRIPTEN_PTHREADS__");
++    // For Faasm, we need to use the Emscripten target to build shared 
++    // libraries, but we don't actually want any of the emscripten features.
++    // See htps://bugs.llvm.org/show_bug.cgi?id=42714
++    //
++    Builder.defineMacro("__wasi__");
++
++    //Builder.defineMacro("__EMSCRIPTEN__");
++    //if (Opts.POSIXThreads)
++    //  Builder.defineMacro("__EMSCRIPTEN_PTHREADS__");
+   }
+ 
+ public:
+-- 
+2.34.1
+
