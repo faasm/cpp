@@ -38,7 +38,6 @@ RUN mkdir -p /code \
         https://github.com/faasm/cpp \
         /code/cpp \
     && cd /code/cpp \
-    # && git submodule update --init -f third-party/llvm-project \
     && git submodule update --init -f third-party/wasi-libc \
     && ./bin/create_venv.sh \
     && source venv/bin/activate \
