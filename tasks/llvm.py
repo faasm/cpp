@@ -13,9 +13,10 @@ from faasmtools.env import (
     WASI_LIBC_DIR,
 )
 from invoke import task
-from os import environ
-from os.path import join
+from os import environ, listdir
+from os.path import exists, join
 from subprocess import run
+from tasks.util.env import PATCHES_DIR
 
 LLVM_BUILD_DIR = join(LLVM_DIR, "build")
 LLVM_BUILD_ENV_VARS = {
@@ -27,6 +28,27 @@ LLVM_BUILD_ENV_VARS = {
     "FAASM_WASI_LIBC_DIR": WASI_LIBC_DIR,
     "FAASM_SYSROOT": WASM_SYSROOT,
 }
+
+
+def do_llvm_clone():
+    """
+    Clone the llvm-project repo and apply faasm-specific patches
+    """
+    print("WARNING: Cloning llvm-project, this can take a while...")
+    git_cmd = [
+        "git clone",
+        "-b llvmorg-{}".format(LLVM_VERSION),
+        "--depth 1",
+        "https://github.com/llvm/llvm-project",
+        LLVM_DIR,
+    ]
+    git_cmd = " ".join(git_cmd)
+    run(git_cmd, shell=True, check=True)
+
+    llvm_patches_dir = join(PATCHES_DIR, "llvm-project")
+    for patch in listdir(llvm_patches_dir):
+        git_cmd = "git apply {}".format(join(llvm_patches_dir, patch))
+        run(git_cmd, shell=True, check=True, cwd=LLVM_DIR)
 
 
 def do_llvm_build(target, clean_target=None):
@@ -61,6 +83,9 @@ def build(ctx, clean=False):
     """
     Build LLVM and all targets (including libc)
     """
+    if not exists(LLVM_DIR):
+        do_llvm_clone()
+
     do_llvm_build("", "clean-all" if clean else None)
 
 

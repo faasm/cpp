@@ -14,7 +14,7 @@ VERSION_FILE = join(PROJ_ROOT, "VERSION")
 
 # LLVM variables
 LLVM_VERSION = "13.0.1"
-LLVM_DIR = join(THIRD_PARTY_DIR, "llvm-project")
+LLVM_DIR = join("/opt", "llvm-project")
 LLVM_MAKEFILE = join(PROJ_ROOT, "LLVM.makefile")
 WASI_LIBC_DIR = join(THIRD_PARTY_DIR, "wasi-libc")
 

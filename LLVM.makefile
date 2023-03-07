@@ -30,7 +30,7 @@ clean-libc:
 	rm -rf $(BUILD_DIR)/libc.BUILT $(WASI_LIBC_DIR)/build
 
 .PHONY: very-clean-libc
-very-clean-libc:
+very-clean-libc: clean-libc
 	# WARNING: this is going to remove _everything_ in FAASM_SYSROOT
 	cd $(WASI_LIBC_DIR) && SYSROOT=$(FAASM_SYSROOT) make clean
 

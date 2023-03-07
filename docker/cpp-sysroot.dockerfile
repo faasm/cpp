@@ -1,13 +1,14 @@
 # llvm image is not re-built often, so the tag may be behind
-FROM faasm/llvm:0.2.2 as llvm
+FROM faasm/llvm:0.2.3 as llvm
 
 # faabric-base image is not re-built often, so tag may be behind
 FROM faasm/faabric-base:0.4.1
 SHELL ["/bin/bash", "-c"]
 ENV CPP_DOCKER="on"
 
-# Copy the toolchain in from the LLVM container
+# Copy the toolchain and LLVM sources from the LLVM container
 COPY --from=llvm /usr/local/faasm /usr/local/faasm
+COPY --from=llvm /opt/llvm-project /opt/llvm-project
 
 # Update APT dependencies
 RUN apt update && apt install -y autotools-dev
@@ -18,7 +19,6 @@ RUN mkdir -p /code \
         https://github.com/faasm/cpp \
         /code/cpp \
     && cd /code/cpp \
-    && git submodule update --init -f third-party/llvm-project \
     && git submodule update --init -f third-party/faabric \
     && git submodule update --init -f third-party/faasm-clapack \
     && git submodule update --init -f third-party/libffi \

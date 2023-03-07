@@ -2,10 +2,6 @@
     path = third-party/wasi-libc
     url = https://github.com/faasm/wasi-libc
     branch = faasm
-[submodule "third-party/llvm-project"]
-    path = third-party/llvm-project
-    url = https://github.com/faasm/llvm-project.git
-    branch = faasm
 [submodule "third-party/libffi"]
     path = third-party/libffi
     url = https://github.com/faasm/libffi.git
