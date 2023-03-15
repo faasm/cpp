@@ -1,10 +1,11 @@
 from subprocess import run
 
+ACR_NAME = "faasm.azurecr.io"
+
 
 def build_container(
     tag_name, dockerfile, cwd, nocache=False, push=False, build_args=None
 ):
-
     build_args = build_args if build_args else dict()
 
     if nocache:
