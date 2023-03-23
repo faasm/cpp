@@ -13,6 +13,7 @@ set(PUBLIC_HEADERS
         faasm/faasm.h
         faasm/files.h
         faasm/input.h
+        faasm/memory.h
         faasm/migrate.h
         faasm/print.h
         faasm/random.h
