@@ -10,7 +10,7 @@
 // header) we link with this dummy function that uses the memory.grow op-code.
 // Note that this function is actually not called. See:
 // https://github.com/bytecodealliance/wasm-micro-runtime/issues/1706
-void __attribute__((used)) __faasm_memory_layout_protection()
+inline void __attribute__((used)) __faasm_memory_layout_protection()
 {
     __builtin_wasm_memory_grow(0, 0);
 }
