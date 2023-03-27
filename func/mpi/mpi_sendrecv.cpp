@@ -17,6 +17,8 @@ int main(int argc, char* argv[])
     int maxRank = worldSize - 1;
     int left = rank > 0 ? rank - 1 : maxRank;
 
+    for (int i = 0; i < 10000; i++) {
+
     // Receive from the left and send to the right
     int sendValue = rank;
     int recvValue = -1;
@@ -44,6 +46,7 @@ int main(int argc, char* argv[])
         return 1;
     }
     printf("Rank %i - sendrecv working properly\n", rank);
+    }
 
     MPI_Finalize();
 
