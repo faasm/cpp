@@ -9,7 +9,6 @@ from os import environ
 # modifications, used all across the project, so be **very** careful when
 # changing it, and be ready to fix problems.
 # -----------------------------------------
-
 # Directories
 FAASM_LOCAL_DIR = environ.get("FAASM_LOCAL_DIR", "/usr/local/faasm")
 FAASM_NATIVE_DIR = join(FAASM_LOCAL_DIR, "native")
@@ -142,7 +141,6 @@ WASM_EXE_LDFLAGS = [
     "-Xlinker --max-memory={}".format(FAASM_WASM_MAX_MEMORY),
     "-Xlinker --features=mutable-globals,simd128",
     "-Wl,-z,stack-size={} -Wl".format(FAASM_WASM_STACK_SIZE),
-    "-Wl,--initial-memory={}".format(FAASM_WASM_INITIAL_MEMORY_SIZE),
 ]
 
 WASM_EXE_LDFLAGS += WASM_WASI_LIBC_LDFLAGS
