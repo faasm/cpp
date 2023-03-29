@@ -1,6 +1,5 @@
 #pragma once
 
-#ifdef __wasm__
 // WAMR performs some optimisations on the WASM modules at load time, whereby
 // if no memory.grow op-code is found, memory is shrunk to the minimum
 // (as specified by the default heap and stack size). This optimisation breaks
@@ -14,4 +13,3 @@ inline void __attribute__((used)) __faasm_memory_layout_protection()
 {
     __builtin_wasm_memory_grow(0, 0);
 }
-#endif
