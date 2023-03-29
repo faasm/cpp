@@ -9,6 +9,7 @@ from os import environ
 # modifications, used all across the project, so be **very** careful when
 # changing it, and be ready to fix problems.
 # -----------------------------------------
+
 # Directories
 FAASM_LOCAL_DIR = environ.get("FAASM_LOCAL_DIR", "/usr/local/faasm")
 FAASM_NATIVE_DIR = join(FAASM_LOCAL_DIR, "native")
