@@ -5,6 +5,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "faasm/memory.h"
+
 #ifdef __cplusplus
 extern "C"
 {
