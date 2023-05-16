@@ -1,3 +1,4 @@
+from base64 import b64encode
 from os import makedirs, listdir
 from os.path import join, exists, splitext
 from shutil import rmtree
@@ -111,7 +112,9 @@ def invoke(ctx, user, func, input_data=None, mpi=None, graph=False):
     }
 
     if input_data:
-        data["input_data"] = input_data
+        data["input_data"] = b64encode(input_data.encode("utf-8")).decode(
+            "utf-8"
+        )
 
     if mpi is not None:
         data["mpi_world_size"] = int(mpi)
