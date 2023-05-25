@@ -42,3 +42,5 @@ __faasm_sm_critical_local_end
 # Migration
 __faasm_migrate_point
 
+# Test
+__faasm_host_interface_test

@@ -157,4 +157,7 @@ void __faasm_sm_critical_local_end();
 
 HOST_IFACE_FUNC
 void __faasm_migrate_point(FaasmMigrateEntryPoint f, int arg);
+
+HOST_IFACE_FUNC
+void __faasm_host_interface_test(int testNum);
 #endif
