@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(PUBLIC_HEADERS
         faasm/core.h
         faasm/host_interface.h
+        faasm/host_interface_test.h
         faasm/array.h
         faasm/compare.h
         faasm/faasm.h
