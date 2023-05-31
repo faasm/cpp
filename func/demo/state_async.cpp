@@ -1,4 +1,5 @@
 #include <faasm/faasm.h>
+#include <string>
 
 int main(int argc, char* argv[])
 {
@@ -17,13 +18,14 @@ int main(int argc, char* argv[])
     faasmReadState(key, readValueSync, 4);
 
     // Check things are equal
-    uint8_t equal[4];
+    std::string output = "equal";
     for (int i = 0; i < 4; i++) {
-        bool isEqual = readValueAsync[i] == readValueSync[i];
-        equal[i] = uint8_t(isEqual);
+        if (readValueAsync[i] != readValueSync[i]) {
+            output = "not equal!";
+        }
     }
 
-    faasmSetOutput(equal, 4);
+    faasmSetOutput(output.c_str(), output.size());
 
     return 0;
 }

@@ -1,4 +1,5 @@
 #include <faasm/faasm.h>
+#include <string>
 #include <vector>
 
 int main(int argc, char* argv[])
@@ -24,6 +25,11 @@ int main(int argc, char* argv[])
     success &= chunkB[1] == 7;
     success &= chunkB[2] == 8;
 
-    faasmSetOutput(BYTES(&success), 1);
+    std::string successStr = "success";
+    if (!success) {
+        successStr = "failure";
+    }
+    faasmSetOutput(successStr.c_str(), successStr.size());
+
     return 0;
 }

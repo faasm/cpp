@@ -1,13 +1,12 @@
 #include <faasm/faasm.h>
 
+#include <string>
+
 int main(int argc, char* argv[])
 {
-    uint8_t output[5];
-    for (int i = 0; i < 5; i++) {
-        output[i] = (uint8_t)i;
-    }
+    std::string output = "dummy";
 
-    faasmSetOutput(output, 5);
+    faasmSetOutput(output.c_str(), output.size());
 
     return 0;
 }

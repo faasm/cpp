@@ -25,9 +25,7 @@ int main(int argc, char* argv[])
 
     std::string output =
       "Fibonacci " + std::to_string(fibNum) + " = " + std::to_string(result);
-    const uint8_t* outputBuffer;
-    outputBuffer = reinterpret_cast<const uint8_t*>(output.c_str());
-    faasmSetOutput(outputBuffer, output.size());
+    faasmSetOutput(output.c_str(), output.size());
 
     return 0;
 }

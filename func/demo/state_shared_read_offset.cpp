@@ -1,4 +1,5 @@
 #include <faasm/faasm.h>
+#include <string>
 
 int main(int argc, char* argv[])
 {
@@ -15,8 +16,11 @@ int main(int argc, char* argv[])
         }
     }
 
-    uint8_t output[1] = { (uint8_t)valuesMatch };
-    faasmSetOutput(output, 1);
+    std::string successStr = "success";
+    if (!valuesMatch) {
+        successStr = "failure";
+    }
+    faasmSetOutput(successStr.c_str(), successStr.size());
 
     return 0;
 }

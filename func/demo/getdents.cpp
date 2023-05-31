@@ -38,8 +38,7 @@ int main(int argc, char* argv[])
 
     closedir(dirp);
 
-    faasmSetOutput(reinterpret_cast<const uint8_t*>(output.c_str()),
-                   output.size());
+    faasmSetOutput(output.c_str(), output.size());
 
     return 0;
 }

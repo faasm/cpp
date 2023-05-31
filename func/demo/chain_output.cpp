@@ -1,18 +1,19 @@
-#include <faasm/compare.h>
 #include <faasm/faasm.h>
 #include <stdio.h>
 
+#include <string>
+
 int otherA()
 {
-    uint8_t outputA[5] = { 0, 1, 2, 3, 4 };
-    faasmSetOutput(outputA, 5);
+    std::string outputA = "expected A";
+    faasmSetOutput(outputA.c_str(), outputA.size());
     return 0;
 }
 
 int otherB()
 {
-    uint8_t outputB[3] = { 5, 4, 3 };
-    faasmSetOutput(outputB, 3);
+    std::string outputB = "longer expected B";
+    faasmSetOutput(outputB.c_str(), outputB.size());
     return 0;
 }
 
@@ -24,25 +25,27 @@ int main(int argc, char* argv[])
     unsigned int callIdA = faasmChain(otherA, nullptr, 0);
     unsigned int callIdB = faasmChain(otherB, nullptr, 0);
 
-    uint8_t expectedA[5] = { 0, 1, 2, 3, 4 };
-    uint8_t actualA[5] = { 0, 0, 0, 0, 0 };
+    std::string expectedA = "expected A";
+    std::string actualA;
+    actualA.reserve(expectedA.size());
 
-    uint8_t expectedB[3] = { 5, 4, 3 };
-    uint8_t actualB[3] = { 0, 0, 0 };
+    std::string expectedB = "longer expected B";
+    std::string actualB;
+    actualB.reserve(expectedB.size());
 
-    unsigned int resA = faasmAwaitCallOutput(callIdA, actualA, 5);
-    unsigned int resB = faasmAwaitCallOutput(callIdB, actualB, 3);
+    unsigned int resA = faasmAwaitCallOutput(callIdA, actualA.c_str(), actualA.size());
+    unsigned int resB = faasmAwaitCallOutput(callIdB, actualB.c_str(), actualB.size());
 
     if (resA != 0 || resB != 0) {
         printf("One or more chained calls failed: %i %i\n", resA, resB);
         return 1;
     }
 
-    if (!faasm::compareArrays<uint8_t>(actualA, expectedA, 5)) {
+    if (actualA != expectedA) {
         return 1;
     }
 
-    if (!faasm::compareArrays<uint8_t>(actualB, expectedB, 3)) {
+    if (actualB != expectedB) {
         return 1;
     }
 

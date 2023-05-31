@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
     size_t nPages = 3;
     size_t memLen = (nPages * 64 * 1024) + 1234;
 
-    uint8_t outputBuf[1];
+    std::string output = "0";
 
     char* memPtrs[10];
     std::array<std::string, 10> expected;
@@ -53,8 +53,8 @@ int main(int argc, char* argv[])
         }
     }
 
-    outputBuf[0] = 1;
-    faasmSetOutput(outputBuf, 1);
+    output = 1;
+    faasmSetOutput(output.c_str(), output.size());
 
     return 0;
 }

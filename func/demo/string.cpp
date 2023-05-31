@@ -9,8 +9,7 @@ int main(int argc, char* argv[])
 
     std::string s3 = s1 + " " + s2;
 
-    auto output = reinterpret_cast<const uint8_t*>(s3.c_str());
-    faasmSetOutput(output, s3.size());
+    faasmSetOutput(s3.c_str(), s3.size());
 
     return 0;
 }

@@ -12,8 +12,7 @@ int main(int argc, char* argv[])
     char str[strLen];
     sprintf(str, "Seconds: %li", tv.tv_sec);
 
-    auto output = BYTES(str);
-    faasmSetOutput(output, strLen);
+    faasmSetOutput(str, strLen);
 
     return 0;
 }

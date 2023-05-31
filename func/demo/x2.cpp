@@ -1,4 +1,5 @@
 #include "faasm/faasm.h"
+#include <string>
 
 /**
  * Multiplies its array input by two
@@ -15,7 +16,8 @@ int main(int argc, char* argv[])
         output[i] = inputBuffer[i] * 2;
     }
 
-    faasmSetOutput(output, inputSize);
+    std::string outputStr = "success";
+    faasmSetOutput(outputStr.c_str(), outputStr.size());
 
     return 0;
 }
