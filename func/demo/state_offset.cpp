@@ -21,12 +21,13 @@ int main(int argc, char* argv[])
 
     // Read 5, 5, 6, 6, 4
     faasmPullState(key, 7);
-    uint8_t expectedReadValuePartial[5] = {5, 5, 6, 6, 4};
+    uint8_t expectedReadValuePartial[5] = { 5, 5, 6, 6, 4 };
     uint8_t readValuePartial[5];
     faasmReadStateOffset(key, 7, 0, readValuePartial, 5);
 
     std::string output = "success";
-    if (!faasm::compareArrays<uint8_t>(readValuePartial, expectedReadValuePartial, 5)) {
+    if (!faasm::compareArrays<uint8_t>(
+          readValuePartial, expectedReadValuePartial, 5)) {
         output = "failure";
     }
     faasmSetOutput(output.c_str(), output.size());

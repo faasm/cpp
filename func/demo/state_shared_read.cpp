@@ -27,6 +27,5 @@ int main(int argc, char* argv[])
     }
     faasmSetOutput(successStr.c_str(), successStr.size());
 
-
     return 0;
 }

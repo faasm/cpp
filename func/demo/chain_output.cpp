@@ -33,8 +33,10 @@ int main(int argc, char* argv[])
     std::string actualB;
     actualB.reserve(expectedB.size());
 
-    unsigned int resA = faasmAwaitCallOutput(callIdA, actualA.c_str(), actualA.size());
-    unsigned int resB = faasmAwaitCallOutput(callIdB, actualB.c_str(), actualB.size());
+    unsigned int resA =
+      faasmAwaitCallOutput(callIdA, actualA.c_str(), actualA.size());
+    unsigned int resB =
+      faasmAwaitCallOutput(callIdB, actualB.c_str(), actualB.size());
 
     if (resA != 0 || resB != 0) {
         printf("One or more chained calls failed: %i %i\n", resA, resB);
