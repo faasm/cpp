@@ -17,8 +17,9 @@ int randomInteger(int iStart, int iEnd)
 
 float randomFloat()
 {
-    // Distribution fixed here (can be static)
-    static std::uniform_real_distribution<float> uni(0, 1);
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::uniform_real_distribution<float> uni(0, 1);
 
     float f = uni(rng);
     return f;

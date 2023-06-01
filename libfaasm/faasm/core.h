@@ -153,9 +153,9 @@ extern "C"
     void faasmGetInput(uint8_t* buffer, long bufferLen);
 
     /**
-     * Sets the given array as the output data for this function
+     * Sets the given string as the output data for this function
      */
-    void faasmSetOutput(const uint8_t* newOutput, long outputLen);
+    void faasmSetOutput(const char* newOutput, long outputLen);
 
     /**
      * Chains a function with the given input data
@@ -188,8 +188,8 @@ extern "C"
      * Gets the output from the given call into the buffer
      */
     unsigned int faasmAwaitCallOutput(unsigned int messageId,
-                                      uint8_t* buffer,
-                                      long bufferLen);
+                                      const char* output,
+                                      long outputLen);
 
     /**
      * Returns the python user

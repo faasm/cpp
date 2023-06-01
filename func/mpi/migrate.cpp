@@ -69,6 +69,7 @@ void doBenchmark(int nLoops)
 
     // Time point for the migrated ranks
     printf("Rank %i - time now: %f\n", rank, faasm::getSecondsSinceEpoch());
+    printf("Rank %i - %i loops to go\n", rank, nLoops);
 
     for (int i = 0; i < nLoops; i++) {
         if (rank == 0 && i % (nLoops / 10) == 0) {
@@ -104,6 +105,7 @@ void doBenchmark(int nLoops)
             // Timing
             timeStartSec = faasm::getSecondsSinceEpoch();
             printf("Time start ms: %f\n", timeStartSec);
+            printf("Second argument: %i\n", nLoops - i - 1);
 
             __faasm_migrate_point(&doBenchmark, (nLoops - i - 1));
         }

@@ -11,8 +11,7 @@ int main(int argc, char* argv[])
     char str[strLen];
     sprintf(str, "Seconds: %.3f", secs);
 
-    auto output = BYTES(str);
-    faasmSetOutput(output, strLen);
+    faasmSetOutput(str, strLen);
 
     return 0;
 }

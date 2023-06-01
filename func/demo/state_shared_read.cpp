@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <faasm/faasm.h>
+#include <string>
 
 int main(int argc, char* argv[])
 {
@@ -20,6 +21,11 @@ int main(int argc, char* argv[])
         valuesMatch &= (actual[i] == expected[i]);
     }
 
-    faasmSetOutput(BYTES(&valuesMatch), 1);
+    std::string successStr = "success";
+    if (!valuesMatch) {
+        successStr = "failure";
+    }
+    faasmSetOutput(successStr.c_str(), successStr.size());
+
     return 0;
 }

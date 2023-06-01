@@ -15,14 +15,13 @@ int main(int argc, char* argv[])
     // Handle empty input
     if (inputLen == 0) {
         const char* output = "Nothing to echo";
-        auto bytesOutput = reinterpret_cast<const uint8_t*>(output);
-        faasmSetOutput(bytesOutput, strlen(output));
+        faasmSetOutput(output, strlen(output));
         return 0;
     }
 
     printf("Echoing %s\n", inputStr);
 
-    faasmSetOutput(reinterpret_cast<const uint8_t*>(inputStr), inputLen);
+    faasmSetOutput(inputStr, inputLen);
 
     return 0;
 }

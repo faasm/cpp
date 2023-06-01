@@ -97,7 +97,7 @@ HOST_IFACE_FUNC
 long __faasm_read_input(unsigned char* buffer, long bufferLen);
 
 HOST_IFACE_FUNC
-void __faasm_write_output(const unsigned char* output, long outputLen);
+void __faasm_write_output(const char* output, long outputLen);
 
 HOST_IFACE_FUNC
 unsigned int __faasm_chain_name(const char* name,
@@ -114,8 +114,8 @@ int __faasm_await_call(unsigned int messageId);
 
 HOST_IFACE_FUNC
 int __faasm_await_call_output(unsigned int messageId,
-                              unsigned char* buffer,
-                              long bufferLen);
+                              const char* output,
+                              long outputLen);
 
 HOST_IFACE_FUNC
 void __faasm_get_py_user(unsigned char* buffer, long bufferLen);

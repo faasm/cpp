@@ -141,7 +141,7 @@ void faasmGetInput(uint8_t* buffer, long bufferLen)
     __faasm_read_input(buffer, bufferLen);
 }
 
-void faasmSetOutput(const uint8_t* newOutput, long outputLen)
+void faasmSetOutput(const char* newOutput, long outputLen)
 {
     __faasm_write_output(newOutput, outputLen);
 }
@@ -152,10 +152,10 @@ unsigned int faasmAwaitCall(unsigned int messageId)
 }
 
 unsigned int faasmAwaitCallOutput(unsigned int messageId,
-                                  uint8_t* buffer,
-                                  long bufferLen)
+                                  const char* output,
+                                  long outputLen)
 {
-    return __faasm_await_call_output(messageId, buffer, bufferLen);
+    return __faasm_await_call_output(messageId, output, outputLen);
 }
 
 unsigned int faasmChainNamed(const char* name,

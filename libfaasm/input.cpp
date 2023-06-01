@@ -33,8 +33,7 @@ int getIntInput()
 
 void setStringOutput(const char* val)
 {
-    auto bytesOutput = reinterpret_cast<const uint8_t*>(val);
-    faasmSetOutput(bytesOutput, strlen(val));
+    faasmSetOutput(val, strlen(val));
 }
 
 int* parseStringToIntArray(const char* strIn, int nInts)
