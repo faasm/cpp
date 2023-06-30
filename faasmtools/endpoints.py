@@ -6,8 +6,10 @@ FAASM_INI_FILE = join(expanduser("~"), ".config", "faasm.ini")
 DEFAULT_KNATIVE_HEADERS = {"Host": "faasm-worker.faasm.example.com"}
 
 DEFAULT_INVOKE_HOST = "worker"
+DEFAULT_PLANNER_HOST = "planner"
 DEFAULT_UPLOAD_HOST = "upload"
 DEFAULT_INVOKE_PORT = 8080
+DEFAULT_PLANNER_PORT = 8081
 DEFAULT_UPLOAD_PORT = 8002
 
 
@@ -47,7 +49,7 @@ def get_faasm_invoke_host_port():
 
 def get_faasm_planner_host_port():
     if not faasm_config_exists():
-        raise RuntimeError("Faasm INI file not found!")
+        return DEFAULT_PLANNER_HOST, DEFAULT_PLANNER_PORT
 
     host = get_faasm_ini_value("Faasm", "planner_host")
     port = get_faasm_ini_value("Faasm", "planner_port")
