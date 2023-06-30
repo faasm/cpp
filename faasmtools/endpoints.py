@@ -45,6 +45,16 @@ def get_faasm_invoke_host_port():
     return host, port
 
 
+def get_faasm_planner_host_port():
+    if not faasm_config_exists():
+        raise RuntimeError("Faasm INI file not found!")
+
+    host = get_faasm_ini_value("Faasm", "planner_host")
+    port = get_faasm_ini_value("Faasm", "planner_port")
+
+    return host, port
+
+
 def get_knative_headers():
     if not faasm_config_exists():
         return DEFAULT_KNATIVE_HEADERS

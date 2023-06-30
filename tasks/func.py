@@ -9,6 +9,7 @@ from invoke import task
 from faasmtools.env import PROJ_ROOT
 from faasmtools.endpoints import (
     get_faasm_invoke_host_port,
+    get_faasm_planner_host_port,
     get_faasm_upload_host_port,
     get_knative_headers,
 )
@@ -151,7 +152,7 @@ def flush(ctx):
     Flush the Faasm cluster
     """
     headers = get_knative_headers()
-    host, port = get_faasm_invoke_host_port()
+    host, port = get_faasm_planner_host_port()
 
     url = "http://{}:{}".format(host, port)
     data = {"type": FAABRIC_MSG_TYPE_FLUSH}
