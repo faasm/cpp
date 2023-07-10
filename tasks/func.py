@@ -1,17 +1,14 @@
 from base64 import b64encode
-from os import makedirs, listdir
-from os.path import join, exists, splitext
-from shutil import rmtree
-from subprocess import run
-import requests
-from invoke import task
 from faasmctl.util.flush import flush_workers
 from faasmctl.util.invoke import invoke_wasm
 from faasmctl.util.upload import upload_wasm
 from faasmtools.env import PROJ_ROOT
 from faasmtools.compile_util import wasm_cmake, wasm_copy_upload
-
-FAABRIC_MSG_TYPE_FLUSH = 3
+from invoke import task
+from os import makedirs, listdir
+from os.path import join, exists, splitext
+from shutil import rmtree
+from subprocess import run
 
 FUNC_DIR = join(PROJ_ROOT, "func")
 FUNC_BUILD_DIR = join(PROJ_ROOT, "build", "func")
@@ -78,7 +75,8 @@ def upload(ctx, user, func):
     """
     Upload a compiled function
     """
-    upload_wasm(user, func)
+    func_file = join(FUNC_BUILD_DIR, user, "{}.wasm".format(func))
+    upload_wasm(user, func, func_file)
 
 
 @task
