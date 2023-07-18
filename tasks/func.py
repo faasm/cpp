@@ -1,21 +1,14 @@
 from base64 import b64encode
+from faasmctl.util.flush import flush_workers
+from faasmctl.util.invoke import invoke_wasm
+from faasmctl.util.upload import upload_wasm
+from faasmtools.env import PROJ_ROOT
+from faasmtools.compile_util import wasm_cmake, wasm_copy_upload
+from invoke import task
 from os import makedirs, listdir
 from os.path import join, exists, splitext
 from shutil import rmtree
 from subprocess import run
-import requests
-from invoke import task
-
-from faasmtools.env import PROJ_ROOT
-from faasmtools.endpoints import (
-    get_faasm_invoke_host_port,
-    get_faasm_planner_host_port,
-    get_faasm_upload_host_port,
-    get_knative_headers,
-)
-from faasmtools.compile_util import wasm_cmake, wasm_copy_upload
-
-FAABRIC_MSG_TYPE_FLUSH = 3
 
 FUNC_DIR = join(PROJ_ROOT, "func")
 FUNC_BUILD_DIR = join(PROJ_ROOT, "build", "func")
@@ -82,12 +75,8 @@ def upload(ctx, user, func):
     """
     Upload a compiled function
     """
-    host, port = get_faasm_upload_host_port()
     func_file = join(FUNC_BUILD_DIR, user, "{}.wasm".format(func))
-    url = "http://{}:{}/f/{}/{}".format(host, port, user, func)
-    response = requests.put(url, data=open(func_file, "rb"))
-
-    print("Response {}: {}".format(response.status_code, response.text))
+    upload_wasm(user, func, func_file)
 
 
 @task
@@ -105,8 +94,7 @@ def invoke(ctx, user, func, input_data=None, mpi=None, graph=False):
     """
     Invoke a given function
     """
-    host, port = get_faasm_invoke_host_port()
-    url = "http://{}:{}".format(host, port)
+    # Prepare Faasm message
     data = {
         "function": func,
         "user": user,
@@ -124,14 +112,10 @@ def invoke(ctx, user, func, input_data=None, mpi=None, graph=False):
         data["record_exec_graph"] = True
         data["async"] = True
 
-    headers = get_knative_headers()
-    response = requests.post(url, json=data, headers=headers)
+    # Invoke message
+    response = invoke_wasm(data)
 
-    if response.status_code != 200:
-        print("Error ({}):\n{}".format(response.status_code, response.text))
-        exit(1)
-
-    print("Success:\n{}".format(response.text))
+    print("Success:\n{}".format(response.messageResults[0].outputData))
 
 
 @task
@@ -151,14 +135,7 @@ def flush(ctx):
     """
     Flush the Faasm cluster
     """
-    headers = get_knative_headers()
-    host, port = get_faasm_planner_host_port()
-
-    url = "http://{}:{}".format(host, port)
-    data = {"type": FAABRIC_MSG_TYPE_FLUSH}
-    response = requests.post(url, json=data, headers=headers)
-
-    print("Flush response {}: {}".format(response.status_code, response.text))
+    flush_workers()
 
 
 @task

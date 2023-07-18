@@ -25,12 +25,9 @@ RUN mkdir -p /code \
     && git submodule update --init -f third-party/wasi-libc \
     && git submodule update --init -f third-party/zlib
 
-# Install the faasmtools Python lib
+# Python set-up
 RUN cd /code/cpp \
-    && ./bin/create_venv.sh \
-    && source venv/bin/activate \
-    && pip3 install -r requirements.txt \
-    && pip3 install .
+    && ./bin/create_venv.sh
 
 # Build all the targets
 RUN cd /code/cpp \

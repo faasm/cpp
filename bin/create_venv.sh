@@ -29,6 +29,8 @@ fi
 pip_cmd install -U pip
 pip_cmd install -U setuptools wheel
 pip_cmd install -r requirements.txt
+# Install faasmtools in editable mode
+pip_cmd install -e .
 
 touch ${VENV_PATH}/faasm_venv.BUILT
 
