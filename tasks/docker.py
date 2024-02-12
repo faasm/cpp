@@ -4,8 +4,9 @@ from faasmtools.docker import (
     ACR_NAME,
 )
 from faasmtools.env import (
-    get_version,
+    LLVM_VERSION,
     PROJ_ROOT,
+    get_version,
 )
 from invoke import task
 from os.path import join
@@ -34,6 +35,7 @@ def build(ctx, c, nocache=False, push=False):
     build_args = {"SYSROOT_VERSION": get_version()}
     for ctr in c:
         if ctr == "llvm":
+            build_args["LLVM_VERSION_MAJOR"] = LLVM_VERSION.split(".")[0]
             dockerfile = LLVM_DOCKERFILE
             tag = get_llvm_tag()
         elif ctr == "cpp-sysroot":

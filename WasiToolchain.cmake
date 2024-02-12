@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.4.0)
+cmake_minimum_required(VERSION 3.5.0)
+# project("Faasm WASM compilation toolchain" C CXX)
 
 # -----------------------------------------
 # A useful reference for this file is the wasi-sdk equivalent:
@@ -11,15 +12,16 @@ cmake_minimum_required(VERSION 3.4.0)
 set(INSTALL_DIR $ENV{FAASM_WASM_INSTALL_DIR})
 set(FAASM_SYSROOT $ENV{FAASM_WASM_SYSROOT})
 
-set(EXE_SUFFIX "")
-
 set(UNIX 1)
 
 # Note that system name and processor here are crucial
 # Setting system name automatically switches on cross-compiling
-set(CMAKE_SYSTEM_NAME Wasm)
+set(CMAKE_SYSTEM_NAME WASI)
 set(CMAKE_SYSTEM_VERSION 1)
 set(CMAKE_SYSTEM_PROCESSOR wasm32)
+set(WASM_TRIPLE  wasm32-wasi)
+
+set(WASI_HOST_EXE_SUFFIX "")
 
 if(FAASM_BUILD_SHARED)
     message(STATUS "Faasm building SHARED libraries")
@@ -32,16 +34,17 @@ else()
     set(WASM_TRIPLE $ENV{FAASM_WASM_HOST_STATIC})
 endif()
 
-set(CMAKE_C_COMPILER_TARGET ${WASM_TRIPLE} CACHE STRING "faasm build")
-set(CMAKE_CXX_COMPILER_TARGET ${WASM_TRIPLE} CACHE STRING "faasm build")
-message(STATUS "Faasm building target ${CMAKE_CXX_COMPILER_TARGET}")
-
 # Specify LLVM toolchain
 set(CMAKE_C_COMPILER $ENV{FAASM_WASM_CC})
 set(CMAKE_CXX_COMPILER $ENV{FAASM_WASM_CXX})
+set(CMAKE_ASM_COMPILER $ENV{FAASM_WASM_CC})
 set(CMAKE_AR $ENV{FAASM_WASM_AR} CACHE STRING "faasm build")
 set(CMAKE_NM $ENV{FAASM_WASM_NM} CACHE STRING "faasm build")
 set(CMAKE_RANLIB $ENV{FAASM_WASM_RANLIB} CACHE STRING "faasm build")
+set(CMAKE_C_COMPILER_TARGET ${WASM_TRIPLE} CACHE STRING "faasm build")
+set(CMAKE_CXX_COMPILER_TARGET ${WASM_TRIPLE} CACHE STRING "faasm build")
+set(CMAKE_ASM_COMPILER_TARGET ${WASM_TRIPLE} CACHE STRING "faasm build")
+message(STATUS "Faasm building target ${CMAKE_CXX_COMPILER_TARGET}")
 
 # We define dynamic linking functions in Faasm
 unset(CMAKE_DL_LIBS CACHE)
@@ -72,4 +75,3 @@ set(CMAKE_C_COMPILER_WORKS ON)
 set(CMAKE_CXX_COMPILER_WORKS ON)
 
 set(FAASM_BLAS_LIBS $ENV{FAASM_WASM_BLAS_LIBS})
-

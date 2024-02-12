@@ -45,10 +45,11 @@ def do_llvm_clone():
     git_cmd = " ".join(git_cmd)
     run(git_cmd, shell=True, check=True)
 
-    llvm_patches_dir = join(PATCHES_DIR, "llvm-project")
-    for patch in listdir(llvm_patches_dir):
-        git_cmd = "git apply {}".format(join(llvm_patches_dir, patch))
-        run(git_cmd, shell=True, check=True, cwd=LLVM_DIR)
+    # TODO: do we even need this patch anymore?
+    # llvm_patches_dir = join(PATCHES_DIR, "llvm-project")
+    # for patch in listdir(llvm_patches_dir):
+        # git_cmd = "git apply {}".format(join(llvm_patches_dir, patch))
+        # run(git_cmd, shell=True, check=True, cwd=LLVM_DIR)
 
 
 def do_llvm_build(target, clean_target=None):
@@ -92,10 +93,10 @@ def build(ctx, clean=False):
 @task()
 def libs(ctx, clean=False):
     """
-    Build the compiler-rt, libcxx, and libcxxabi for our LLVM fork
+    Build the compiler-rt, and libcxx for our LLVM fork
     """
     do_llvm_build(
-        "libcxx libcxxabi compiler-rt", "clean-libs" if clean else None
+        "libcxx compiler-rt", "clean-libs" if clean else None
     )
 
 
