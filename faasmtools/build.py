@@ -142,7 +142,7 @@ WASM_EXE_LDFLAGS = [
     "-Xlinker --export={}".format(FAASM_WASM_CTORS_FUNC_NAME),
     "-Xlinker --export=__stack_pointer",
     "-Xlinker --max-memory={}".format(FAASM_WASM_MAX_MEMORY),
-    "-Xlinker --features=mutable-globals,simd128",
+    "-Xlinker --features=mutable-globals,sign-ext,simd128",
     "-Wl,-z,stack-size={} -Wl".format(FAASM_WASM_STACK_SIZE),
 ]
 
