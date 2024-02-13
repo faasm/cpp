@@ -115,7 +115,11 @@ $(BUILD_DIR)/compiler-rt.BUILT: $(BUILD_DIR)/llvm.BUILT
 		-DCOMPILER_RT_OS_DIR=wasi \
 		$(LLVM_PROJ_DIR)/compiler-rt/lib/builtins
 	ninja -v -C $(BUILD_DIR)/compiler-rt install
+	# Install clang-provided headers
 	cp -R $(BUILD_DIR)/llvm/lib/clang $(FAASM_TOOLCHAIN_DIR)/lib/
+	# Install libclang_rt.builtins-wasm32.a
+	mkdir -p $(FAASM_TOOLCHAIN_DIR)/lib/clang/$(CLANG_VERSION_MAJOR)/lib/wasi
+	cp -R $(BUILD_DIR)/compiler-rt/lib/wasi/ $(FAASM_TOOLCHAIN_DIR)/lib/clang/$(CLANG_VERSION_MAJOR)/lib/wasi/
 	touch $(BUILD_DIR)/compiler-rt.BUILT
 
 $(BUILD_DIR)/libcxx.BUILT: $(BUILD_DIR)/llvm.BUILT ${BUILD_DIR}/wasi-libc.BUILT
