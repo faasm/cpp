@@ -2,7 +2,7 @@ from faasmtools.build import (
     CMAKE_TOOLCHAIN_FILE,
     FAASM_BUILD_ENV_DICT,
     FAASM_NATIVE_DIR,
-    WASM_SYSROOT,
+    WASM_LIB_INSTALL,
 )
 from faasmtools.env import LLVM_VERSION, PROJ_ROOT
 from os.path import exists, join
@@ -16,7 +16,7 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
     Builds one of the libraries included in this repo
     """
     work_dir = join(PROJ_ROOT, subdir)
-    install_dir = FAASM_NATIVE_DIR if native else WASM_SYSROOT
+    install_dir = FAASM_NATIVE_DIR if native else WASM_LIB_INSTALL
 
     if native and shared:
         build_dir = "build-native-shared"
@@ -67,3 +67,11 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
 
     run("ninja", shell=True, cwd=build_dir, check=True)
     run("ninja install", shell=True, cwd=build_dir, check=True)
+
+    # Copy imports into place for WASM libraries
+    if not native:
+        imports_file = "{}.imports".format(subdir)
+        src_imports = join(work_dir, imports_file)
+        dst_imports = join(install_dir, imports_file)
+        print("Copying {} to {}".format(src_imports, dst_imports))
+        run("cp {} {}".format(src_imports, dst_imports), check=True, shell=True)
