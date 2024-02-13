@@ -8,7 +8,7 @@ function(mpi_func exec_name dir_path)
 
     target_link_libraries(${exec_name} faasmpi mpi)
 
-    if (NOT CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+    if (NOT CMAKE_SYSTEM_NAME STREQUAL "WASI")
         target_link_libraries(${exec_name} pthread)
     endif ()
 

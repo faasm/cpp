@@ -101,7 +101,7 @@ demo_func(zygote_check zygote_check.cpp)
 
 # 23/09/2020 - removing simd
 # WASM-only functions
-if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     demo_func(emscripten_check emscripten_check.cpp)
     target_link_libraries(emscripten_check emscripten)
 

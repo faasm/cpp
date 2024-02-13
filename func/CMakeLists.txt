@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(FAASM_NATIVE_INSTALL $ENV{FAASM_NATIVE_INSTALL_DIR})
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     # For Faasm functions, we add `_faasm_zygote` as an exported symbol
     set(CMAKE_EXE_LINKER_FLAGS
         "${CMAKE_EXE_LINKER_FLAGS} -Xlinker --export=_faasm_zygote"
@@ -20,7 +20,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     set(CMAKE_EXECUTABLE_SUFFIX ".wasm")
 endif ()
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     # ----------------------
     # Wasm build
     # ----------------------

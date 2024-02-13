@@ -1,8 +1,9 @@
 set(FAASM_USER omp)
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker --shared-memory")
 else ()
     find_package(OpenMP REQUIRED)
     include_directories(${OPENMP_INCLUDE_DIR} ${LLVM_INCLUDE_DIRS}/openmp)
@@ -15,7 +16,7 @@ function(omp_func exec_name dir_path)
 
     target_link_libraries(${exec_name} faasmp)
 
-    if (NOT CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+    if (NOT CMAKE_SYSTEM_NAME STREQUAL "WASI")
         target_link_libraries(${exec_name} pthread)
     endif ()
 
