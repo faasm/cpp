@@ -9,7 +9,7 @@ from shutil import copy, rmtree
 from subprocess import run
 
 
-def wasm_cmake(src_dir, build_dir, target, clean=False, debug=False):
+def wasm_cmake(src_dir, build_dir, target, clean=False, debug=False, is_threads=False):
     cmake_build_type = "Debug" if debug else "Release"
 
     if exists(build_dir) and clean:

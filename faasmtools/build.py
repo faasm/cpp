@@ -142,7 +142,7 @@ WASM_EXE_LDFLAGS = [
     "-Xlinker --export={}".format(FAASM_WASM_CTORS_FUNC_NAME),
     "-Xlinker --export=__stack_pointer",
     "-Xlinker --max-memory={}".format(FAASM_WASM_MAX_MEMORY),
-    "-Xlinker --features=mutable-globals,sign-ext,simd128",
+    "-Xlinker --features=bulk-memory,mutable-globals,sign-ext,simd128",
     "-Wl,-z,stack-size={} -Wl".format(FAASM_WASM_STACK_SIZE),
 ]
 
@@ -188,6 +188,8 @@ WASM_BLAS_LIBS = [
 
 # Env. variables as a dictionary: prefix with FAASM_WASM or FAASM_NATIVE
 # depending on the build type variables target
+# WARNING: do NOT import this method directly, instead use the getter method:
+# get_faasm_build_env_dict
 FAASM_BUILD_ENV_DICT = {
     "CMAKE_ROOT": FAASM_CMAKE_ROOT,
     "FAASM_NATIVE_INSTALL_DIR": FAASM_NATIVE_DIR,
@@ -206,6 +208,8 @@ FAASM_BUILD_ENV_DICT = {
     "FAASM_WASM_SYSROOT": WASM_SYSROOT,
     "FAASM_WASM_CFLAGS": " ".join(WASM_CFLAGS),
     "FAASM_WASM_CFLAGS_SHARED": " ".join(WASM_CFLAGS_SHARED),
+    "FAASM_WASM_CXXFLAGS": " ".join(WASM_CXXFLAGS),
+    "FAASM_WASM_CXXFLAGS_SHARED": " ".join(WASM_CXXFLAGS_SHARED),
     "FAASM_WASM_EXE_LINKER_FLAGS": " ".join(WASM_EXE_LDFLAGS),
     "FAASM_WASM_EXE_LINKER_FLAGS_SHARED": " ".join(WASM_EXE_LDFLAGS_SHARED),
     "FAASM_WASM_SHARED_LINKER_FLAGS": " ".join(WASM_LDFLAGS_SHARED),
@@ -222,6 +226,23 @@ FAASM_RUNTIME_ENV_DICT = {
     "FAASM_WASM_STACK_SIZE": str(FAASM_WASM_STACK_SIZE),
     "FAASM_WASM_ZYGOTE_FUNC_NAME": FAASM_WASM_ZYGOTE_FUNC_NAME,
 }
+
+
+def get_faasm_build_env_dict(is_threads=False):
+    """
+    This method returns the right set of environment variables needed to use
+    our toolchain file as well as most cross-compilation scripts in Faasm.
+    """
+    build_env_dicts = FAASM_BUILD_ENV_DICT
+    if is_threads:
+        build_env_dicts["FAASM_WASM_TRIPLE"] = "wasm32-wasi-threads"
+        build_env_dicts["FAASM_WASM_CFLAGS"] += " -pthread"
+        build_env_dicts["FAASM_WASM_CXXFLAGS"] += " -pthread"
+        build_env_dicts["FAASM_WASM_EXE_LINKER_FLAGS"] += " -Wl,--import-memory"
+        build_env_dicts["FAASM_WASM_EXE_LINKER_FLAGS"] += " -Wl,--export-memory"
+    else:
+        build_env_dicts["FAASM_WASM_TRIPLE"] = "wasm32-wasi"
+
 
 
 def get_dict_as_cmake_vars(env_dict):

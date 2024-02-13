@@ -35,7 +35,6 @@ set(LIB_FILES
     zygote.cpp
 )
 
-
 if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     message(STATUS "Libfaasm WebAssembly build")
 
