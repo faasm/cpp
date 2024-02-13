@@ -119,7 +119,9 @@ $(BUILD_DIR)/compiler-rt.BUILT: $(BUILD_DIR)/llvm.BUILT
 	cp -R $(BUILD_DIR)/llvm/lib/clang $(FAASM_TOOLCHAIN_DIR)/lib/
 	# Install libclang_rt.builtins-wasm32.a
 	mkdir -p $(FAASM_TOOLCHAIN_DIR)/lib/clang/$(CLANG_VERSION_MAJOR)/lib/wasi
-	cp -R $(BUILD_DIR)/compiler-rt/lib/wasi/ $(FAASM_TOOLCHAIN_DIR)/lib/clang/$(CLANG_VERSION_MAJOR)/lib/wasi/
+	cp \
+		$(BUILD_DIR)/compiler-rt/lib/wasi/libclang_rt.builtins-wasm32.a \
+		$(FAASM_TOOLCHAIN_DIR)/lib/clang/$(CLANG_VERSION_MAJOR)/lib/wasi/libclang_rt.builtins-wasm32.a
 	touch $(BUILD_DIR)/compiler-rt.BUILT
 
 $(BUILD_DIR)/libcxx.BUILT: $(BUILD_DIR)/llvm.BUILT ${BUILD_DIR}/wasi-libc.BUILT
