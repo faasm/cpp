@@ -58,8 +58,17 @@ if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
         CODE "execute_process( \
         COMMAND
             ${CMAKE_COMMAND} -E create_symlink \
-            ${CMAKE_SYSROOT}/lib/wasm32-wasi/libfaabricmpi.a \
-            ${CMAKE_SYSROOT}/lib/wasm32-wasi/libmpi.a \
+            $ENV{FAASM_WASM_LIB_INSTALL_DIR}/libfaabricmpi.a \
+            $ENV{FAASM_WASM_LIB_INSTALL_DIR}/libmpi.a \
+        )"
+    )
+
+    # Symlink mpi.h
+    install(
+        CODE "execute_process( \
+        COMMAND ${CMAKE_COMMAND} -E create_symlink \
+            $ENV{FAASM_WASM_LIB_INSTALL_DIR}/include/faabric/mpi/mpi.h \
+            $ENV{FAASM_WASM_HEADER_INSTALL_DIR}/mpi.h   \
         )"
     )
 else()
@@ -71,15 +80,13 @@ else()
         LIBRARY DESTINATION lib
         PUBLIC_HEADER DESTINATION include/faasmpi
     )
-endif()
 
-# Symlink header (common to wasm and native builds)
-# WARNING - if you use the default CMAKE_INSTALL_PREFIX, this may overwrite the
-# existing mpi.h on the system
-install(
-    CODE "execute_process( \
-    COMMAND ${CMAKE_COMMAND} -E create_symlink \
-        ${CMAKE_INSTALL_PREFIX}/include/faabric/mpi/mpi.h \
-        ${CMAKE_INSTALL_PREFIX}/include/mpi.h   \
-    )"
-)
+    # Symlink mpi.h
+    install(
+        CODE "execute_process( \
+        COMMAND ${CMAKE_COMMAND} -E create_symlink \
+            ${CMAKE_INSTALL_PREFIX}/include/faabric/mpi/mpi.h \
+            ${CMAKE_INSTALL_PREFIX}/include/mpi.h   \
+        )"
+    )
+endif()
