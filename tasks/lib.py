@@ -67,11 +67,3 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
 
     run("ninja", shell=True, cwd=build_dir, check=True)
     run("ninja install", shell=True, cwd=build_dir, check=True)
-
-    # Copy imports into place for WASM libraries
-    if not native:
-        imports_file = "{}.imports".format(subdir)
-        src_imports = join(work_dir, imports_file)
-        dst_imports = join(install_dir, imports_file)
-        print("Copying {} to {}".format(src_imports, dst_imports))
-        run("cp {} {}".format(src_imports, dst_imports), check=True, shell=True)
