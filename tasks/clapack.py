@@ -1,9 +1,8 @@
 from copy import copy
 from faasmtools.env import THIRD_PARTY_DIR, USABLE_CPUS
 from faasmtools.build import (
-    FAASM_BUILD_ENV_DICT,
     WASM_SYSROOT,
-    WASM_LIB_INSTALL,
+    get_faasm_build_env_dict,
 )
 from invoke import task
 from os import environ, remove
@@ -37,7 +36,7 @@ def build(ctx, clean=False, shared=False):
     # Set up environment to specify whether we're building static or shared
     env = copy(environ)
     env.update({"LIBEXT": ".so" if shared else ".a"})
-    env.update(FAASM_BUILD_ENV_DICT)
+    env.update(get_faasm_build_env_dict())
 
     # Make libf2c first (needed by others)
     run(
@@ -70,14 +69,20 @@ def uninstall(ctx):
     """
     Removes all installed files
     """
-    for headers_dir in HEADERS_DIRS:
+    build_env = get_faasm_build_env_dict()
+
+    for headers_dir in build_env["FAASM_WASM_HEADER_INSTALL_DIR"]:
         if exists(headers_dir):
             print("Removing headers {}".format(headers_dir))
             rmtree(headers_dir)
 
     for lib_name in INSTALLED_LIBS:
-        static_path = join(WASM_LIB_INSTALL, "{}.a".format(lib_name))
-        shared_path = join(WASM_LIB_INSTALL, "{}.so".format(lib_name))
+        static_path = join(
+            build_env["FAASM_WASM_LIB_INSTALL_DIR"], "{}.a".format(lib_name)
+        )
+        shared_path = join(
+            build_env["FAASM_WASM_LIB_INSTALL_DIR"], "{}.so".format(lib_name)
+        )
 
         if exists(static_path):
             print("Removing static lib {}".format(static_path))

@@ -1,8 +1,7 @@
 from faasmtools.build import (
     CMAKE_TOOLCHAIN_FILE,
-    FAASM_BUILD_ENV_DICT,
     FAASM_NATIVE_DIR,
-    WASM_LIB_INSTALL,
+    get_faasm_build_env_dict,
 )
 from faasmtools.env import LLVM_VERSION, PROJ_ROOT
 from os.path import exists, join
@@ -11,12 +10,18 @@ from shutil import rmtree
 from subprocess import run
 
 
-def build_faasm_lib(subdir, clean=False, native=False, shared=False):
+def build_faasm_lib(
+    subdir, clean=False, native=False, shared=False, threads=False
+):
     """
     Builds one of the libraries included in this repo
     """
     work_dir = join(PROJ_ROOT, subdir)
-    install_dir = FAASM_NATIVE_DIR if native else WASM_LIB_INSTALL
+    install_dir = (
+        FAASM_NATIVE_DIR
+        if native
+        else get_faasm_build_env_dict(threads)["FAASM_WASM_LIB_INSTALL_DIR"]
+    )
 
     if native and shared:
         build_dir = "build-native-shared"
@@ -62,7 +67,7 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
 
     work_env = environ.copy()
     if not native:
-        work_env.update(FAASM_BUILD_ENV_DICT)
+        work_env.update(get_faasm_build_env_dict(is_threads=threads))
     run(build_cmd_str, shell=True, cwd=build_dir, check=True, env=work_env)
 
     run("ninja", shell=True, cwd=build_dir, check=True)

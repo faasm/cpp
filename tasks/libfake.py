@@ -1,7 +1,7 @@
 from faasmtools.build import (
     CMAKE_TOOLCHAIN_FILE,
-    FAASM_BUILD_ENV_DICT,
     WASM_SYSROOT,
+    get_faasm_build_env_dict,
 )
 from faasmtools.env import PROJ_ROOT, FAASM_RUNTIME_ROOT
 from invoke import task
@@ -35,7 +35,7 @@ def fake(ctx, clean=False):
     ]
 
     work_env = environ.copy()
-    work_env.update(FAASM_BUILD_ENV_DICT)
+    work_env.update(get_faasm_build_env_dict())
     run(
         " ".join(build_cmd),
         shell=True,

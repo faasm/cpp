@@ -15,8 +15,6 @@ FAASM_LOCAL_DIR = environ.get("FAASM_LOCAL_DIR", "/usr/local/faasm")
 FAASM_NATIVE_DIR = join(FAASM_LOCAL_DIR, "native")
 FAASM_CMAKE_ROOT = "/usr/share/cmake-3.24"
 WASM_SYSROOT = join(FAASM_LOCAL_DIR, "llvm-sysroot")
-WASM_HEADER_INSTALL = "{}/include/wasm32-wasi".format(WASM_SYSROOT)
-WASM_LIB_INSTALL = "{}/lib/wasm32-wasi".format(WASM_SYSROOT)
 WASM_TOOLCHAIN_ROOT = join(FAASM_LOCAL_DIR, "toolchain")
 WASM_TOOLCHAIN_TOOLS = join(WASM_TOOLCHAIN_ROOT, "tools")
 WASM_TOOLCHAIN_BIN = join(WASM_TOOLCHAIN_ROOT, "bin")
@@ -38,6 +36,7 @@ WASM_LD = WASM_CC
 WASM_LDXX = WASM_CXX
 
 # Host triple
+# TODO: remove this?
 WASM_BUILD = "wasm32"
 WASM_HOST = "wasm32-unknown-wasi"
 WASM_HOST_STATIC = "wasm32-wasi"
@@ -73,7 +72,7 @@ FAASM_WASM_INITIAL_MEMORY_SIZE = 4 * FAASM_WASM_STACK_SIZE
 # https://reviews.llvm.org/D59281
 WASM_CFLAGS = [
     "-O3",
-    "-mno-atomics",
+    # "-mno-atomics",
     "-msimd128",
     "--sysroot={}".format(WASM_SYSROOT),
     "-m32",
@@ -142,7 +141,6 @@ WASM_EXE_LDFLAGS = [
     "-Xlinker --export={}".format(FAASM_WASM_CTORS_FUNC_NAME),
     "-Xlinker --export=__stack_pointer",
     "-Xlinker --max-memory={}".format(FAASM_WASM_MAX_MEMORY),
-    "-Xlinker --features=bulk-memory,mutable-globals,sign-ext,simd128",
     "-Wl,-z,stack-size={} -Wl".format(FAASM_WASM_STACK_SIZE),
 ]
 
@@ -190,7 +188,7 @@ WASM_BLAS_LIBS = [
 # depending on the build type variables target
 # WARNING: do NOT import this method directly, instead use the getter method:
 # get_faasm_build_env_dict
-FAASM_BUILD_ENV_DICT = {
+_FAASM_BUILD_ENV_DICT = {
     "CMAKE_ROOT": FAASM_CMAKE_ROOT,
     "FAASM_NATIVE_INSTALL_DIR": FAASM_NATIVE_DIR,
     "FAASM_WASM_MAKE_TOOLCHAIN_FILE": MAKE_TOOLCHAIN_FILE,
@@ -203,8 +201,6 @@ FAASM_BUILD_ENV_DICT = {
     "FAASM_WASM_HOST_STATIC": WASM_HOST_STATIC,
     "FAASM_WASM_HOST_UNKNOWN": WASM_HOST_UNKNOWN,
     "FAASM_WASM_INSTALL_DIR": WASM_TOOLCHAIN_BIN,
-    "FAASM_WASM_HEADER_INSTALL_DIR": WASM_HEADER_INSTALL,
-    "FAASM_WASM_LIB_INSTALL_DIR": WASM_LIB_INSTALL,
     "FAASM_WASM_SYSROOT": WASM_SYSROOT,
     "FAASM_WASM_CFLAGS": " ".join(WASM_CFLAGS),
     "FAASM_WASM_CFLAGS_SHARED": " ".join(WASM_CFLAGS_SHARED),
@@ -233,16 +229,46 @@ def get_faasm_build_env_dict(is_threads=False):
     This method returns the right set of environment variables needed to use
     our toolchain file as well as most cross-compilation scripts in Faasm.
     """
-    build_env_dicts = FAASM_BUILD_ENV_DICT
+    build_env_dicts = _FAASM_BUILD_ENV_DICT
     if is_threads:
-        build_env_dicts["FAASM_WASM_TRIPLE"] = "wasm32-wasi-threads"
+        wasm_triple = "wasm32-wasi-threads"
+        build_env_dicts["FAASM_WASM_TRIPLE"] = wasm_triple
         build_env_dicts["FAASM_WASM_CFLAGS"] += " -pthread"
         build_env_dicts["FAASM_WASM_CXXFLAGS"] += " -pthread"
-        build_env_dicts["FAASM_WASM_EXE_LINKER_FLAGS"] += " -Wl,--import-memory"
-        build_env_dicts["FAASM_WASM_EXE_LINKER_FLAGS"] += " -Wl,--export-memory"
+        linker_features = [
+            "atomics",
+            "bulk-memory",
+            "mutable-globals",
+            "sign-ext",
+            "simd128",
+        ]
+        build_env_dicts[
+            "FAASM_WASM_EXE_LINKER_FLAGS"
+        ] += " -Wl,--import-memory"
+        build_env_dicts[
+            "FAASM_WASM_EXE_LINKER_FLAGS"
+        ] += " -Wl,--export-memory"
     else:
-        build_env_dicts["FAASM_WASM_TRIPLE"] = "wasm32-wasi"
+        wasm_triple = "wasm32-wasi"
+        build_env_dicts["FAASM_WASM_TRIPLE"] = wasm_triple
+        linker_features = [
+            "bulk-memory",
+            "mutable-globals",
+            "sign-ext",
+            "simd128",
+        ]
 
+    build_env_dicts["FAASM_WASM_HEADER_INSTALL_DIR"] = join(
+        WASM_SYSROOT, "include", wasm_triple
+    )
+    build_env_dicts["FAASM_WASM_LIB_INSTALL_DIR"] = join(
+        WASM_SYSROOT, "lib", wasm_triple
+    )
+    build_env_dicts[
+        "FAASM_WASM_EXE_LINKER_FLAGS"
+    ] += " -Xlinker --features={}".format(",".join(linker_features))
+
+    return build_env_dicts
 
 
 def get_dict_as_cmake_vars(env_dict):

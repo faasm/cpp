@@ -1,45 +1,36 @@
-from faasmtools.env import (
-    THIRD_PARTY_DIR,
-)
-from faasmtools.build import (
-    WASM_AR,
-    WASM_CC,
-    WASM_CFLAGS,
-    WASM_CXX,
-    WASM_LDFLAGS,
-    WASM_LD,
-    WASM_LIB_INSTALL,
-    WASM_NM,
-    WASM_RANLIB,
-    WASM_SYSROOT,
-)
+from faasmtools.env import THIRD_PARTY_DIR
+from faasmtools.build import get_faasm_build_env_dict
 from invoke import task
 from os.path import join
 from subprocess import run
 
 
 @task(default=True)
-def zlib(ctx, clean=False):
+def zlib(ctx, clean=False, threads=False):
     """
-    Compile and install libpng
+    Compile and install zlib
     """
     zlib_dir = join(THIRD_PARTY_DIR, "zlib")
 
     if clean:
         run("make clean", shell=True, cwd=zlib_dir, check=True)
 
+    build_env = get_faasm_build_env_dict(threads)
+
     configure_cmd = [
-        "CC={}".format(WASM_CC),
-        "CXX={}".format(WASM_CXX),
-        "CFLAGS='{}'".format(" ".join(WASM_CFLAGS)),
-        "CXXFLAGS='{}'".format(" ".join(WASM_CFLAGS)),
-        "LD={}".format(WASM_LD),
-        "LDFLAGS='{}'".format(" ".join(WASM_LDFLAGS)),
-        "AR={}".format(WASM_AR),
-        "RANLIB={}".format(WASM_RANLIB),
-        "NM={}".format(WASM_NM),
+        "CC={}".format(build_env["FAASM_WASM_CC"]),
+        "CXX={}".format(build_env["FAASM_WASM_CXX"]),
+        "CFLAGS='{}'".format(build_env["FAASM_WASM_CFLAGS"]),
+        "CXXFLAGS='{}'".format(build_env["FAASM_WASM_CXXFLAGS"]),
+        "LD={}".format(build_env["FAASM_WASM_LD"]),
+        "LDFLAGS='{}'".format(build_env["FAASM_WASM_STATIC_LINKER_FLAGS"]),
+        "AR={}".format(build_env["FAASM_WASM_AR"]),
+        "RANLIB={}".format(build_env["FAASM_WASM_RANLIB"]),
+        "NM={}".format(build_env["FAASM_WASM_NM"]),
+        # TODO: can we add the target here too so that install just works?
         "./configure",
-        "--prefix={}".format(WASM_SYSROOT),
+        "--includedir={}".format(build_env["FAASM_WASM_HEADER_INSTALL_DIR"]),
+        "--libdir={}".format(build_env["FAASM_WASM_LIB_INSTALL_DIR"]),
         "--static",
     ]
 
@@ -49,8 +40,3 @@ def zlib(ctx, clean=False):
     # Only build the static library, not the examples nor tests
     run("make -j libz.a", shell=True, cwd=zlib_dir, check=True)
     run("make install", shell=True, cwd=zlib_dir, check=True)
-
-    # Move the library from /usr/local/faasm/llvm-sysroot/lib into wasm32-wasi
-    mv_cmd = "mv {}/lib/libz.a {}".format(WASM_SYSROOT, WASM_LIB_INSTALL)
-    print(mv_cmd)
-    run(mv_cmd, shell=True, check=True)

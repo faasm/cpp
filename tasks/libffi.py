@@ -1,20 +1,18 @@
 from faasmtools.build import (
     build_config_cmd,
+    get_faasm_build_env_dict,
     run_autotools,
-    WASM_SYSROOT,
-    WASM_LIB_INSTALL,
 )
-from faasmtools.env import THIRD_PARTY_DIR, USABLE_CPUS, PROJ_ROOT
+from faasmtools.env import THIRD_PARTY_DIR, USABLE_CPUS
 from invoke import task
 from os.path import join, exists
 from subprocess import run
 
 LIBFFI_DIR = join(THIRD_PARTY_DIR, "libffi")
-LIBFFI_LIBS_DIR = join(LIBFFI_DIR, "wasm32-unknown-wasi")
 
 
 @task(default=True)
-def build(ctx, clean=False):
+def build(ctx, clean=False, threads=False):
     """
     Builds libffi
     """
@@ -25,10 +23,14 @@ def build(ctx, clean=False):
     run_autotools(LIBFFI_DIR)
 
     # Configure
+    build_env = get_faasm_build_env_dict(threads)
     configure_cmd = build_config_cmd(
         [
             "./configure",
-            "--prefix={}".format(WASM_SYSROOT),
+            "--includedir={}".format(
+                build_env["FAASM_WASM_HEADER_INSTALL_DIR"]
+            ),
+            "--libdir={}".format(build_env["FAASM_WASM_LIB_INSTALL_DIR"]),
             "--disable-multi-os-directory",
             "--disable-docs",
         ],
@@ -44,14 +46,11 @@ def build(ctx, clean=False):
     run("make install", shell=True, check=True, cwd=LIBFFI_DIR)
 
     # Move lib into correct install dir
-    for lib_name in ["libffi.a", "libffi.la"]:
-        src_lib = join(WASM_SYSROOT, "lib", lib_name)
-        dest_lib = join(WASM_LIB_INSTALL, lib_name)
-        print("Moving {} to {}".format(src_lib, dest_lib))
-        run("mv {} {}".format(src_lib, dest_lib), shell=True, check=True)
-
     # Copy imports into place
+    # TODO: do we need these?
+    """
     src_imports = join(PROJ_ROOT, "sysroot_extras", "libffi.imports")
     dest_imports = join(WASM_LIB_INSTALL, "libffi.imports")
     print("Copying {} to {}".format(src_imports, dest_imports))
     run("cp {} {}".format(src_imports, dest_imports), check=True, shell=True)
+    """

@@ -72,7 +72,14 @@ def compile(ctx, user, func, clean=False, debug=False, native=False):
         )
     else:
         # Build the function (gets written to the build dir)
-        wasm_cmake(FUNC_DIR, FUNC_BUILD_DIR, func, clean, debug, _is_threaded_func(user, func))
+        wasm_cmake(
+            FUNC_DIR,
+            FUNC_BUILD_DIR,
+            func,
+            clean,
+            debug,
+            _is_threaded_func(user, func),
+        )
 
         # Copy into place
         _copy_built_function(user, func)
@@ -153,7 +160,14 @@ def user(ctx, user, clean=False, debug=False):
     """
     # Build all funcs for this user (will fail if any builds fail)
     target = "{}_all_funcs".format(user)
-    wasm_cmake(FUNC_DIR, FUNC_BUILD_DIR, target, clean, debug, _is_threaded_func(user, ""))
+    wasm_cmake(
+        FUNC_DIR,
+        FUNC_BUILD_DIR,
+        target,
+        clean,
+        debug,
+        _is_threaded_func(user, ""),
+    )
 
     funcs = _get_all_user_funcs(user)
     for f in funcs:
