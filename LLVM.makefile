@@ -34,8 +34,12 @@ very-clean-libc: clean-libc
 
 .PHONY: clean-libs
 clean-libs: clean-libc
+	# compiler-rt clean
 	rm -rf $(BUILD_DIR)/compiler-rt $(BUILD_DIR)/compiler-rt.BUILT
+	# libcxx clean
 	rm -rf $(BUILD_DIR)/libcxx $(BUILD_DIR)/libcxx.BUILT
+	rm -rf $(FAASM_SYSROOT)/include/wasm32-wasi/c++
+	rm -rf $(FAASM_SYSROOT)/include/wasm32-wasi-threads/c++
 
 .PHONY: clean-all
 clean-all:
@@ -185,8 +189,8 @@ $(BUILD_DIR)/libcxx.BUILT: $(BUILD_DIR)/llvm.BUILT ${BUILD_DIR}/wasi-libc.BUILT
 	mkdir -p $(BUILD_DIR)/libcxx-threads
 	cd $(BUILD_DIR)/libcxx-threads && cmake -G Ninja $(call LIBCXX_CMAKE_FLAGS,ON,OFF) \
 		-DCMAKE_SYSROOT=${FAASM_SYSROOT} \
-		-DCMAKE_C_FLAGS="--target=wasm32-wasi-threads" \
-		-DCMAKE_CXX_FLAGS="--target=wasm32-wasi-threads" \
+		-DCMAKE_C_FLAGS="-pthread --target=wasm32-wasi-threads" \
+		-DCMAKE_CXX_FLAGS="-pthread --target=wasm32-wasi-threads" \
 		-DLIBCXX_LIBDIR_SUFFIX=/wasm32-wasi-threads \
 		-DLIBCXXABI_LIBDIR_SUFFIX=/wasm32-wasi-threads \
 		-DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi" \

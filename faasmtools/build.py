@@ -242,12 +242,15 @@ def get_faasm_build_env_dict(is_threads=False):
             "sign-ext",
             "simd128",
         ]
-        build_env_dicts[
-            "FAASM_WASM_EXE_LINKER_FLAGS"
-        ] += " -Wl,--import-memory"
-        build_env_dicts[
-            "FAASM_WASM_EXE_LINKER_FLAGS"
-        ] += " -Wl,--export-memory"
+        # TODO: it seems that this import/export here are a requirement of
+        # the wasi-threads spec (see wasi-sdk/wasi-sdk-pthread.cmake). It
+        # is still not clear if we need it or not.
+#         build_env_dicts[
+#             "FAASM_WASM_EXE_LINKER_FLAGS"
+#         ] += " -Wl,--import-memory"
+#         build_env_dicts[
+#             "FAASM_WASM_EXE_LINKER_FLAGS"
+#         ] += " -Wl,--export-memory"
     else:
         wasm_triple = "wasm32-wasi"
         build_env_dicts["FAASM_WASM_TRIPLE"] = wasm_triple

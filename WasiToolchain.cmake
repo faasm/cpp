@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.5.0)
-# project("Faasm WASM compilation toolchain" C CXX)
 
 # -----------------------------------------
 # A useful reference for this file is the wasi-sdk equivalent:
@@ -19,7 +18,7 @@ set(UNIX 1)
 set(CMAKE_SYSTEM_NAME WASI)
 set(CMAKE_SYSTEM_VERSION 1)
 set(CMAKE_SYSTEM_PROCESSOR wasm32)
-set(WASM_TRIPLE  $ENV{FAASM_WASM_TRIPLE})
+set(WASM_TRIPLE $ENV{FAASM_WASM_TRIPLE})
 
 set(WASI_HOST_EXE_SUFFIX "")
 
@@ -27,11 +26,12 @@ if(FAASM_BUILD_SHARED)
     message(STATUS "Faasm building SHARED libraries")
 
     # See note in README about shared libraries targeting Emscripten
+    # TODO: what happens with shared lirbaries now?
     set(WASM_TRIPLE $ENV{FAASM_WASM_HOST_SHARED})
 else()
     message(STATUS "Faasm building STATIC libraries")
 
-    set(WASM_TRIPLE $ENV{FAASM_WASM_HOST_STATIC})
+    # set(WASM_TRIPLE $ENV{WASM_TRIPLE})
 endif()
 
 # Specify LLVM toolchain
@@ -41,10 +41,10 @@ set(CMAKE_ASM_COMPILER $ENV{FAASM_WASM_CC})
 set(CMAKE_AR $ENV{FAASM_WASM_AR} CACHE STRING "faasm build")
 set(CMAKE_NM $ENV{FAASM_WASM_NM} CACHE STRING "faasm build")
 set(CMAKE_RANLIB $ENV{FAASM_WASM_RANLIB} CACHE STRING "faasm build")
-set(CMAKE_C_COMPILER_TARGET ${WASM_TRIPLE} CACHE STRING "faasm build")
-set(CMAKE_CXX_COMPILER_TARGET ${WASM_TRIPLE} CACHE STRING "faasm build")
-set(CMAKE_ASM_COMPILER_TARGET ${WASM_TRIPLE} CACHE STRING "faasm build")
-message(STATUS "Faasm building target ${CMAKE_CXX_COMPILER_TARGET}")
+set(CMAKE_C_COMPILER_TARGET $ENV{WASM_TRIPLE} CACHE STRING "faasm build")
+set(CMAKE_CXX_COMPILER_TARGET $ENV{WASM_TRIPLE} CACHE STRING "faasm build")
+set(CMAKE_ASM_COMPILER_TARGET $ENV{WASM_TRIPLE} CACHE STRING "faasm build")
+message(STATUS "Faasm building target $ENV{CMAKE_CXX_COMPILER_TARGET}")
 
 # We define dynamic linking functions in Faasm
 unset(CMAKE_DL_LIBS CACHE)
@@ -56,12 +56,12 @@ if(FAASM_BUILD_SHARED)
     set(FAASM_COMPILER_FLAGS "$ENV{FAASM_WASM_CFLAGS} $ENV{FAASM_WASM_CFLAGS_SHARED}")
 endif()
 
-set(CMAKE_SYSROOT ${FAASM_SYSROOT} CACHE STRING "faasm build")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} $ENV{FAASM_WASM_CFLAGS}" CACHE STRING "faasm build")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} $ENV{FAASM_WASM_CXXFLAGS}" CACHE STRING "faasm build")
-set(CMAKE_LINKER_FLAGS $ENV{FAASM_WASM_LINKER_FLAGS} CACHE STRING "faasm build")
-set(CMAKE_SHARED_LINKER_FLAGS $ENV{FAASM_WASM_SHARED_LINKER_FLAGS} CACHE STRING "faasm build")
-set(CMAKE_EXE_LINKER_FLAGS $ENV{FAASM_WASM_EXE_LINKER_FLAGS} CACHE STRING "faasm build")
+set(CMAKE_SYSROOT $ENV{FAASM_SYSROOT} CACHE STRING "faasm build")
+set(CMAKE_C_FLAGS "$ENV{CMAKE_C_FLAGS} $ENV{FAASM_WASM_CFLAGS}" CACHE STRING "faasm build")
+set(CMAKE_CXX_FLAGS "$ENV{CMAKE_CXX_FLAGS} $ENV{FAASM_WASM_CXXFLAGS}" CACHE STRING "faasm build")
+set(CMAKE_LINKER_FLAGS "$ENV{FAASM_WASM_LINKER_FLAGS}" CACHE STRING "faasm build")
+set(CMAKE_SHARED_LINKER_FLAGS "$ENV{FAASM_WASM_SHARED_LINKER_FLAGS}" CACHE STRING "faasm build")
+set(CMAKE_EXE_LINKER_FLAGS "$ENV{FAASM_WASM_EXE_LINKER_FLAGS}" CACHE STRING "faasm build")
 
 # This is important to ensure the right search path
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
