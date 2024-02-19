@@ -74,6 +74,7 @@ $(BUILD_DIR)/llvm.BUILT:
 		install-llvm-ranlib \
 		install-llvm-strip \
 		install-llvm-dwarfdump \
+		install-llvm-symbolizer \
 		install-clang-resource-headers \
 		install-ar \
 		install-ranlib \

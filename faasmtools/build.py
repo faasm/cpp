@@ -73,6 +73,7 @@ FAASM_WASM_INITIAL_MEMORY_SIZE = 4 * FAASM_WASM_STACK_SIZE
 WASM_CFLAGS = [
     "-O3",
     # "-mno-atomics",
+    # TODO: may want to use -mrelaxed-simd instead
     "-msimd128",
     "--sysroot={}".format(WASM_SYSROOT),
     "-m32",
@@ -329,21 +330,46 @@ BASE_CONFIG_FLAGS_SHARED = [
 ]
 
 
-def build_config_cmd(cmd, shared=False, cxx=False, conf_args=True):
+def build_config_cmd(env_vars, cmd, shared=False, cxx=False, conf_args=True):
     """
     Wraps an autotools command in the relevant environment variables and
-    cross-compilation config
+    cross-compilation config. We need to call this method after we get
+    the right env. vars using get_faasm_build_env_dict
     """
-    result = copy(BASE_CONFIG_CMDXX if cxx else BASE_CONFIG_CMD)
+    base_config_cmd = [
+        "CC={}".format(env_vars["FAASM_WASM_CC"]),
+        "CXX={}".format(env_vars["FAASM_WASM_CXX"]),
+        # "CPP={}".format(env_vars["FAASM_WASM_CXX"]),
+        "AR={}".format(env_vars["FAASM_WASM_AR"]),
+        "RANLIB={}".format(env_vars["FAASM_WASM_RANLIB"]),
+        'CFLAGS="--target={} {}"'.format(env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_CFLAGS"]),
+        # 'CPPFLAGS="--target={} {}"'.format(env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_CXXFLAGS"]),
+        'CXXFLAGS="--target={} {}"'.format(env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_CXXFLAGS"]),
+        'CCSHARED="{}"'.format(env_vars["FAASM_WASM_CFLAGS_SHARED"]),
+        'CXXSHARED="{}"'.format(env_vars["FAASM_WASM_CXXFLAGS_SHARED"]),
+    ]
 
-    result += BASE_CONFIG_FLAGS_SHARED if shared else BASE_CONFIG_FLAGS
+    if cxx:
+        base_config_cmd += [
+            "LD={}".format(env_vars["FAASM_WASM_CXX"]),
+            'LDFLAGS="-target {} {}"'.format(env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"])
+            # 'LDSHARED="{}"'.format(WASM_LDXXSHARED),
+        ]
+    else:
+        base_config_cmd += [
+            "LD={}".format(env_vars["FAASM_WASM_CC"]),
+            'LDFLAGS="-target {} {}"'.format(env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"])
+            # 'LDSHARED="{}"'.format(env_vars["FAASM_WASM_CFLAGS_SHARED"),
+        ]
 
-    result += cmd
+    # result += BASE_CONFIG_FLAGS_SHARED if shared else BASE_CONFIG_FLAGS
+
+    base_config_cmd += cmd
 
     if conf_args:
-        result += _BASE_CONFIG_ARGS_SHARED if shared else _BASE_CONFIG_ARGS
+        base_config_cmd += _BASE_CONFIG_ARGS_SHARED if shared else _BASE_CONFIG_ARGS
 
-    return result
+    return base_config_cmd
 
 
 def run_autotools(proj_dir):
