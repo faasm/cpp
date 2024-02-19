@@ -42,13 +42,9 @@ RUN cd /code/cpp \
         libfaasmpi --native --shared \
     # Install toolchain files
     && inv install \
-    # Temporarily using llvm --clean as we debug new versions of the toolchain
-    # to avoid having to re-build the base image
-    # TODO: remove me
-    && inv llvm --clean \
     # Build wasi-libc and reset the sysroot. The second call to LLVM just
     # installs some headers that are purged
-    # && inv llvm.libc --purge llvm \
+    && inv llvm.libc --purge llvm \
     # Build Faasm WASM libraries
     && inv \
         libemscripten \

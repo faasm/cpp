@@ -40,8 +40,7 @@ demo_func(fstat fstat.cpp)
 demo_func(getcwd getcwd.cpp)
 demo_func(getdents getdents.cpp)
 demo_func(getenv getenv.cpp)
-# FIXME: need pwd.h
-# demo_func(getpwuid getpwuid.cpp)
+demo_func(getpwuid getpwuid.cpp)
 demo_func(gettime gettime.cpp)
 demo_func(heap heap.cpp)
 demo_func(hello hello.cpp)
@@ -92,12 +91,10 @@ demo_func(time time.cpp)
 demo_func(time_of_day time_of_day.cpp)
 demo_func(uname uname.cpp)
 demo_func(va_arg va_arg.cpp)
-# TODO: needs sys/wait.h
-# demo_func(waitpid waitpid.cpp)
+demo_func(waitpid waitpid.cpp)
 demo_func(x2 x2.cpp)
 demo_func(zygote_check zygote_check.cpp)
 
-# 23/09/2020 - removing simd
 # WASM-only functions
 if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     demo_func(emscripten_check emscripten_check.cpp)
@@ -109,9 +106,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     # target_link_libraries(blas_check ${FAASM_BLAS_LIBS})
 endif()
 
-# FIXME: needs pwd.h
-# faasm_dynamic_func(dynlink dynlink.cpp)
-# set(ALL_DEMO_FUNCS ${ALL_DEMO_FUNCS} dynlink)
+faasm_dynamic_func(dynlink dynlink.cpp)
+set(ALL_DEMO_FUNCS ${ALL_DEMO_FUNCS} dynlink)
 
 # Custom target to group all the demo functions
 add_custom_target(demo_all_funcs DEPENDS ${ALL_DEMO_FUNCS})
