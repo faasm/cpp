@@ -56,7 +56,7 @@ RUN cd /code/cpp \
         libfaasm \
         libfaasm --threads \
         libfaasmp \
-        libfaasmpi
+        libfaasmpi \
     # Lastly, build the libraries that populate the sysroot
     && inv \
         libffi \

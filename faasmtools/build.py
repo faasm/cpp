@@ -372,14 +372,14 @@ def build_config_cmd(env_vars, cmd, shared=False, cxx=False, conf_args=True):
     return base_config_cmd
 
 
-def run_autotools(proj_dir):
+def run_autotools(env_vars, proj_dir):
     """
     Runs through autotools set-up on the given directory
     """
 
     def _run_auto_cmd(cmd):
         print("Running {}".format(cmd))
-        auto_cmd = build_config_cmd([cmd], conf_args=False)
+        auto_cmd = build_config_cmd(env_vars, [cmd], conf_args=False)
         auto_cmd = " ".join(auto_cmd)
         run(auto_cmd, shell=True, check=True, cwd=proj_dir)
 

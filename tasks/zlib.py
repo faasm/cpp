@@ -22,7 +22,7 @@ def zlib(ctx, clean=False, threads=False):
         "CXX={}".format(build_env["FAASM_WASM_CXX"]),
         "CFLAGS='{}'".format(build_env["FAASM_WASM_CFLAGS"]),
         "CXXFLAGS='{}'".format(build_env["FAASM_WASM_CXXFLAGS"]),
-        "LD={}".format(build_env["FAASM_WASM_LD"]),
+        "LD={}".format(build_env["FAASM_WASM_CC"]),
         "LDFLAGS='{}'".format(build_env["FAASM_WASM_STATIC_LINKER_FLAGS"]),
         "AR={}".format(build_env["FAASM_WASM_AR"]),
         "RANLIB={}".format(build_env["FAASM_WASM_RANLIB"]),

@@ -19,12 +19,14 @@ def build(ctx, clean=False, threads=False):
     if exists(join(LIBFFI_DIR, "Makefile")) and clean:
         run("make clean", cwd=LIBFFI_DIR, shell=True, check=True)
 
+    build_env = get_faasm_build_env_dict(threads)
+
     # Autotools
-    run_autotools(LIBFFI_DIR)
+    run_autotools(build_env, LIBFFI_DIR)
 
     # Configure
-    build_env = get_faasm_build_env_dict(threads)
     configure_cmd = build_config_cmd(
+        build_env,
         [
             "./configure",
             "--includedir={}".format(
