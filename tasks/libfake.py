@@ -1,6 +1,5 @@
 from faasmtools.build import (
     CMAKE_TOOLCHAIN_FILE,
-    WASM_SYSROOT,
     get_faasm_build_env_dict,
 )
 from faasmtools.env import PROJ_ROOT, FAASM_RUNTIME_ROOT
@@ -18,6 +17,7 @@ def fake(ctx, clean=False):
     """
     work_dir = join(PROJ_ROOT, "func", "dynlink")
     build_dir = join(PROJ_ROOT, "build", "libfake")
+    build_env = get_faasm_build_env_dict()
 
     if exists(build_dir) and clean:
         rmtree(build_dir)
@@ -30,7 +30,7 @@ def fake(ctx, clean=False):
         "-DFAASM_BUILD_SHARED=ON",
         "-DCMAKE_TOOLCHAIN_FILE={}".format(CMAKE_TOOLCHAIN_FILE),
         "-DCMAKE_BUILD_TYPE=Release",
-        "-DCMAKE_INSTALL_PREFIX={}".format(WASM_SYSROOT),
+        "-DCMAKE_INSTALL_PREFIX={}".format(build_env["FAASM_WASM_SYSROOT"]),
         work_dir,
     ]
 
@@ -47,7 +47,7 @@ def fake(ctx, clean=False):
     run("ninja install", shell=True, cwd=build_dir, check=True, env=work_env)
 
     # Copy shared object into place
-    sysroot_files = join(WASM_SYSROOT, "lib", "wasm32-wasi", "libfake*.so")
+    sysroot_files = join(build_env["FAASM_WASM_LIB_INSTALL_DIR"], "libfake*.so")
 
     runtime_lib_dir = join(FAASM_RUNTIME_ROOT, "lib", "fake")
     makedirs(runtime_lib_dir, exist_ok=True)
