@@ -21,10 +21,8 @@ RUN apt update \
     && apt install -y \
         autoconf \
         build-essential \
-        # This clang version is needed to help us build LLVM from source below.
-        # Pin it to one number as it can drift away from the WASM-compiling
-        # LLVM version
-        clang-17 \
+        # This clang version is needed to help us build LLVM from source below
+        clang-${LLVM_VERSION_MAJOR} \
         curl \
         git \
         gpg \
