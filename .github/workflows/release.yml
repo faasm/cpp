@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.ACR_SERVICE_PRINCIPAL_PASSWORD }}
       - name: "Build and push cpp-sysroot container"
         id: docker_build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5.1.0
         with:
           push: true
           file: docker/cpp-sysroot.dockerfile

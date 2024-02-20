@@ -12,8 +12,9 @@ USABLE_CPUS = int(cpu_count()) - 1
 # Versioning
 VERSION_FILE = join(PROJ_ROOT, "VERSION")
 
-# LLVM variables
-# LLVM_VERSION = "17.0.6"
+# LLVM version for C/C++ to x86 compilation
+LLVM_NATIVE_VERSION = "17.0.6"
+# LLVM version for C/C++ to WASM compilation
 LLVM_VERSION = "18.1.0-rc2"
 LLVM_DIR = join("/opt", "llvm-project")
 LLVM_MAKEFILE = join(PROJ_ROOT, "LLVM.makefile")

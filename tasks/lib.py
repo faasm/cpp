@@ -3,7 +3,7 @@ from faasmtools.build import (
     FAASM_NATIVE_DIR,
     get_faasm_build_env_dict,
 )
-from faasmtools.env import LLVM_VERSION, PROJ_ROOT
+from faasmtools.env import LLVM_NATIVE_VERSION, PROJ_ROOT
 from os.path import exists, join
 from os import environ, makedirs
 from shutil import rmtree
@@ -38,7 +38,7 @@ def build_faasm_lib(
     makedirs(build_dir, exist_ok=True)
 
     if native:
-        llvm_major = LLVM_VERSION.split(".")[0]
+        llvm_major = LLVM_NATIVE_VERSION.split(".")[0]
         extras = [
             "-DCMAKE_C_COMPILER=/usr/bin/clang-{}".format(llvm_major),
             "-DCMAKE_CXX_COMPILER=/usr/bin/clang++-{}".format(llvm_major),
