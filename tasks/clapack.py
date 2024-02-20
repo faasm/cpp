@@ -1,16 +1,11 @@
 from copy import copy
 from faasmtools.env import THIRD_PARTY_DIR, USABLE_CPUS
-from faasmtools.build import (
-    WASM_SYSROOT,
-    get_faasm_build_env_dict,
-)
+from faasmtools.build import get_faasm_build_env_dict
 from invoke import task
 from os import environ, remove
 from os.path import join, exists
 from shutil import rmtree
 from subprocess import run
-
-HEADERS_DIRS = [join(WASM_SYSROOT, "include", "clapack")]
 
 INSTALLED_LIBS = [
     "libcblas",

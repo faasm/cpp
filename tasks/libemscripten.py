@@ -7,4 +7,10 @@ def build(ctx, clean=False, threads=False):
     """
     Builds Faasm emscripten support library
     """
-    build_faasm_lib("libemscripten", clean=clean, native=False, shared=False, threads=threads)
+    build_faasm_lib(
+        "libemscripten",
+        clean=clean,
+        native=False,
+        shared=False,
+        threads=threads,
+    )

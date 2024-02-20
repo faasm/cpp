@@ -1,4 +1,3 @@
-from copy import copy
 from os.path import join
 from subprocess import run
 from os import environ
@@ -234,8 +233,12 @@ def get_faasm_build_env_dict(is_threads=False):
     if is_threads:
         wasm_triple = "wasm32-wasi-threads"
         build_env_dicts["FAASM_WASM_TRIPLE"] = wasm_triple
-        build_env_dicts["FAASM_WASM_CFLAGS"] += " --target={} -pthread".format(wasm_triple)
-        build_env_dicts["FAASM_WASM_CXXFLAGS"] += " --target={} -pthread".format(wasm_triple)
+        build_env_dicts["FAASM_WASM_CFLAGS"] += " --target={} -pthread".format(
+            wasm_triple
+        )
+        build_env_dicts[
+            "FAASM_WASM_CXXFLAGS"
+        ] += " --target={} -pthread".format(wasm_triple)
         linker_features = [
             "atomics",
             "bulk-memory",
@@ -246,12 +249,12 @@ def get_faasm_build_env_dict(is_threads=False):
         # TODO: it seems that this import/export here are a requirement of
         # the wasi-threads spec (see wasi-sdk/wasi-sdk-pthread.cmake). It
         # is still not clear if we need it or not.
-#         build_env_dicts[
-#             "FAASM_WASM_EXE_LINKER_FLAGS"
-#         ] += " -Wl,--import-memory"
-#         build_env_dicts[
-#             "FAASM_WASM_EXE_LINKER_FLAGS"
-#         ] += " -Wl,--export-memory"
+    #         build_env_dicts[
+    #             "FAASM_WASM_EXE_LINKER_FLAGS"
+    #         ] += " -Wl,--import-memory"
+    #         build_env_dicts[
+    #             "FAASM_WASM_EXE_LINKER_FLAGS"
+    #         ] += " -Wl,--export-memory"
     else:
         wasm_triple = "wasm32-wasi"
         build_env_dicts["FAASM_WASM_TRIPLE"] = wasm_triple
@@ -339,12 +342,14 @@ def build_config_cmd(env_vars, cmd, shared=False, cxx=False, conf_args=True):
     base_config_cmd = [
         "CC={}".format(env_vars["FAASM_WASM_CC"]),
         "CXX={}".format(env_vars["FAASM_WASM_CXX"]),
-        # "CPP={}".format(env_vars["FAASM_WASM_CXX"]),
         "AR={}".format(env_vars["FAASM_WASM_AR"]),
         "RANLIB={}".format(env_vars["FAASM_WASM_RANLIB"]),
-        'CFLAGS="--target={} {}"'.format(env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_CFLAGS"]),
-        # 'CPPFLAGS="--target={} {}"'.format(env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_CXXFLAGS"]),
-        'CXXFLAGS="--target={} {}"'.format(env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_CXXFLAGS"]),
+        'CFLAGS="--target={} {}"'.format(
+            env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_CFLAGS"]
+        ),
+        'CXXFLAGS="--target={} {}"'.format(
+            env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_CXXFLAGS"]
+        ),
         'CCSHARED="{}"'.format(env_vars["FAASM_WASM_CFLAGS_SHARED"]),
         'CXXSHARED="{}"'.format(env_vars["FAASM_WASM_CXXFLAGS_SHARED"]),
     ]
@@ -352,13 +357,19 @@ def build_config_cmd(env_vars, cmd, shared=False, cxx=False, conf_args=True):
     if cxx:
         base_config_cmd += [
             "LD={}".format(env_vars["FAASM_WASM_CXX"]),
-            'LDFLAGS="-target {} {}"'.format(env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"])
+            'LDFLAGS="-target {} {}"'.format(
+                env_vars["FAASM_WASM_TRIPLE"],
+                env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"],
+            )
             # 'LDSHARED="{}"'.format(WASM_LDXXSHARED),
         ]
     else:
         base_config_cmd += [
             "LD={}".format(env_vars["FAASM_WASM_CC"]),
-            'LDFLAGS="-target {} {}"'.format(env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"])
+            'LDFLAGS="-target {} {}"'.format(
+                env_vars["FAASM_WASM_TRIPLE"],
+                env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"],
+            )
             # 'LDSHARED="{}"'.format(env_vars["FAASM_WASM_CFLAGS_SHARED"),
         ]
 
@@ -367,7 +378,9 @@ def build_config_cmd(env_vars, cmd, shared=False, cxx=False, conf_args=True):
     base_config_cmd += cmd
 
     if conf_args:
-        base_config_cmd += _BASE_CONFIG_ARGS_SHARED if shared else _BASE_CONFIG_ARGS
+        base_config_cmd += (
+            _BASE_CONFIG_ARGS_SHARED if shared else _BASE_CONFIG_ARGS
+        )
 
     return base_config_cmd
 

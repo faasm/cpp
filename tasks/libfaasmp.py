@@ -7,4 +7,6 @@ def build(ctx, clean=False, native=False, shared=False):
     """
     Builds Faasm OpenMP library
     """
-    build_faasm_lib("libfaasmp", clean=clean, native=native, shared=shared, threads=True)
+    build_faasm_lib(
+        "libfaasmp", clean=clean, native=native, shared=shared, threads=True
+    )
