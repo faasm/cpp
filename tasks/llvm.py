@@ -43,12 +43,6 @@ def do_llvm_clone():
     git_cmd = " ".join(git_cmd)
     run(git_cmd, shell=True, check=True)
 
-    # TODO: do we even need this patch anymore?
-    # llvm_patches_dir = join(PATCHES_DIR, "llvm-project")
-    # for patch in listdir(llvm_patches_dir):
-    # git_cmd = "git apply {}".format(join(llvm_patches_dir, patch))
-    # run(git_cmd, shell=True, check=True, cwd=LLVM_DIR)
-
 
 def do_llvm_build(target, clean_target=None):
     build_env = environ.copy()
