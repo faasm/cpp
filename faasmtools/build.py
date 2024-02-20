@@ -234,8 +234,8 @@ def get_faasm_build_env_dict(is_threads=False):
     if is_threads:
         wasm_triple = "wasm32-wasi-threads"
         build_env_dicts["FAASM_WASM_TRIPLE"] = wasm_triple
-        build_env_dicts["FAASM_WASM_CFLAGS"] += " -pthread"
-        build_env_dicts["FAASM_WASM_CXXFLAGS"] += " -pthread"
+        build_env_dicts["FAASM_WASM_CFLAGS"] += " --target={} -pthread".format(wasm_triple)
+        build_env_dicts["FAASM_WASM_CXXFLAGS"] += " --target={} -pthread".format(wasm_triple)
         linker_features = [
             "atomics",
             "bulk-memory",
