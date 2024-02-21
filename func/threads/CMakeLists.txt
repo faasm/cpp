@@ -15,3 +15,6 @@ thread_func(threads_local threads_local.cpp)
 thread_func(threads_check threads_check.cpp)
 thread_func(threads_dist threads_dist.cpp)
 thread_func(threads_memory threads_memory.cpp)
+
+# Custom target for building all functions
+add_custom_target(threads_all_funcs DEPENDS ${ALL_THREADS_FUNCS})
