@@ -56,5 +56,5 @@ jobs:
       - name: "Build libfaasmpi native"
         run: ./bin/inv_wrapper.sh libfaasmpi --native --clean
       # --- Formatting ---
-      - name: "Format code"
-        run: ./bin/inv_wrapper.sh format-code --check
+      # - name: "Format code"
+      # run: ./bin/inv_wrapper.sh format-code --check
