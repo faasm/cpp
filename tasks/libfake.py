@@ -47,7 +47,9 @@ def fake(ctx, clean=False):
     run("ninja install", shell=True, cwd=build_dir, check=True, env=work_env)
 
     # Copy shared object into place
-    sysroot_files = join(build_env["FAASM_WASM_LIB_INSTALL_DIR"], "libfake*.so")
+    sysroot_files = join(
+        build_env["FAASM_WASM_LIB_INSTALL_DIR"], "libfake*.so"
+    )
 
     runtime_lib_dir = join(FAASM_RUNTIME_ROOT, "lib", "fake")
     makedirs(runtime_lib_dir, exist_ok=True)
