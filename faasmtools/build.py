@@ -360,7 +360,7 @@ def build_config_cmd(env_vars, cmd, shared=False, cxx=False, conf_args=True):
             'LDFLAGS="-target {} {}"'.format(
                 env_vars["FAASM_WASM_TRIPLE"],
                 env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"],
-            )
+            ),
             # 'LDSHARED="{}"'.format(WASM_LDXXSHARED),
         ]
     else:
@@ -369,7 +369,7 @@ def build_config_cmd(env_vars, cmd, shared=False, cxx=False, conf_args=True):
             'LDFLAGS="-target {} {}"'.format(
                 env_vars["FAASM_WASM_TRIPLE"],
                 env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"],
-            )
+            ),
             # 'LDSHARED="{}"'.format(env_vars["FAASM_WASM_CFLAGS_SHARED"),
         ]
 
