@@ -14,7 +14,8 @@ int main(int argc, char* argv[])
 
     FAASM_REDUCE(count, FAASM_TYPE_INT, FAASM_OP_SUM)
 
-#pragma omp parallel for num_threads(5) default(none) shared(loopSize) reduction(+ : count)
+#pragma omp parallel for num_threads(5) default(none) shared(loopSize)         \
+  reduction(+ : count)
     for (int i = 0; i < loopSize; i++) {
         count += (omp_get_thread_num() + 1);
     }

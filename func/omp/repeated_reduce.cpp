@@ -20,9 +20,8 @@ bool doReduce()
     FAASM_REDUCE(reducedA, FAASM_TYPE_INT, FAASM_OP_SUM)
     FAASM_REDUCE(reducedB, FAASM_TYPE_INT, FAASM_OP_SUM)
 
-#pragma omp parallel for num_threads(nThreads) default(none) \
-    shared(counts,loopSize,success) \
-    reduction(+ : reducedA,reducedB)
+#pragma omp parallel for num_threads(nThreads) default(none)                   \
+  shared(counts, loopSize, success) reduction(+ : reducedA, reducedB)
     for (int i = 0; i < loopSize; i++) {
         int threadNum = omp_get_thread_num();
         counts[threadNum]++;

@@ -25,7 +25,10 @@ TEST_CASE("Test string input", "[input]")
 
     std::string expected;
     std::string defaultVal = "default";
-    SECTION("No input") { expected = defaultVal; }
+    SECTION("No input")
+    {
+        expected = defaultVal;
+    }
 
     SECTION("Input")
     {

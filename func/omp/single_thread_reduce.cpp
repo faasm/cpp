@@ -30,10 +30,9 @@ int main(int argc, char* argv[])
     FAASM_REDUCE(reducedA, FAASM_TYPE_INT, FAASM_OP_SUM)
     FAASM_REDUCE(reducedB, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
 
-#pragma omp parallel for num_threads(1) default(none) \
-    private(privateA,privateB) \
-    reduction(+ : reducedA,reducedB) \
-    shared(loopSize, sharedA)
+#pragma omp parallel for num_threads(1) default(none) private(privateA,        \
+                                                                privateB)      \
+  reduction(+ : reducedA, reducedB) shared(loopSize, sharedA)
     for (int i = 0; i < loopSize; i++) {
         int threadNum = omp_get_thread_num();
 

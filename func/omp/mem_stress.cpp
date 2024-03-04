@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     FAASM_REDUCE(totalLoops, FAASM_TYPE_INT, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(nThreads) default(none)                   \
-  shared(ptrs, counts) reduction(+:totalLoops)
+  shared(ptrs, counts) reduction(+ : totalLoops)
     for (int i = 0; i < ITERATIONS; i++) {
         totalLoops++;
 
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
     FAASM_REDUCE(totalLoops, FAASM_TYPE_INT, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(nThreads) default(none)                   \
-  shared(ptrs, counts) reduction(+:totalLoops)
+  shared(ptrs, counts) reduction(+ : totalLoops)
     for (int i = 0; i < ITERATIONS; i++) {
         totalLoops++;
         ::free(ptrs[i]);
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     FAASM_REDUCE(totalLoops, FAASM_TYPE_INT, FAASM_OP_SUM)
 
 #pragma omp parallel for num_threads(nThreads) default(none)                   \
-  shared(ptrs, counts) reduction(+:totalLoops)
+  shared(ptrs, counts) reduction(+ : totalLoops)
     for (int i = 0; i < ITERATIONS; i++) {
         totalLoops++;
         size_t mallocSize = (i % 6) * 1024;

@@ -11,9 +11,8 @@ int inspectAdder(int a, int b)
     return a + b;
 }
 
-#pragma omp declare reduction(inspectAdd:int                                   \
-                              : omp_out = inspectAdder(omp_out, omp_in))       \
-  initializer(omp_priv = 0)
+#pragma omp declare reduction(inspectAdd                                       \
+:int : omp_out = inspectAdder(omp_out, omp_in)) initializer(omp_priv = 0)
 
 int main()
 {
