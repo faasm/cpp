@@ -1,8 +1,8 @@
 set(FAASM_USER omp)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --target=$ENV{FAASM_WASM_TRIPLE} -fopenmp")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --target=$ENV{FAASM_WASM_TRIPLE} -fopenmp")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker --shared-memory")
 else ()
     find_package(OpenMP REQUIRED)
