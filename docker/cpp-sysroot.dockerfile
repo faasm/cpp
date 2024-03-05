@@ -45,14 +45,16 @@ RUN cd /code/cpp \
     # Build wasi-libc and reset the sysroot. The second call to LLVM just
     # installs some headers that are purged
     && inv llvm.libc --purge llvm \
-    # Build Faasm WASM libraries
+    # Build Faasm WASM libraries for wasm32-wasi target
     && inv \
-        libemscripten \
-        libemscripten --threads \
         libfaasm \
-        libfaasm --threads \
-        libfaasmp \
+        libemscripten \
         libfaasmpi \
+    # Build Faasm WASM libraries for wasm32-wasi-threads target
+    && inv \
+        libfaasm --threads \
+        libemscripten --threads \
+        libfaasmp \
     # Lastly, build the libraries that populate the sysroot
     && inv \
         libffi \
