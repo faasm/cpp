@@ -27,8 +27,10 @@ def build_faasm_lib(
         build_dir = "build-native-shared"
     elif native:
         build_dir = "build-native"
+    elif threads:
+        build_dir = "build-wasm32-wasi-threads"
     else:
-        build_dir = "build-wasm"
+        build_dir = "build-wasm32-wasi"
 
     build_dir = join(work_dir, build_dir)
 
