@@ -109,7 +109,6 @@ def libc(ctx, clean=False, purge=False):
     do_llvm_build("libc", clean_args)
 
     # Copy the import files into place
-    # TODO: do we need this?
     copy_cmd = "cp -r sysroot_extras/* {}".format(
         get_faasm_build_env_dict()["FAASM_WASM_LIB_INSTALL_DIR"]
     )

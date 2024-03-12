@@ -35,7 +35,7 @@ WASM_LD = WASM_CC
 WASM_LDXX = WASM_CXX
 
 # Host triple
-# TODO: remove this?
+# TODO(shared-libs): consider removing this
 WASM_BUILD = "wasm32"
 WASM_HOST = "wasm32-unknown-wasi"
 WASM_HOST_STATIC = "wasm32-wasi"
@@ -71,7 +71,6 @@ FAASM_WASM_INITIAL_MEMORY_SIZE = 4 * FAASM_WASM_STACK_SIZE
 # https://reviews.llvm.org/D59281
 WASM_CFLAGS = [
     "-O3",
-    # "-mno-atomics",
     # TODO: may want to use -mrelaxed-simd instead
     "-msimd128",
     "--sysroot={}".format(WASM_SYSROOT),
@@ -246,15 +245,6 @@ def get_faasm_build_env_dict(is_threads=False):
             "sign-ext",
             "simd128",
         ]
-        # TODO: it seems that this import/export here are a requirement of
-        # the wasi-threads spec (see wasi-sdk/wasi-sdk-pthread.cmake). It
-        # is still not clear if we need it or not.
-    #         build_env_dicts[
-    #             "FAASM_WASM_EXE_LINKER_FLAGS"
-    #         ] += " -Wl,--import-memory"
-    #         build_env_dicts[
-    #             "FAASM_WASM_EXE_LINKER_FLAGS"
-    #         ] += " -Wl,--export-memory"
     else:
         wasm_triple = "wasm32-wasi"
         build_env_dicts["FAASM_WASM_TRIPLE"] = wasm_triple
@@ -286,52 +276,6 @@ def get_dict_as_cmake_vars(env_dict):
 # Scripts for configure, automake, and autotools
 # ----------
 
-# Variables for 'configure' scripts
-_BASE_CONFIG_CMD = [
-    "CC={}".format(WASM_CC),
-    "CXX={}".format(WASM_CXX),
-    "CPP={}".format(WASM_CPP),
-    "AR={}".format(WASM_AR),
-    "RANLIB={}".format(WASM_RANLIB),
-    'CFLAGS="{}"'.format(" ".join(WASM_CFLAGS)),
-    'CPPFLAGS="{}"'.format(" ".join(WASM_CFLAGS)),
-    'CXXFLAGS="{}"'.format(" ".join(WASM_CXXFLAGS)),
-    'CCSHARED="{}"'.format(WASM_CCSHARED),
-    'CXXSHARED="{}"'.format(WASM_CXXSHARED),
-]
-
-_BASE_CONFIG_ARGS = [
-    "--build={}".format(WASM_BUILD),
-    "--host={}".format(WASM_HOST),
-]
-
-_BASE_CONFIG_ARGS_SHARED = [
-    "--build={}".format(WASM_BUILD),
-    "--host={}".format(WASM_HOST_SHARED),
-]
-
-BASE_CONFIG_CMD = _BASE_CONFIG_CMD + [
-    "LD={}".format(WASM_LD),
-    'LDSHARED="{}"'.format(WASM_LDSHARED),
-]
-
-BASE_CONFIG_CMDXX = _BASE_CONFIG_CMD + [
-    "LD={}".format(WASM_LDXX),
-    'LDSHARED="{}"'.format(WASM_LDXXSHARED),
-]
-
-BASE_CONFIG_FLAGS = [
-    'CFLAGS="{}"'.format(" ".join(WASM_CFLAGS)),
-    'CPPFLAGS="{}"'.format(" ".join(WASM_CXXFLAGS)),
-    'LDFLAGS="{}"'.format(" ".join(WASM_LDFLAGS)),
-]
-
-BASE_CONFIG_FLAGS_SHARED = [
-    'CFLAGS="{}"'.format(" ".join(WASM_CFLAGS_SHARED)),
-    'CPPFLAGS="{}"'.format(" ".join(WASM_CXXFLAGS_SHARED)),
-    'LDFLAGS="{}"'.format(" ".join(WASM_LDFLAGS_SHARED)),
-]
-
 
 def build_config_cmd(env_vars, cmd, shared=False, cxx=False, conf_args=True):
     """
@@ -361,7 +305,6 @@ def build_config_cmd(env_vars, cmd, shared=False, cxx=False, conf_args=True):
                 env_vars["FAASM_WASM_TRIPLE"],
                 env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"],
             ),
-            # 'LDSHARED="{}"'.format(WASM_LDXXSHARED),
         ]
     else:
         base_config_cmd += [
@@ -370,17 +313,9 @@ def build_config_cmd(env_vars, cmd, shared=False, cxx=False, conf_args=True):
                 env_vars["FAASM_WASM_TRIPLE"],
                 env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"],
             ),
-            # 'LDSHARED="{}"'.format(env_vars["FAASM_WASM_CFLAGS_SHARED"),
         ]
 
-    # result += BASE_CONFIG_FLAGS_SHARED if shared else BASE_CONFIG_FLAGS
-
     base_config_cmd += cmd
-
-    if conf_args:
-        base_config_cmd += (
-            _BASE_CONFIG_ARGS_SHARED if shared else _BASE_CONFIG_ARGS
-        )
 
     return base_config_cmd
 

@@ -27,7 +27,6 @@ def zlib(ctx, clean=False, threads=False):
         "AR={}".format(build_env["FAASM_WASM_AR"]),
         "RANLIB={}".format(build_env["FAASM_WASM_RANLIB"]),
         "NM={}".format(build_env["FAASM_WASM_NM"]),
-        # TODO: can we add the target here too so that install just works?
         "./configure",
         "--includedir={}".format(build_env["FAASM_WASM_HEADER_INSTALL_DIR"]),
         "--libdir={}".format(build_env["FAASM_WASM_LIB_INSTALL_DIR"]),

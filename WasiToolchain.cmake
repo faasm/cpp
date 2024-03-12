@@ -26,7 +26,6 @@ if(FAASM_BUILD_SHARED)
     message(STATUS "Faasm building SHARED libraries")
 
     # See note in README about shared libraries targeting Emscripten
-    # TODO: what happens with shared lirbaries now?
     set(WASM_TRIPLE $ENV{FAASM_WASM_HOST_SHARED})
 else()
     message(STATUS "Faasm building STATIC libraries")

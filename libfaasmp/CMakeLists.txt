@@ -18,7 +18,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
 
     set(LLVM_OMP_SRC_DIR "/opt/llvm-project/openmp/runtime/src")
     set(LLVM_OMP_BUILD_SRC_DIR "/opt/llvm-project/build/llvm/projects/openmp/runtime/src")
-    # set(LIBOMP_ASMFILES "${LLVM_OMP_SRC_DIR}/z_Linux_asm.S")
     set(LIBOMP_ASMFILES "z_Linux_asm.S")
     set(LIBOMP_HEADERS "${LLVM_OMP_BUILD_SRC_DIR}/omp.h")
     set_source_files_properties(${LIBOMP_ASMFILES} PROPERTIES LANGUAGE C)
@@ -26,7 +25,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
 
     add_library(faasmp STATIC ${LIB_FILES})
     set_target_properties(faasmp PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
-    # target_include_directories(faasmp PUBLIC ${LLVM_OMP_BUILD_SRC_DIR} ${LLVM_OMP_SRC_DIR})
 
     # Install in WASM sysroot
     install(
@@ -44,7 +42,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     )
 
     # Add omp.h header copied from clang source
-    # TODO: can we copy it directly from LLVM source, for each LLVM version?
     install(
         FILES ${LIBOMP_HEADERS}
         DESTINATION $ENV{FAASM_WASM_HEADER_INSTALL_DIR}

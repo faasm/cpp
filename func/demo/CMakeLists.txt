@@ -100,7 +100,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     demo_func(emscripten_check emscripten_check.cpp)
     target_link_libraries(emscripten_check emscripten)
 
-    # TODO - fix BLAS check function
+    # 12/03/2024 - BLAS (and CLAPACK) has been broken for a while
     # include_directories(/usr/local/faasm/llvm-sysroot/include/clapack)
     # demo_func_c(blas_check blas_check.c)
     # target_link_libraries(blas_check ${FAASM_BLAS_LIBS})

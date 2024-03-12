@@ -46,13 +46,3 @@ def build(ctx, clean=False, threads=False):
 
     # Run install
     run("make install", shell=True, check=True, cwd=LIBFFI_DIR)
-
-    # Move lib into correct install dir
-    # Copy imports into place
-    # TODO: do we need these?
-    """
-    src_imports = join(PROJ_ROOT, "sysroot_extras", "libffi.imports")
-    dest_imports = join(WASM_LIB_INSTALL, "libffi.imports")
-    print("Copying {} to {}".format(src_imports, dest_imports))
-    run("cp {} {}".format(src_imports, dest_imports), check=True, shell=True)
-    """

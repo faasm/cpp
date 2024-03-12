@@ -61,8 +61,6 @@ RUN cd /code/cpp \
         libffi --threads \
         zlib \
         zlib --threads
-    #         clapack \
-    #         clapack --clean --shared \
 
 # CLI setup
 WORKDIR /code/cpp
