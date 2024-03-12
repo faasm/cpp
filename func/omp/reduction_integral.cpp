@@ -124,7 +124,8 @@ double doBetterReduction()
 
     FAASM_REDUCE(sum, FAASM_TYPE_DOUBLE, FAASM_OP_SUM)
 
-#pragma omp parallel for private(x) default(none) shared(nSteps, step) reduction(+:sum)
+#pragma omp parallel for private(x) default(none) shared(nSteps, step)         \
+  reduction(+ : sum)
     for (i = 0; i < nSteps; ++i) {
         x = (i + 0.5) * step;
         sum += 4.0 / (1.0 + x * x);

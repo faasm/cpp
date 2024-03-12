@@ -18,8 +18,8 @@ complex_t complex_add(complex_t a, complex_t b)
     return c;
 }
 
-#pragma omp declare reduction(cmplxAdd:complex_t                               \
-                              : omp_out = complex_add(omp_out, omp_in))        \
+#pragma omp declare reduction(cmplxAdd:complex_t : omp_out =                   \
+                                complex_add(omp_out, omp_in))                  \
   initializer(omp_priv = { 0, 0 })
 
 int main()

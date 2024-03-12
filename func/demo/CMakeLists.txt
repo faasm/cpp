@@ -87,10 +87,6 @@ demo_func(stdout stdout.cpp)
 demo_func(stderr stderr.cpp)
 demo_func(string string.cpp)
 demo_func(sysconf sysconf.cpp)
-demo_func(threads_local threads_local.cpp)
-demo_func(threads_check threads_check.cpp)
-demo_func(threads_dist threads_dist.cpp)
-demo_func(threads_memory threads_memory.cpp)
 demo_func(time time.cpp)
 demo_func(time_of_day time_of_day.cpp)
 demo_func(uname uname.cpp)
@@ -99,13 +95,12 @@ demo_func(waitpid waitpid.cpp)
 demo_func(x2 x2.cpp)
 demo_func(zygote_check zygote_check.cpp)
 
-# 23/09/2020 - removing simd
 # WASM-only functions
-if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     demo_func(emscripten_check emscripten_check.cpp)
     target_link_libraries(emscripten_check emscripten)
 
-    # TODO - fix BLAS check function
+    # 12/03/2024 - BLAS (and CLAPACK) has been broken for a while
     # include_directories(/usr/local/faasm/llvm-sysroot/include/clapack)
     # demo_func_c(blas_check blas_check.c)
     # target_link_libraries(blas_check ${FAASM_BLAS_LIBS})

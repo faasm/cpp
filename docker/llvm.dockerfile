@@ -3,13 +3,26 @@ FROM ubuntu:22.04
 SHELL ["/bin/bash", "-c"]
 ENV CPP_DOCKER="on"
 
+# Configure APT repositories
+ARG LLVM_VERSION_MAJOR
+RUN apt update \
+    && apt upgrade -y \
+    && apt install -y \
+        curl \
+        gpg \
+        software-properties-common \
+        wget \
+    && wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc \
+    && add-apt-repository -y "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-${LLVM_VERSION_MAJOR} main"
+
 # Install APT dependencies
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update \
     && apt install -y \
         autoconf \
         build-essential \
-        clang-13 \
+        # This clang version is needed to help us build LLVM from source below
+        clang-${LLVM_VERSION_MAJOR} \
         curl \
         git \
         gpg \
@@ -26,7 +39,7 @@ RUN apt remove --purge --auto-remove cmake \
     && mkdir -p /setup \
     && cd /setup \
     && wget -q -O cmake-linux.sh \
-        https://github.com/Kitware/CMake/releases/download/v3.24.2/cmake-3.24.2-linux-x86_64.sh \
+        https://github.com/Kitware/CMake/releases/download/v3.28.0/cmake-3.28.0-linux-x86_64.sh \
     && sh cmake-linux.sh -- --skip-license --prefix=/usr/local \
     && apt clean autoclean -y \
     && apt autoremove -y
@@ -42,6 +55,7 @@ RUN mkdir -p /code \
     && ./bin/create_venv.sh \
     && source venv/bin/activate \
     && inv install \
+    # This task builds LLVM from source and reads the version from faasmtools/env.py
     && inv llvm.build \
     && /usr/local/faasm/toolchain/bin/clang --version \
     && rm -rf /code

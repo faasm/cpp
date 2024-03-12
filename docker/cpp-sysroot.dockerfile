@@ -1,8 +1,8 @@
 # llvm image is not re-built often, so the tag may be behind
-FROM faasm.azurecr.io/llvm:0.2.4 as llvm
+FROM faasm.azurecr.io/llvm:0.4.0 as llvm
 
 # faabric-base image is not re-built often, so tag may be behind
-FROM faasm.azurecr.io/faabric-base:0.4.2
+FROM faasm.azurecr.io/faabric-base:0.15.0
 SHELL ["/bin/bash", "-c"]
 ENV CPP_DOCKER="on"
 
@@ -45,18 +45,22 @@ RUN cd /code/cpp \
     # Build wasi-libc and reset the sysroot. The second call to LLVM just
     # installs some headers that are purged
     && inv llvm.libc --purge llvm \
-    # Build Faasm WASM libraries
+    # Build Faasm WASM libraries for wasm32-wasi target
     && inv \
-        libemscripten \
         libfaasm \
-        libfaasmp \
+        libemscripten \
         libfaasmpi \
+    # Build Faasm WASM libraries for wasm32-wasi-threads target
+    && inv \
+        libfaasm --threads \
+        libemscripten --threads \
+        libfaasmp \
     # Lastly, build the libraries that populate the sysroot
     && inv \
-        clapack \
-        clapack --clean --shared \
         libffi \
-        zlib
+        libffi --threads \
+        zlib \
+        zlib --threads
 
 # CLI setup
 WORKDIR /code/cpp

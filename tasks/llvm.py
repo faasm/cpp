@@ -1,8 +1,7 @@
 from faasmtools.build import (
-    FAASM_BUILD_ENV_DICT,
     FAASM_LOCAL_DIR,
-    WASM_LIB_INSTALL,
     WASM_SYSROOT,
+    get_faasm_build_env_dict,
 )
 from faasmtools.env import (
     LLVM_DIR,
@@ -13,10 +12,9 @@ from faasmtools.env import (
     WASI_LIBC_DIR,
 )
 from invoke import task
-from os import environ, listdir
+from os import environ
 from os.path import exists, join
 from subprocess import run
-from tasks.util.env import PATCHES_DIR
 
 LLVM_BUILD_DIR = join(LLVM_DIR, "build")
 LLVM_BUILD_ENV_VARS = {
@@ -45,11 +43,6 @@ def do_llvm_clone():
     git_cmd = " ".join(git_cmd)
     run(git_cmd, shell=True, check=True)
 
-    llvm_patches_dir = join(PATCHES_DIR, "llvm-project")
-    for patch in listdir(llvm_patches_dir):
-        git_cmd = "git apply {}".format(join(llvm_patches_dir, patch))
-        run(git_cmd, shell=True, check=True, cwd=LLVM_DIR)
-
 
 def do_llvm_build(target, clean_target=None):
     build_env = environ.copy()
@@ -67,7 +60,7 @@ def do_llvm_build(target, clean_target=None):
         )
 
     # These env. variables are to actually build LLVM
-    build_env.update(FAASM_BUILD_ENV_DICT)
+    build_env.update(get_faasm_build_env_dict())
     make_cmd = [
         "make",
         "-j {}".format(USABLE_CPUS),
@@ -92,11 +85,9 @@ def build(ctx, clean=False):
 @task()
 def libs(ctx, clean=False):
     """
-    Build the compiler-rt, libcxx, and libcxxabi for our LLVM fork
+    Build the compiler-rt, and libcxx for our LLVM fork
     """
-    do_llvm_build(
-        "libcxx libcxxabi compiler-rt", "clean-libs" if clean else None
-    )
+    do_llvm_build("libcxx compiler-rt", "clean-libs" if clean else None)
 
 
 @task()
@@ -118,6 +109,8 @@ def libc(ctx, clean=False, purge=False):
     do_llvm_build("libc", clean_args)
 
     # Copy the import files into place
-    copy_cmd = "cp -r sysroot_extras/* {}".format(WASM_LIB_INSTALL)
+    copy_cmd = "cp -r sysroot_extras/* {}".format(
+        get_faasm_build_env_dict()["FAASM_WASM_LIB_INSTALL_DIR"]
+    )
     print("\nCopying undefined symbols into place: \n{}".format(copy_cmd))
     run(copy_cmd, check=True, shell=True, cwd=PROJ_ROOT)

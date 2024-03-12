@@ -1,29 +1,36 @@
 from faasmtools.build import (
     CMAKE_TOOLCHAIN_FILE,
-    FAASM_BUILD_ENV_DICT,
     FAASM_NATIVE_DIR,
-    WASM_SYSROOT,
+    get_faasm_build_env_dict,
 )
-from faasmtools.env import LLVM_VERSION, PROJ_ROOT
+from faasmtools.env import LLVM_NATIVE_VERSION, PROJ_ROOT
 from os.path import exists, join
 from os import environ, makedirs
 from shutil import rmtree
 from subprocess import run
 
 
-def build_faasm_lib(subdir, clean=False, native=False, shared=False):
+def build_faasm_lib(
+    subdir, clean=False, native=False, shared=False, threads=False
+):
     """
     Builds one of the libraries included in this repo
     """
     work_dir = join(PROJ_ROOT, subdir)
-    install_dir = FAASM_NATIVE_DIR if native else WASM_SYSROOT
+    install_dir = (
+        FAASM_NATIVE_DIR
+        if native
+        else get_faasm_build_env_dict(threads)["FAASM_WASM_LIB_INSTALL_DIR"]
+    )
 
     if native and shared:
         build_dir = "build-native-shared"
     elif native:
         build_dir = "build-native"
+    elif threads:
+        build_dir = "build-wasm32-wasi-threads"
     else:
-        build_dir = "build-wasm"
+        build_dir = "build-wasm32-wasi"
 
     build_dir = join(work_dir, build_dir)
 
@@ -33,7 +40,7 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
     makedirs(build_dir, exist_ok=True)
 
     if native:
-        llvm_major = LLVM_VERSION.split(".")[0]
+        llvm_major = LLVM_NATIVE_VERSION.split(".")[0]
         extras = [
             "-DCMAKE_C_COMPILER=/usr/bin/clang-{}".format(llvm_major),
             "-DCMAKE_CXX_COMPILER=/usr/bin/clang++-{}".format(llvm_major),
@@ -62,7 +69,7 @@ def build_faasm_lib(subdir, clean=False, native=False, shared=False):
 
     work_env = environ.copy()
     if not native:
-        work_env.update(FAASM_BUILD_ENV_DICT)
+        work_env.update(get_faasm_build_env_dict(is_threads=threads))
     run(build_cmd_str, shell=True, cwd=build_dir, check=True, env=work_env)
 
     run("ninja", shell=True, cwd=build_dir, check=True)

@@ -15,6 +15,14 @@ FUNC_BUILD_DIR = join(PROJ_ROOT, "build", "func")
 NATIVE_FUNC_BUILD_DIR = join(PROJ_ROOT, "build", "native-func")
 
 
+def _is_threaded_func(user, func):
+    """
+    Work out if the function requires using the wasm32-wasi or the
+    wasm32-wasi-threads target
+    """
+    return user in ["threads", "omp"]
+
+
 def _get_all_user_funcs(user):
     # Work out all the functions for this user (that we assume will have been
     # built)
@@ -64,7 +72,14 @@ def compile(ctx, user, func, clean=False, debug=False, native=False):
         )
     else:
         # Build the function (gets written to the build dir)
-        wasm_cmake(FUNC_DIR, FUNC_BUILD_DIR, func, clean, debug)
+        wasm_cmake(
+            FUNC_DIR,
+            FUNC_BUILD_DIR,
+            func,
+            clean,
+            debug,
+            _is_threaded_func(user, func),
+        )
 
         # Copy into place
         _copy_built_function(user, func)
@@ -145,7 +160,14 @@ def user(ctx, user, clean=False, debug=False):
     """
     # Build all funcs for this user (will fail if any builds fail)
     target = "{}_all_funcs".format(user)
-    wasm_cmake(FUNC_DIR, FUNC_BUILD_DIR, target, clean, debug)
+    wasm_cmake(
+        FUNC_DIR,
+        FUNC_BUILD_DIR,
+        target,
+        clean,
+        debug,
+        _is_threaded_func(user, ""),
+    )
 
     funcs = _get_all_user_funcs(user)
     for f in funcs:
@@ -161,3 +183,4 @@ def local(ctx, clean=False, debug=False):
     user(ctx, "errors", clean, debug)
     user(ctx, "mpi", clean, debug)
     user(ctx, "omp", clean, debug)
+    user(ctx, "threads", clean, debug)

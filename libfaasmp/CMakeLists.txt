@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.8)
 project(libfaasmp)
 
 # ------ Faasm OpenMP library ------ #
@@ -6,17 +6,20 @@ project(libfaasmp)
 set(CMAKE_CXX_STANDARD 17)
 
 set(PUBLIC_HEADERS
-        faasmp/faasmp.h
-        )
+    faasmp/faasmp.h
+)
 
 set(LIB_FILES
-        faasmp.cpp
-        )
+    faasmp.cpp
+)
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     message(STATUS "Libfaasmp WebAssembly build")
 
+    set(LLVM_OMP_SRC_DIR "/opt/llvm-project/openmp/runtime/src")
+    set(LLVM_OMP_BUILD_SRC_DIR "/opt/llvm-project/build/llvm/projects/openmp/runtime/src")
     set(LIBOMP_ASMFILES "z_Linux_asm.S")
+    set(LIBOMP_HEADERS "${LLVM_OMP_BUILD_SRC_DIR}/omp.h")
     set_source_files_properties(${LIBOMP_ASMFILES} PROPERTIES LANGUAGE C)
     set(LIB_FILES ${LIBOMP_ASMFILES} ${LIB_FILES})
 
@@ -24,21 +27,25 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
     set_target_properties(faasmp PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 
     # Install in WASM sysroot
-    install(TARGETS faasmp
-            ARCHIVE DESTINATION ${CMAKE_SYSROOT}/lib/wasm32-wasi
-            LIBRARY DESTINATION ${CMAKE_SYSROOT}/lib/wasm32-wasi
-            PUBLIC_HEADER DESTINATION ${CMAKE_SYSROOT}/include/faasmp
-            )
+    install(
+        TARGETS faasmp
+        ARCHIVE DESTINATION $ENV{FAASM_WASM_LIB_INSTALL_DIR}
+        LIBRARY DESTINATION $ENV{FAASM_WASM_LIB_INSTALL_DIR}
+        PUBLIC_HEADER DESTINATION $ENV{FAASM_WASM_HEADER_INSTALL_DIR}/faasmmp
+    )
 
     # Add imports
-    install(FILES faasmp.imports
-            DESTINATION ${CMAKE_SYSROOT}/lib/wasm32-wasi
-            RENAME libfaasmp.imports)
+    install(
+        FILES libfaasmp.imports
+        DESTINATION $ENV{FAASM_WASM_LIB_INSTALL_DIR}
+        RENAME libfaasmp.imports
+    )
 
-    # Add omp header
-    install(FILES omp.h
-            DESTINATION ${CMAKE_SYSROOT}/include)
-
+    # Add omp.h header copied from clang source
+    install(
+        FILES ${LIBOMP_HEADERS}
+        DESTINATION $ENV{FAASM_WASM_HEADER_INSTALL_DIR}
+    )
 else ()
     message(STATUS "Libfaasmp native build")
 
@@ -50,9 +57,10 @@ else ()
 
     set_target_properties(faasmp PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 
-    install(TARGETS faasmp
-            ARCHIVE DESTINATION lib
-            LIBRARY DESTINATION lib
-            PUBLIC_HEADER DESTINATION include/faasmp
-            )
+    install(
+        TARGETS faasmp
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        PUBLIC_HEADER DESTINATION include/faasmp
+    )
 endif ()

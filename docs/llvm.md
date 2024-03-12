@@ -1,4 +1,14 @@
-# Upgrading LLVM
+# LLVM
+
+We use LLVM to cross-compile C and C++ code to WebAssembly. Our
+cross-compilation toolchain consists of a home-built LLVM suite (`clang` and
+co.) targetting WebAssembly, together with a sysroot with a set of standard
+libraries to link against so that we can cross-compile meaningful applications
+(most notably `libc` through [`wasi-libc`](
+https://github.com/faasm/wasi-libc).
+
+To this extent, our set-up is very similar to that of [`wasi-sdk`](
+https://github.com/WebAssembly/wasi-sdk).
 
 To upgrade the underlying LLVM version you need to:
 

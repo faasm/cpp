@@ -1,4 +1,3 @@
-from copy import copy
 from os.path import join
 from subprocess import run
 from os import environ
@@ -15,8 +14,6 @@ FAASM_LOCAL_DIR = environ.get("FAASM_LOCAL_DIR", "/usr/local/faasm")
 FAASM_NATIVE_DIR = join(FAASM_LOCAL_DIR, "native")
 FAASM_CMAKE_ROOT = "/usr/share/cmake-3.24"
 WASM_SYSROOT = join(FAASM_LOCAL_DIR, "llvm-sysroot")
-WASM_HEADER_INSTALL = "{}/include".format(WASM_SYSROOT)
-WASM_LIB_INSTALL = "{}/lib/wasm32-wasi".format(WASM_SYSROOT)
 WASM_TOOLCHAIN_ROOT = join(FAASM_LOCAL_DIR, "toolchain")
 WASM_TOOLCHAIN_TOOLS = join(WASM_TOOLCHAIN_ROOT, "tools")
 WASM_TOOLCHAIN_BIN = join(WASM_TOOLCHAIN_ROOT, "bin")
@@ -38,6 +35,7 @@ WASM_LD = WASM_CC
 WASM_LDXX = WASM_CXX
 
 # Host triple
+# TODO(shared-libs): consider removing this
 WASM_BUILD = "wasm32"
 WASM_HOST = "wasm32-unknown-wasi"
 WASM_HOST_STATIC = "wasm32-wasi"
@@ -73,7 +71,7 @@ FAASM_WASM_INITIAL_MEMORY_SIZE = 4 * FAASM_WASM_STACK_SIZE
 # https://reviews.llvm.org/D59281
 WASM_CFLAGS = [
     "-O3",
-    "-mno-atomics",
+    # TODO: may want to use -mrelaxed-simd instead
     "-msimd128",
     "--sysroot={}".format(WASM_SYSROOT),
     "-m32",
@@ -142,7 +140,6 @@ WASM_EXE_LDFLAGS = [
     "-Xlinker --export={}".format(FAASM_WASM_CTORS_FUNC_NAME),
     "-Xlinker --export=__stack_pointer",
     "-Xlinker --max-memory={}".format(FAASM_WASM_MAX_MEMORY),
-    "-Xlinker --features=mutable-globals,simd128",
     "-Wl,-z,stack-size={} -Wl".format(FAASM_WASM_STACK_SIZE),
 ]
 
@@ -188,7 +185,9 @@ WASM_BLAS_LIBS = [
 
 # Env. variables as a dictionary: prefix with FAASM_WASM or FAASM_NATIVE
 # depending on the build type variables target
-FAASM_BUILD_ENV_DICT = {
+# WARNING: do NOT import this method directly, instead use the getter method:
+# get_faasm_build_env_dict
+_FAASM_BUILD_ENV_DICT = {
     "CMAKE_ROOT": FAASM_CMAKE_ROOT,
     "FAASM_NATIVE_INSTALL_DIR": FAASM_NATIVE_DIR,
     "FAASM_WASM_MAKE_TOOLCHAIN_FILE": MAKE_TOOLCHAIN_FILE,
@@ -204,6 +203,8 @@ FAASM_BUILD_ENV_DICT = {
     "FAASM_WASM_SYSROOT": WASM_SYSROOT,
     "FAASM_WASM_CFLAGS": " ".join(WASM_CFLAGS),
     "FAASM_WASM_CFLAGS_SHARED": " ".join(WASM_CFLAGS_SHARED),
+    "FAASM_WASM_CXXFLAGS": " ".join(WASM_CXXFLAGS),
+    "FAASM_WASM_CXXFLAGS_SHARED": " ".join(WASM_CXXFLAGS_SHARED),
     "FAASM_WASM_EXE_LINKER_FLAGS": " ".join(WASM_EXE_LDFLAGS),
     "FAASM_WASM_EXE_LINKER_FLAGS_SHARED": " ".join(WASM_EXE_LDFLAGS_SHARED),
     "FAASM_WASM_SHARED_LINKER_FLAGS": " ".join(WASM_LDFLAGS_SHARED),
@@ -222,6 +223,51 @@ FAASM_RUNTIME_ENV_DICT = {
 }
 
 
+def get_faasm_build_env_dict(is_threads=False):
+    """
+    This method returns the right set of environment variables needed to use
+    our toolchain file as well as most cross-compilation scripts in Faasm.
+    """
+    build_env_dicts = _FAASM_BUILD_ENV_DICT
+    if is_threads:
+        wasm_triple = "wasm32-wasi-threads"
+        build_env_dicts["FAASM_WASM_TRIPLE"] = wasm_triple
+        build_env_dicts["FAASM_WASM_CFLAGS"] += " --target={} -pthread".format(
+            wasm_triple
+        )
+        build_env_dicts[
+            "FAASM_WASM_CXXFLAGS"
+        ] += " --target={} -pthread".format(wasm_triple)
+        linker_features = [
+            "atomics",
+            "bulk-memory",
+            "mutable-globals",
+            "sign-ext",
+            "simd128",
+        ]
+    else:
+        wasm_triple = "wasm32-wasi"
+        build_env_dicts["FAASM_WASM_TRIPLE"] = wasm_triple
+        linker_features = [
+            "bulk-memory",
+            "mutable-globals",
+            "sign-ext",
+            "simd128",
+        ]
+
+    build_env_dicts["FAASM_WASM_HEADER_INSTALL_DIR"] = join(
+        WASM_SYSROOT, "include", wasm_triple
+    )
+    build_env_dicts["FAASM_WASM_LIB_INSTALL_DIR"] = join(
+        WASM_SYSROOT, "lib", wasm_triple
+    )
+    build_env_dicts[
+        "FAASM_WASM_EXE_LINKER_FLAGS"
+    ] += " -Xlinker --features={}".format(",".join(linker_features))
+
+    return build_env_dicts
+
+
 def get_dict_as_cmake_vars(env_dict):
     return " ".join(["-D{}={}".format(k, env_dict[k]) for k in env_dict])
 
@@ -230,78 +276,58 @@ def get_dict_as_cmake_vars(env_dict):
 # Scripts for configure, automake, and autotools
 # ----------
 
-# Variables for 'configure' scripts
-_BASE_CONFIG_CMD = [
-    "CC={}".format(WASM_CC),
-    "CXX={}".format(WASM_CXX),
-    "CPP={}".format(WASM_CPP),
-    "AR={}".format(WASM_AR),
-    "RANLIB={}".format(WASM_RANLIB),
-    'CFLAGS="{}"'.format(" ".join(WASM_CFLAGS)),
-    'CPPFLAGS="{}"'.format(" ".join(WASM_CFLAGS)),
-    'CXXFLAGS="{}"'.format(" ".join(WASM_CXXFLAGS)),
-    'CCSHARED="{}"'.format(WASM_CCSHARED),
-    'CXXSHARED="{}"'.format(WASM_CXXSHARED),
-]
 
-_BASE_CONFIG_ARGS = [
-    "--build={}".format(WASM_BUILD),
-    "--host={}".format(WASM_HOST),
-]
-
-_BASE_CONFIG_ARGS_SHARED = [
-    "--build={}".format(WASM_BUILD),
-    "--host={}".format(WASM_HOST_SHARED),
-]
-
-BASE_CONFIG_CMD = _BASE_CONFIG_CMD + [
-    "LD={}".format(WASM_LD),
-    'LDSHARED="{}"'.format(WASM_LDSHARED),
-]
-
-BASE_CONFIG_CMDXX = _BASE_CONFIG_CMD + [
-    "LD={}".format(WASM_LDXX),
-    'LDSHARED="{}"'.format(WASM_LDXXSHARED),
-]
-
-BASE_CONFIG_FLAGS = [
-    'CFLAGS="{}"'.format(" ".join(WASM_CFLAGS)),
-    'CPPFLAGS="{}"'.format(" ".join(WASM_CXXFLAGS)),
-    'LDFLAGS="{}"'.format(" ".join(WASM_LDFLAGS)),
-]
-
-BASE_CONFIG_FLAGS_SHARED = [
-    'CFLAGS="{}"'.format(" ".join(WASM_CFLAGS_SHARED)),
-    'CPPFLAGS="{}"'.format(" ".join(WASM_CXXFLAGS_SHARED)),
-    'LDFLAGS="{}"'.format(" ".join(WASM_LDFLAGS_SHARED)),
-]
-
-
-def build_config_cmd(cmd, shared=False, cxx=False, conf_args=True):
+def build_config_cmd(env_vars, cmd, shared=False, cxx=False, conf_args=True):
     """
     Wraps an autotools command in the relevant environment variables and
-    cross-compilation config
+    cross-compilation config. We need to call this method after we get
+    the right env. vars using get_faasm_build_env_dict
     """
-    result = copy(BASE_CONFIG_CMDXX if cxx else BASE_CONFIG_CMD)
+    base_config_cmd = [
+        "CC={}".format(env_vars["FAASM_WASM_CC"]),
+        "CXX={}".format(env_vars["FAASM_WASM_CXX"]),
+        "AR={}".format(env_vars["FAASM_WASM_AR"]),
+        "RANLIB={}".format(env_vars["FAASM_WASM_RANLIB"]),
+        'CFLAGS="--target={} {}"'.format(
+            env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_CFLAGS"]
+        ),
+        'CXXFLAGS="--target={} {}"'.format(
+            env_vars["FAASM_WASM_TRIPLE"], env_vars["FAASM_WASM_CXXFLAGS"]
+        ),
+        'CCSHARED="{}"'.format(env_vars["FAASM_WASM_CFLAGS_SHARED"]),
+        'CXXSHARED="{}"'.format(env_vars["FAASM_WASM_CXXFLAGS_SHARED"]),
+    ]
 
-    result += BASE_CONFIG_FLAGS_SHARED if shared else BASE_CONFIG_FLAGS
+    if cxx:
+        base_config_cmd += [
+            "LD={}".format(env_vars["FAASM_WASM_CXX"]),
+            'LDFLAGS="-target {} {}"'.format(
+                env_vars["FAASM_WASM_TRIPLE"],
+                env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"],
+            ),
+        ]
+    else:
+        base_config_cmd += [
+            "LD={}".format(env_vars["FAASM_WASM_CC"]),
+            'LDFLAGS="-target {} {}"'.format(
+                env_vars["FAASM_WASM_TRIPLE"],
+                env_vars["FAASM_WASM_STATIC_LINKER_FLAGS"],
+            ),
+        ]
 
-    result += cmd
+    base_config_cmd += cmd
 
-    if conf_args:
-        result += _BASE_CONFIG_ARGS_SHARED if shared else _BASE_CONFIG_ARGS
-
-    return result
+    return base_config_cmd
 
 
-def run_autotools(proj_dir):
+def run_autotools(env_vars, proj_dir):
     """
     Runs through autotools set-up on the given directory
     """
 
     def _run_auto_cmd(cmd):
         print("Running {}".format(cmd))
-        auto_cmd = build_config_cmd([cmd], conf_args=False)
+        auto_cmd = build_config_cmd(env_vars, [cmd], conf_args=False)
         auto_cmd = " ".join(auto_cmd)
         run(auto_cmd, shell=True, check=True, cwd=proj_dir)
 

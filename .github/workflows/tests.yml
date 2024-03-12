@@ -7,26 +7,24 @@ on:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
 
-jobs:
-  # Cancel previous running actions for the same PR
-  cancel_previous:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel Workflow Action
-        uses: styfle/cancel-workflow-action@0.11.0
+# Cancel previous running actions for the same PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
+jobs:
   checks:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     container:
-      image: faasm.azurecr.io/cpp-sysroot:0.3.1
+      image: faasm.azurecr.io/cpp-sysroot:0.4.0
       credentials:
         username: ${{ secrets.ACR_SERVICE_PRINCIPAL_ID }}
         password: ${{ secrets.ACR_SERVICE_PRINCIPAL_PASSWORD }}
     steps:
       # --- Update code ---
       - name: "Checkout code"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
       # See actions/checkout#766
@@ -35,6 +33,8 @@ jobs:
       # --- Build libraries to wasm ---
       - name: "Build libfaasm"
         run: ./bin/inv_wrapper.sh libfaasm
+      - name: "Build libfaasm with threads support"
+        run: ./bin/inv_wrapper.sh libfaasm --threads
       - name: "Build libfaasmp"
         run: ./bin/inv_wrapper.sh libfaasmp
       - name: "Build libfaasmpi"
@@ -45,6 +45,8 @@ jobs:
         run: ./bin/inv_wrapper.sh libfake
       - name: "Build libemscripten"
         run: ./bin/inv_wrapper.sh libemscripten
+      - name: "Build libemscripten with threads support"
+        run: ./bin/inv_wrapper.sh libemscripten --threads
       - name: "Build zlib"
         run: ./bin/inv_wrapper.sh zlib
       # --- Build functions to wasm ---

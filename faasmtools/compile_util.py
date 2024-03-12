@@ -1,6 +1,6 @@
 from faasmtools.build import (
     CMAKE_TOOLCHAIN_FILE,
-    FAASM_BUILD_ENV_DICT,
+    get_faasm_build_env_dict,
 )
 from faasmtools.env import WASM_DIR
 from os import environ, makedirs
@@ -9,7 +9,9 @@ from shutil import copy, rmtree
 from subprocess import run
 
 
-def wasm_cmake(src_dir, build_dir, target, clean=False, debug=False):
+def wasm_cmake(
+    src_dir, build_dir, target, clean=False, debug=False, is_threads=False
+):
     cmake_build_type = "Debug" if debug else "Release"
 
     if exists(build_dir) and clean:
@@ -28,7 +30,7 @@ def wasm_cmake(src_dir, build_dir, target, clean=False, debug=False):
     print(build_cmd)
 
     work_env = environ.copy()
-    work_env.update(FAASM_BUILD_ENV_DICT)
+    work_env.update(get_faasm_build_env_dict(is_threads))
 
     res = run(build_cmd, shell=True, cwd=build_dir, env=work_env)
     if res.returncode != 0:

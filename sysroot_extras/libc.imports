@@ -99,11 +99,16 @@ pthread_cond_destroy
 pthread_cond_signal
 pthread_cond_timedwait
 pthread_cond_init
+pthread_condattr_init
+pthread_condattr_setclock
 pthread_equal
 pthread_mutexattr_init
 pthread_mutexattr_settype
 pthread_mutexattr_destroy
+__tls_align
 __tls_base
+__tls_size
+__wasm_init_tls
 
 # Signals
 signal

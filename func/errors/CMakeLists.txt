@@ -11,7 +11,7 @@ error_func(open_blocked open_blocked.cpp)
 error_func(ret_one ret_one.cpp)
 error_func(stdin_poll stdin_poll.cpp)
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     error_func(stackoverflow stackoverflow.cpp)
 endif()
 

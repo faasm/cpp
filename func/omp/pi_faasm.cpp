@@ -23,9 +23,8 @@ int main(int argc, char** argv)
     int nTotal = nWorkers * CHUNK_SIZE;
 
     FAASM_REDUCE(result, FAASM_TYPE_LONG, FAASM_OP_SUM)
-#pragma omp parallel num_threads(nWorkers) default(none) \
-        shared(nTotal) \
-        reduction(+ : result)
+#pragma omp parallel num_threads(nWorkers) default(none) shared(nTotal)        \
+  reduction(+ : result)
     {
         // Different seed per thread
         std::uniform_real_distribution<double> unif(0, 1);

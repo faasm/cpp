@@ -3,7 +3,7 @@ set_target_properties(fakeLibB PROPERTIES PUBLIC_HEADER libB.h)
 
 target_link_libraries(fakeLibB fakeLibA)
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Wasm")
+if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     install(TARGETS fakeLibB
             ARCHIVE DESTINATION lib/wasm32-wasi
             LIBRARY DESTINATION lib/wasm32-wasi
