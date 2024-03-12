@@ -29,6 +29,8 @@ def build(ctx, clean=False, threads=False):
         build_env,
         [
             "./configure",
+            "--build=wasm32",
+            "--host=wasm32-wasi",
             "--includedir={}".format(
                 build_env["FAASM_WASM_HEADER_INSTALL_DIR"]
             ),
