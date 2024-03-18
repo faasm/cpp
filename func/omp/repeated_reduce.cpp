@@ -1,3 +1,4 @@
+#include <faasm/input.h>
 #include <faasm/shared_mem.h>
 
 #include <cstdio>
@@ -76,6 +77,13 @@ bool doReduce()
 
 int main(int argc, char* argv[])
 {
+    int numThreads = faasm::getIntInput();
+    if (numThreads <= 0) {
+        printf("Incorrect number of threads passed as input: %i\n", numThreads);
+        return 1;
+    }
+    omp_set_num_threads(numThreads);
+
     // Run reduce in a loop and check each iteration is correct
     int nLoops = 10;
     for (int i = 0; i < nLoops; i++) {
