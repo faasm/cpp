@@ -71,7 +71,6 @@ FAASM_WASM_INITIAL_MEMORY_SIZE = 4 * FAASM_WASM_STACK_SIZE
 # https://reviews.llvm.org/D59281
 WASM_CFLAGS = [
     "-O3",
-    # TODO: may want to use -mrelaxed-simd instead
     "-mrelaxed-simd",
     "-msimd128",
     "--sysroot={}".format(WASM_SYSROOT),
