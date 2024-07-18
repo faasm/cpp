@@ -1,4 +1,9 @@
-#include "faasm/faasm.h"
+extern "C"
+{
+#include "faasm/host_interface.h"
+}
+
+#include <stdio.h>
 
 // TODO: get the number of expected buckets as input
 int main(int argc, char* argv[])
