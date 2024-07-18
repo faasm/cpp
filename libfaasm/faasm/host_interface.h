@@ -160,4 +160,11 @@ void __faasm_migrate_point(FaasmMigrateEntryPoint f, int arg);
 
 HOST_IFACE_FUNC
 void __faasm_host_interface_test(int testNum);
+
+// S3
+HOST_IFACE_FUNC
+int __faasm_s3_get_num_buckets();
+
+HOST_IFACE_FUNC
+void __faasm_s3_list_buckets(char** bucketsBuffer, long* bucketsBufferLens);
 #endif
