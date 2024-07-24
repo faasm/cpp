@@ -45,8 +45,6 @@ __faasm_migrate_point
 # S3
 __faasm_s3_get_num_buckets
 __faasm_s3_list_buckets
-__faasm_s3_create_bucket
-__faasm_s3_delete_bucket
 __faasm_s3_get_num_keys
 __faasm_s3_list_keys
 __faasm_s3_add_key_bytes
