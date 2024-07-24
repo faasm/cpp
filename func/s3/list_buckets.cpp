@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
         strncpy(outBuffer + offset, bucketsBuffer[i], bucketsBufferLens[i]);
         offset += bucketsBufferLens[i];
         if (i < numBuckets - 1) {
-            outBuffer[offset] = (char) '|';
+            outBuffer[offset] = (char)'|';
             offset += 1;
         }
         printf("Bucket %i: %s\n", i, bucketsBuffer[i]);

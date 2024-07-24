@@ -10,7 +10,8 @@ int main(int argc, char* argv[])
 {
     // Get bucket and key from command line
     if (argc != 3) {
-        printf("error: must invoke function with two arguments: bucketName keyName\n");
+        printf("error: must invoke function with two arguments: bucketName "
+               "keyName\n");
         return 1;
     }
 
@@ -22,7 +23,8 @@ int main(int argc, char* argv[])
     uint8_t keyBytes[inputSize];
     faasmGetInput(keyBytes, inputSize);
 
-    int ret = __faasm_s3_add_key_bytes(bucketName, keyName, (void*) keyBytes, inputSize);
+    int ret =
+      __faasm_s3_add_key_bytes(bucketName, keyName, (void*)keyBytes, inputSize);
 
     return ret;
 }

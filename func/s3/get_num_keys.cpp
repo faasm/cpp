@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     // Get the bucket name as an input
     int inputSize = faasmGetInputSize();
     char bucketName[inputSize];
-    faasmGetInput((uint8_t*) bucketName, inputSize);
+    faasmGetInput((uint8_t*)bucketName, inputSize);
 
     int numKeys = __faasm_s3_get_num_keys(bucketName);
 

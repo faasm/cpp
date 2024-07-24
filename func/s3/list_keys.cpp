@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     // Get the bucket name as an input
     int inputSize = faasmGetInputSize();
     char bucketName[inputSize];
-    faasmGetInput((uint8_t*) bucketName, inputSize);
+    faasmGetInput((uint8_t*)bucketName, inputSize);
 
     int numKeys = __faasm_s3_get_num_keys(bucketName);
 
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
         strncpy(outBuffer + offset, keysBuffer[i], keysBufferLens[i]);
         offset += keysBufferLens[i];
         if (i < numKeys - 1) {
-            outBuffer[offset] = (char) '|';
+            outBuffer[offset] = (char)'|';
             offset += 1;
         }
         printf("Key %i: %s\n", i, keysBuffer[i]);
