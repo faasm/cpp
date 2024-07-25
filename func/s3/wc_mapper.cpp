@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     }
 
     // Work-out the serialised payload and directory
-    auto serialisedWordCount = serialiseWordCount();
+    auto thisWordCount = serialiseWordCount();
     size_t lastSlash = s3ObjectKey.rfind("/");
     if (lastSlash != std::string::npos) {
         s3ObjectKey.insert(lastSlash + 1, "mapper-results/");
@@ -99,17 +99,14 @@ int main(int argc, char** argv)
         s3ObjectKey = "mapper-results/" + s3ObjectKey;
     }
 
-    printf("would write result to: %s\n", s3ObjectKey.c_str());
-    // TODO: write serialised result
-/*
+    printf("word-count(mapper): writting result to %s\n", s3ObjectKey.c_str());
 #ifdef __faasm
-    int ret =
+    ret =
       __faasm_s3_add_key_bytes(bucketName.c_str(),
                                s3ObjectKey.c_str(),
-                               (void*) serialiseWordCount.c_str(),
-                               serialiseWordCount.size());
+                               (void*) thisWordCount.c_str(),
+                               thisWordCount.size());
 #endif
-*/
 
     return 0;
 }
