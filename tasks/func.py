@@ -183,4 +183,5 @@ def local(ctx, clean=False, debug=False):
     user(ctx, "errors", clean, debug)
     user(ctx, "mpi", clean, debug)
     user(ctx, "omp", clean, debug)
+    user(ctx, "s3", clean, debug)
     user(ctx, "threads", clean, debug)
