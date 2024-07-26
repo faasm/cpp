@@ -152,8 +152,8 @@ unsigned int faasmAwaitCall(unsigned int messageId)
 }
 
 unsigned int faasmAwaitCallOutput(unsigned int messageId,
-                                  const char* output,
-                                  long outputLen)
+                                  char** output,
+                                  int* outputLen)
 {
     return __faasm_await_call_output(messageId, output, outputLen);
 }

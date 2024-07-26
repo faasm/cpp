@@ -26,17 +26,22 @@ int main(int argc, char* argv[])
     unsigned int callIdB = faasmChain(otherB, nullptr, 0);
 
     std::string expectedA = "expected A";
-    std::string actualA;
-    actualA.reserve(expectedA.size());
 
     std::string expectedB = "longer expected B";
-    std::string actualB;
-    actualB.reserve(expectedB.size());
 
+    std::string actualA;
+    char* actualABuf;
+    int actualABufSize;
     unsigned int resA =
-      faasmAwaitCallOutput(callIdA, actualA.c_str(), actualA.size());
+      faasmAwaitCallOutput(callIdA, &actualABuf, &actualABufSize);
+    actualA.assign(actualABuf, actualABuf + actualABufSize);
+
+    std::string actualB;
+    char* actualBBuf;
+    int actualBBufSize;
     unsigned int resB =
-      faasmAwaitCallOutput(callIdB, actualB.c_str(), actualB.size());
+      faasmAwaitCallOutput(callIdB, &actualBBuf, &actualBBufSize);
+    actualB.assign(actualBBuf, actualBBuf + actualBBufSize);
 
     if (resA != 0 || resB != 0) {
         printf("One or more chained calls failed: %i %i\n", resA, resB);
@@ -44,10 +49,14 @@ int main(int argc, char* argv[])
     }
 
     if (actualA != expectedA) {
+        printf(
+          "Output mismatch: %s != %s\n", actualA.c_str(), expectedA.c_str());
         return 1;
     }
 
     if (actualB != expectedB) {
+        printf(
+          "Output mismatch: %s != %s\n", actualB.c_str(), expectedB.c_str());
         return 1;
     }
 

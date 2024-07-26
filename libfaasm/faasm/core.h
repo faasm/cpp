@@ -188,8 +188,8 @@ extern "C"
      * Gets the output from the given call into the buffer
      */
     unsigned int faasmAwaitCallOutput(unsigned int messageId,
-                                      const char* output,
-                                      long outputLen);
+                                      char** output,
+                                      int* outputLen);
 
     /**
      * Returns the python user

@@ -114,8 +114,8 @@ int __faasm_await_call(unsigned int messageId);
 
 HOST_IFACE_FUNC
 int __faasm_await_call_output(unsigned int messageId,
-                              const char* output,
-                              long outputLen);
+                              char** output,
+                              int* outputLen);
 
 HOST_IFACE_FUNC
 void __faasm_get_py_user(unsigned char* buffer, long bufferLen);
@@ -160,4 +160,35 @@ void __faasm_migrate_point(FaasmMigrateEntryPoint f, int arg);
 
 HOST_IFACE_FUNC
 void __faasm_host_interface_test(int testNum);
+
+// ----- S3 -----
+
+HOST_IFACE_FUNC
+int __faasm_s3_get_num_buckets();
+
+// Note that bucketsBuffer is, in reality, a char** populated by the host
+HOST_IFACE_FUNC
+void __faasm_s3_list_buckets(void* bucketsBuffer, int* bucketsBufferLens);
+
+HOST_IFACE_FUNC
+int __faasm_s3_get_num_keys(const char* bucketName);
+
+// Note that keysBuffer is, in reality, a char** populated by the host
+HOST_IFACE_FUNC
+void __faasm_s3_list_keys(const char* bucketName,
+                          void* keysBuffer,
+                          int* keysBufferLens);
+
+HOST_IFACE_FUNC
+int __faasm_s3_add_key_bytes(const char* bucketName,
+                             const char* keyName,
+                             void* keyBuffer,
+                             int keyBufferLen);
+
+// Note that keyBuffer is, in reality, a uint8_t** populated by the host
+HOST_IFACE_FUNC
+int __faasm_s3_get_key_bytes(const char* bucketName,
+                             const char* keyName,
+                             void* keyBuffer,
+                             int* keyBufferLen);
 #endif
