@@ -179,9 +179,16 @@ def local(ctx, clean=False, debug=False):
     """
     Compile all functions used in the tests
     """
+    # Mixing users that use the threads sysroot and the non-threads sysroot
+    # seems to give some rather obscure compilation errors, so just make sure
+    # to separate them
+
+    # Non-threaded users
     user(ctx, "demo", clean, debug)
     user(ctx, "errors", clean, debug)
     user(ctx, "mpi", clean, debug)
-    user(ctx, "omp", clean, debug)
     user(ctx, "s3", clean, debug)
+
+    # Threaded users
+    user(ctx, "omp", clean, debug)
     user(ctx, "threads", clean, debug)
