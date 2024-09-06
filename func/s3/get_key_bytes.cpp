@@ -23,7 +23,6 @@ int main(int argc, char* argv[])
 
     int ret =
       __faasm_s3_get_key_bytes(bucketName, keyName, &keyBytes, &keyBytesLen);
-    printf("Got %s/%s: %s\n", bucketName, keyName, (char*)keyBytes);
     faasmSetOutput((char*)keyBytes, keyBytesLen);
 
     return ret;
