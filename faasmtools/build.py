@@ -255,6 +255,8 @@ def get_faasm_build_env_dict(is_threads=False):
             "relaxed-simd",
             "sign-ext",
             "simd128",
+            "reference-types",
+            "multivalue",
         ]
 
     build_env_dicts["FAASM_WASM_HEADER_INSTALL_DIR"] = join(
