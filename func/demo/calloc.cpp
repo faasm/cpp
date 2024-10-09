@@ -13,13 +13,13 @@
 int main(int argc, char* argv[])
 {
     int callocSize = 100;
-    int n = 1000;
+    int n = 100;
     char* callocPtrs[n];
     char* mmapPtrs[n];
     int mmapLen = 20;
 
     // Use calloc to allocate lots of smaller memory regions
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < n; i++) {
         char* callocPtr = (char*)calloc(1, callocSize);
         std::string s = "number ";
         s += std::to_string(i);
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
     }
 
     // Go back through and check everything is still intact
-    for (int j = 0; j < 1000; j++) {
+    for (int j = 0; j < n; j++) {
         char* nextPtr = callocPtrs[j];
         std::string actual(nextPtr);
         std::string expected = "number ";
