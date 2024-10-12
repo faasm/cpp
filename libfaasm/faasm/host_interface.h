@@ -185,9 +185,9 @@ void __faasm_s3_list_keys(const char* bucketName,
 // Note that keysBuffer is, in reality, a char** populated by the host
 HOST_IFACE_FUNC
 void __faasm_s3_list_keys_with_prefix(const char* bucketName,
+                                      const char* prefix,
                                       void* keysBuffer,
-                                      int* keysBufferLens,
-                                      const char* prefix);
+                                      int* keysBufferLens);
 
 HOST_IFACE_FUNC
 int __faasm_s3_add_key_bytes(const char* bucketName,
