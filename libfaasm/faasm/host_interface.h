@@ -193,7 +193,8 @@ HOST_IFACE_FUNC
 int __faasm_s3_add_key_bytes(const char* bucketName,
                              const char* keyName,
                              void* keyBuffer,
-                             int keyBufferLen);
+                             int keyBufferLen,
+                             bool overwrite = false);
 
 // Note that keyBuffer is, in reality, a uint8_t** populated by the host
 HOST_IFACE_FUNC
