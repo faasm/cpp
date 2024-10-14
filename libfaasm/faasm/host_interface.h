@@ -174,7 +174,8 @@ HOST_IFACE_FUNC
 int __faasm_s3_get_num_keys(const char* bucketName);
 
 HOST_IFACE_FUNC
-int __faasm_s3_get_num_keys_with_prefix(const char* bucketName, const char* prefix);
+int __faasm_s3_get_num_keys_with_prefix(const char* bucketName,
+                                        const char* prefix);
 
 // Note that keysBuffer is, in reality, a char** populated by the host
 HOST_IFACE_FUNC
