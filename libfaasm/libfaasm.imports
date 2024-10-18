@@ -54,3 +54,6 @@ __faasm_s3_get_key_bytes
 
 # Test
 __faasm_host_interface_test
+
+# TLess TODO consider!
+__tless_get_attestation_jwt
