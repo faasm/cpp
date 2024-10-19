@@ -202,5 +202,6 @@ HOST_IFACE_FUNC
 int __faasm_s3_get_key_bytes(const char* bucketName,
                              const char* keyName,
                              void* keyBuffer,
-                             int* keyBufferLen);
+                             int* keyBufferLen,
+                             bool tolerateMissing = false);
 #endif
