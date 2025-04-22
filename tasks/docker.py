@@ -1,7 +1,7 @@
 from faasmtools.docker import (
     build_container,
     push_container,
-    ACR_NAME,
+    CR_NAME,
 )
 from faasmtools.env import (
     LLVM_VERSION,
@@ -11,9 +11,9 @@ from faasmtools.env import (
 from invoke import task
 from os.path import join
 
-LLVM_IMAGE_NAME = "{}/llvm".format(ACR_NAME)
+LLVM_IMAGE_NAME = "{}/llvm".format(CR_NAME)
 LLVM_DOCKERFILE = join(PROJ_ROOT, "docker", "llvm.dockerfile")
-SYSROOT_IMAGE_NAME = "{}/cpp-sysroot".format(ACR_NAME)
+SYSROOT_IMAGE_NAME = "{}/cpp-sysroot".format(CR_NAME)
 SYSROOT_DOCKERFILE = join(PROJ_ROOT, "docker", "cpp-sysroot.dockerfile")
 
 
