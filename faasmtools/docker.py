@@ -1,6 +1,6 @@
 from subprocess import run
 
-ACR_NAME = "faasm.azurecr.io"
+CR_NAME = "ghcr.io/faasm"
 
 
 def build_container(

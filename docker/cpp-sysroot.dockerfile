@@ -1,8 +1,8 @@
 # llvm image is not re-built often, so the tag may be behind
-FROM faasm.azurecr.io/llvm:0.4.0 as llvm
+FROM ghcr.io/faasm/llvm:0.4.0 AS llvm
 
 # faabric-base image is not re-built often, so tag may be behind
-FROM faasm.azurecr.io/faabric-base:0.15.0
+FROM ghcr.io/faasm/faabric-base:0.15.0
 SHELL ["/bin/bash", "-c"]
 ENV CPP_DOCKER="on"
 
@@ -64,7 +64,7 @@ RUN cd /code/cpp \
 
 # CLI setup
 WORKDIR /code/cpp
-ENV TERM xterm-256color
+ENV TERM=xterm-256color
 
 RUN echo ". /code/cpp/bin/workon.sh" >> ~/.bashrc
 CMD ["/bin/bash", "-l"]
