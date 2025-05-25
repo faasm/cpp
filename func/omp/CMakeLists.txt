@@ -54,3 +54,7 @@ omp_func(wtime wtime.cpp)
 
 # Custom target for building all functions
 add_custom_target(omp_all_funcs DEPENDS ${ALL_OMP_FUNCS})
+
+# CloudSkin Func
+faasm_func(elastic_imagesim ./elastic_imagesim.cpp)
+target_link_libraries(elastic_imagesim faasmp faasm)
