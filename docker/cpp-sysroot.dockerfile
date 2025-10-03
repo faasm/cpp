@@ -1,8 +1,8 @@
 # llvm image is not re-built often, so the tag may be behind
-FROM ghcr.io/faasm/llvm:0.4.0 AS llvm
+FROM ghcr.io/faasm/llvm:0.7.0 AS llvm
 
 # faabric-base image is not re-built often, so tag may be behind
-FROM ghcr.io/faasm/faabric-base:0.15.0
+FROM ghcr.io/faasm/faabric-base:0.21.0
 SHELL ["/bin/bash", "-c"]
 ENV CPP_DOCKER="on"
 
