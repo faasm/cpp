@@ -2,13 +2,13 @@
 FROM ghcr.io/faasm/llvm:0.7.0 AS llvm
 
 # faabric-base image is not re-built often, so tag may be behind
-FROM ghcr.io/faasm/faabric-base:0.21.0
+FROM ghcr.io/faasm/faabric-base:0.22.0
 SHELL ["/bin/bash", "-c"]
 ENV CPP_DOCKER="on"
 
 # Copy the toolchain and LLVM sources from the LLVM container
 COPY --from=llvm /usr/local/faasm /usr/local/faasm
-COPY --from=llvm /opt/llvm-project /opt/llvm-project
+# COPY --from=llvm /opt/llvm-project /opt/llvm-project
 
 # Update APT dependencies
 RUN apt update && apt install -y autotools-dev
