@@ -16,7 +16,6 @@ set(LIB_FILES
 if (CMAKE_SYSTEM_NAME STREQUAL "WASI")
     message(STATUS "Libfaasmp WebAssembly build")
 
-    set(LLVM_OMP_SRC_DIR "/opt/llvm-project/openmp/runtime/src")
     set(LLVM_OMP_BUILD_SRC_DIR "/opt/llvm-project/build/llvm/projects/openmp/runtime/src")
     set(LIBOMP_ASMFILES "z_Linux_asm.S")
     set(LIBOMP_HEADERS "${LLVM_OMP_BUILD_SRC_DIR}/omp.h")
