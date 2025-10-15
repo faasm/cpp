@@ -1,17 +1,44 @@
 # llvm image is not re-built often, so the tag may be behind
 FROM ghcr.io/faasm/llvm:0.7.0 AS llvm
 
-# faabric-base image is not re-built often, so tag may be behind
-FROM ghcr.io/faasm/faabric-base:0.21.0
+# Start from a fresh ubuntu image, cpp-sysroot has little built deps.
+FROM ubuntu:24.04
+
+RUN apt update \
+    && apt install -y --no-install-recommends \
+        autoconf \
+        automake \
+        autopoint \
+        autotools-dev \
+        clang-17 \
+        clang-format-17 \
+        cmake \
+        dpkg-dev \
+        gawk \
+        gettext \
+        git \
+        libltdl-dev \
+        libtool \
+        llvm-17 \
+        make \
+        m4 \
+        ninja-build \
+        pkg-config \
+        python3-pip \
+        python3-venv \
+        vim-tiny \
+    && apt autoremove \
+    && rm -rf /var/lib/apt/lists/*
+
 SHELL ["/bin/bash", "-c"]
 ENV CPP_DOCKER="on"
 
-# Copy the toolchain and LLVM sources from the LLVM container
+# Copy the toolchain and LLVM OpenMP sources necessary to build libfaasmp
 COPY --from=llvm /usr/local/faasm /usr/local/faasm
-COPY --from=llvm /opt/llvm-project /opt/llvm-project
+COPY --from=llvm \
+    /opt/llvm-project/build/llvm/projects/openmp/runtime/src \
+    /opt/llvm-project/build/llvm/projects/openmp/runtime/src
 
-# Update APT dependencies
-RUN apt update && apt install -y autotools-dev
 # Get the code and submodules
 ARG SYSROOT_VERSION
 RUN mkdir -p /code \
@@ -42,9 +69,6 @@ RUN cd /code/cpp \
         libfaasmpi --native --shared \
     # Install toolchain files
     && inv install \
-    # Build wasi-libc and reset the sysroot. The second call to LLVM just
-    # installs some headers that are purged
-    && inv llvm.libc --purge llvm \
     # Build Faasm WASM libraries for wasm32-wasi target
     && inv \
         libfaasm \
