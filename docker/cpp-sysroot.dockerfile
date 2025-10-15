@@ -4,28 +4,30 @@ FROM ghcr.io/faasm/llvm:0.7.0 AS llvm
 # Start from a fresh ubuntu image, cpp-sysroot has little built deps.
 FROM ubuntu:24.04
 
-RUN set -eux; \
-    apt update; \
-    apt install -y --no-install-recommends \
+RUN apt update \
+    && apt install -y --no-install-recommends \
         autoconf \
         automake \
         autopoint \
         autotools-dev \
         clang-17 \
         cmake \
+        dpkg-dev \
+        gawk \
         gettext \
+        git \
+        libltdl-dev \
         libtool \
         llvm-17 \
+        make \
         m4 \
         ninja-build \
-        make \
         pkg-config \
         python3-pip \
         python3-venv \
-        git \
-        vim-tiny; \
-  apt autoremove -y; \
-  apt clean; rm -rf /var/lib/apt/lists/*
+        vim-tiny \
+    && apt autoremove \
+    && rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash", "-c"]
 ENV CPP_DOCKER="on"
@@ -76,16 +78,12 @@ RUN cd /code/cpp \
         libfaasm --threads \
         libemscripten --threads \
         libfaasmp \
-    # Lastly, build the libraries that populate the sysroot. For some reason
-    # we need to re-run apt update for libtool to work properly.
-    && apt update \
+    # Lastly, build the libraries that populate the sysroot
     && inv \
         libffi \
         libffi --threads \
         zlib \
-        zlib --threads \
-    && apt autoremove -y \
-    && apt clean; rm -rf /var/lib/apt/lists/*
+        zlib --threads
 
 # CLI setup
 WORKDIR /code/cpp

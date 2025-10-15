@@ -37,10 +37,7 @@ jobs:
       - name: "Build libfaasmpi"
         run: ./bin/inv_wrapper.sh libfaasmpi
       - name: "Build libffi"
-        run: |
-          # For some reason, libffi necessitates running apt update.
-          apt update
-          ./bin/inv_wrapper.sh libffi
+        run: ./bin/inv_wrapper.sh libffi
       - name: "Build libfake"
         run: ./bin/inv_wrapper.sh libfake
       - name: "Build libemscripten"
