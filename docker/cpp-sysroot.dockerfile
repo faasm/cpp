@@ -11,6 +11,7 @@ RUN apt update \
         autopoint \
         autotools-dev \
         clang-17 \
+        clang-format-17 \
         cmake \
         dpkg-dev \
         gawk \
