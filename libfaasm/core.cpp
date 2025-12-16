@@ -159,10 +159,11 @@ unsigned int faasmAwaitCallOutput(unsigned int messageId,
 }
 
 unsigned int faasmChainNamed(const char* name,
+                             const char* cmdline,
                              const uint8_t* inputData,
                              long inputDataSize)
 {
-    return __faasm_chain_name(name, inputData, inputDataSize);
+    return __faasm_chain_name(name, cmdline, inputData, inputDataSize);
 }
 
 unsigned int faasmChain(FaasmFuncPtr funcPtr,

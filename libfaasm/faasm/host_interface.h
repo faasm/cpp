@@ -101,6 +101,7 @@ void __faasm_write_output(const char* output, long outputLen);
 
 HOST_IFACE_FUNC
 unsigned int __faasm_chain_name(const char* name,
+                                const char* cmdline,
                                 const unsigned char* inputData,
                                 long inputDataSize);
 
@@ -204,4 +205,10 @@ int __faasm_s3_get_key_bytes(const char* bucketName,
                              void* keyBuffer,
                              int* keyBufferLen,
                              bool tolerateMissing = false);
+
+HOST_IFACE_FUNC
+int __faasm_s3_download_key(const char* bucketName,
+                            const char* keyName,
+                            const char* outPath,
+                            bool tolerateMissing = false);
 #endif

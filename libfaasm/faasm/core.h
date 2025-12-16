@@ -161,6 +161,7 @@ extern "C"
      * Chains a function with the given input data
      */
     unsigned int faasmChainNamed(const char* name,
+                                 const char* cmdline,
                                  const uint8_t* inputData,
                                  long inputDataSize);
 
