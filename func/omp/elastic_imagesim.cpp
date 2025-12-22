@@ -36,11 +36,13 @@ std::vector<std::string> listS3Keys(const std::string& path)
  */
 bool doImageSim(const std::vector<std::string>& images, int numThreads)
 {
-	// Split image array into even slices.
-	auto iters = 2 * numThreads;
+    // Split image array into even slices.
+    auto iters = 2 * numThreads;
     const std::size_t n = images.size();
     const std::size_t base = n / static_cast<std::size_t>(iters);
     const std::size_t rem  = n % static_cast<std::size_t>(iters);
+
+    std::cout << "Hello - n: " << n << " - base: " << base << " - rem: " << rem << std::endl;
 
 #pragma omp parallel for num_threads(numThreads)
     // We need to give the for loop room to potentially grow when numThreads is
@@ -54,20 +56,21 @@ bool doImageSim(const std::vector<std::string>& images, int numThreads)
         const std::size_t start = ui * base + std::min(ui, rem);
         const std::size_t len   = base + (ui < rem ? 1u : 0u);
 
-		std::cout << "Thread processing " << len << " images" << std::endl;
-		for (auto i = 0; i < len; i++) {
-			int callId = -1;
-			while (callId == -1) {
-				callId = faasmChainNamed("imagesim", images.at(i).c_str(), nullptr, 0);
+        std::cout << "Thread processing " << len << " images" << std::endl;
+        for (auto j = 0; j < len; j++) {
+            const std::size_t idx = start + j;
+            int callId = -1;
+            while (callId == -1) {
+                callId = faasmChainNamed("imagesim", images.at(idx).c_str(), nullptr, 0);
 
-				if (callId == -1) {
-					printf("ERROR: executing image-similarity (no hosts?)\n");
-					usleep(1 * 1000 * 1000);
-				}
-			}
+                if (callId == -1) {
+                    printf("ERROR: executing image-similarity (no hosts?)\n");
+                    usleep(1 * 1000 * 1000);
+                }
+            }
 
-        	faasmAwaitCall(callId);
-		}
+            faasmAwaitCall(callId);
+        }
     }
 
     return 0;
@@ -100,15 +103,25 @@ int main(int argc, char** argv)
 
     // Otherwise, we first need to download all keys in the bucket.
     auto images = listS3Keys(imageBucket);
-	std::vector<std::string> imageNames;
+    std::vector<std::string> imageNames;
     for (const auto& image : images) {
-		auto imageName = std::filesystem::path(image).filename().string();
-		__faasm_s3_download_key(BUCKET_NAME, image.c_str(), imageName.c_str());
-		imageNames.push_back(imageName);
+        auto imageName = std::filesystem::path(image).filename().string();
+        __faasm_s3_download_key(BUCKET_NAME, image.c_str(), imageName.c_str());
+        imageNames.push_back(imageName);
+    }
+    // FIXME: this images yield a runtime error in the KNN search.
+
+    std::vector<std::string> imageNamesLocal;
+    for (const auto& entry : std::filesystem::directory_iterator("data/test_embeddings/")) {
+        if (entry.is_regular_file()) {
+            std::cout << "adding file: " << entry.path() << std::endl;
+            imageNamesLocal.push_back(entry.path());
+            // std::cout << entry.path() << '\n';
+        }
     }
 
     for (int i = 0; i < itersPerThread; i++) {
-        doImageSim(imageNames, numThreads);
+        doImageSim(imageNamesLocal, numThreads);
     }
 
     return 0;
