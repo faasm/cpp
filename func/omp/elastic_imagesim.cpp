@@ -80,7 +80,7 @@ void doSleep(int numThreads)
 {
 #pragma omp parallel for num_threads(numThreads)
     for (int i = 0; i < numThreads; i++) {
-        usleep(2 * 1000 * 1000);
+        usleep(5 * 1000 * 1000);
     }
 }
 
@@ -99,6 +99,7 @@ int main(int argc, char** argv)
     // take up resources
     if (itersPerThread == 0) {
         doSleep(numThreads);
+        return 0;
     }
 
     // Otherwise, we first need to download all keys in the bucket.
